@@ -8,9 +8,10 @@ on:
 
 jobs:
   checks:
-    name: Checks
+    name: Checks & deploy
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     steps:
       - uses: actions/checkout@v3
 
@@ -41,4 +42,3 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           dry-run: ${{ github.ref != 'refs/heads/master' }}
-          greater-version-only: true
