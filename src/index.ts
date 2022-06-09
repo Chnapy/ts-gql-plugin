@@ -14,7 +14,7 @@ const init = (modules: { typescript: typeof TS }) => {
     const { project, languageService } = info;
     const config = info.config as Config;
 
-    const logger = createLogger(config, project.projectService.logger);
+    const logger = createLogger(config.logLevel, project.projectService.logger);
 
     const directory = project.getCurrentDirectory();
 
@@ -43,9 +43,9 @@ const init = (modules: { typescript: typeof TS }) => {
             );
             if (previousSnapshot !== scriptSnapshot) {
               logger.verbose(`script updated - Filename ${fileName}`);
-              // logger.verbose(
-              //   scriptSnapshot.getText(0, scriptSnapshot.getLength())
-              // );
+              logger.debug(
+                scriptSnapshot.getText(0, scriptSnapshot.getLength())
+              );
             }
           }
 
@@ -67,9 +67,9 @@ const init = (modules: { typescript: typeof TS }) => {
               logger.verbose(
                 `script updated - Filename ${sourceFile.fileName}`
               );
-              // logger.verbose(
-              //   scriptSnapshot.getText(0, scriptSnapshot.getLength())
-              // );
+              logger.debug(
+                scriptSnapshot.getText(0, scriptSnapshot.getLength())
+              );
             }
           }
 

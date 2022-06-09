@@ -1,11 +1,8 @@
-import {
-  parseTTExpressionOccurenceList,
-  TTExpressionOccurence,
-} from './parse-ttexpression-occurence-list';
-import { formatTS } from './test-utils';
+import { parseLiteralOccurenceList } from './parse-literal-occurence-list';
+import { formatGQL } from './test-utils';
 
-describe('Parse TTExpression occurence list', () => {
-  it('parse TTExpression occurence list', () => {
+describe('Parse literal occurence list', () => {
+  it('parse literal occurence list', () => {
     const code = `
 import { VendorProductListItem } from 'web-client/components/organisms';
 import { CartItemRemoved } from 'web-client/components/organisms/cart/cartList/CartItemRemoved';
@@ -25,7 +22,7 @@ import { useCartPrice } from 'web-client/components/organisms/cart/hooks/UseCart
 
 export const CartList: React.FC = () => {
   const { t } = useTranslate();
-  const { data: cartData, loading } = useQuery(gql\`
+  const { data: cartData, loading } = useQuery(gql(\`
     query User($id: ID!) {
       user(id: $id) {
         id
@@ -36,17 +33,17 @@ export const CartList: React.FC = () => {
         email
       }
     }
-  \`);
+  \`));
   const cartItems = useGraphQLArray(cartData?.cartItems);
   const [deleteCartItem] = useOrderCartItemDeleteMutation(
-    gql\`
+    gql(\`
       mutation UserDelete($id: ID!) {
         user(id: $id) {
           id
           name
         }
       }
-    \`, {
+    \`), {
       refetchQueries: [
         refetchOrderCartQuery({
           token: cartData?.token,
@@ -75,15 +72,8 @@ export const CartList: React.FC = () => {
 export default CartList;
     `;
 
-    expect(
-      parseTTExpressionOccurenceList(code).map(({ content, position }) => ({
-        content: formatTS(content),
-        position,
-      }))
-    ).toEqual<TTExpressionOccurence[]>([
-      {
-        position: 1168,
-        content: formatTS(`gql\`
+    expect(parseLiteralOccurenceList(code).map(formatGQL)).toEqual([
+      formatGQL(`
           query User($id: ID!) {
             user(id: $id) {
               id
@@ -94,19 +84,15 @@ export default CartList;
               email
             }
           }
-        \``),
-      },
-      {
-        position: 1434,
-        content: formatTS(`gql\`
+        `),
+      formatGQL(`
           mutation UserDelete($id: ID!) {
             user(id: $id) {
               id
               name
             }
           }
-        \``),
-      },
+        `),
     ]);
   });
 
@@ -130,7 +116,7 @@ import { useCartPrice } from 'web-client/components/organisms/cart/hooks/UseCart
 
 export const CartList: React.FC = () => {
   const { t } = useTranslate();
-  const { data: cartData, loading } = useQuery(gql\`
+  const { data: cartData, loading } = useQuery(gql(\`
     query User($id: ID!) {
       user(id: $id) {
         id
@@ -141,17 +127,17 @@ export const CartList: React.FC = () => {
         email
       }
     }
-  \` as any);
+  \`) as any);
   const cartItems = useGraphQLArray(cartData?.cartItems);
   const [deleteCartItem] = useOrderCartItemDeleteMutation(
-    gql\`
+    gql(\`
       mutation UserDelete($id: ID!) {
         user(id: $id) {
           id
           name
         }
       }
-    \`, {
+    \`), {
       refetchQueries: [
         refetchOrderCartQuery({
           token: cartData?.token,
@@ -180,23 +166,15 @@ export const CartList: React.FC = () => {
 export default CartList;
     `;
 
-    expect(
-      parseTTExpressionOccurenceList(code).map(({ content, position }) => ({
-        content: formatTS(content),
-        position,
-      }))
-    ).toEqual<TTExpressionOccurence[]>([
-      {
-        position: 1441,
-        content: formatTS(`gql\`
+    expect(parseLiteralOccurenceList(code).map(formatGQL)).toEqual([
+      formatGQL(`
           mutation UserDelete($id: ID!) {
             user(id: $id) {
               id
               name
             }
           }
-        \``),
-      },
+        `),
     ]);
   });
 });
