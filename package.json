@@ -1,11 +1,25 @@
 {
   "name": "ts-gql-plugin",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "packageManager": "yarn@3.2.1",
   "license": "MIT",
   "main": "./dist/index.js",
+  "description": "TypeScript Language Service Plugin for GraphQL DocumentNode typing",
   "author": {
     "name": "Richard Haddad"
+  },
+  "keywords": [
+    "typescript",
+    "graphql",
+    "language service"
+  ],
+  "homepage": "https://github.com/chnapy/ts-gql-plugin#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chnapy/ts-gql-plugin"
+  },
+  "bugs": {
+    "url": "https://github.com/chnapy/ts-gql-plugin/issues"
   },
   "scripts": {
     "c:format": "prettier -w .",
@@ -23,8 +37,8 @@
     "deasync": "0.1.26"
   },
   "peerDependencies": {
-    "graphql": "16.5.0",
-    "graphql-tag": "2.12.6"
+    "graphql": ">= 16",
+    "graphql-tag": ">= 2"
   },
   "devDependencies": {
     "@apollo/client": "3.6.6",
