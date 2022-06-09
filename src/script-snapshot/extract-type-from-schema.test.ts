@@ -53,17 +53,6 @@ describe('Extract type from schema', () => {
       type QueryUserArgs = {
         id: Scalars['ID'];
       };
-
-      import { DocumentNode } from 'graphql';
-
-      interface TypedDocumentNode<Result = { [key: string]: any }, Variables = { [key: string]: any }> extends DocumentNode {
-        /**
-         * This type is used to ensure that the variables you pass in to the query are assignable to Variables
-         * and that the Result is assignable to whatever you pass your result to. The method is never actually
-         * implemented, but the type is valid because we list it as optional
-         */
-        __apiType?: (variables: Variables) => Result;
-      }
     `;
 
     const result = await extractTypeFromSchema(schema);

@@ -1,8 +1,8 @@
 import { parse } from 'graphql';
-import { extractTypeFromTTExpression } from './extract-type-from-ttexpression';
-import { formatTS } from './test-utils';
+import { extractTypeFromLiteral } from './extract-type-from-literal';
+import { formatGQL, formatTS } from './test-utils';
 
-describe('Extract type from TTExpression', () => {
+describe('Extract type from literal', () => {
   it('extracts type from correct string', async () => {
     const schema = parse(`
     type User {
@@ -19,7 +19,7 @@ describe('Extract type from TTExpression', () => {
     }
     `);
 
-    const code = `gql\`
+    const code = `
     query User($id: ID!) {
       user(id: $id) {
         id
@@ -30,13 +30,13 @@ describe('Extract type from TTExpression', () => {
         email
       }
     }
-\``;
+`;
 
     const expectedVariables = `UserQueryVariables`;
 
-    const expectedOperation = `UserQueryOperation`;
+    const expectedResult = `UserQueryOperation`;
 
-    const expectedStatic = formatTS(`
+    const expectedStaticTypes = formatTS(`
       type UserQueryVariables = Exact<{
         id: Scalars['ID'];
       }>;
@@ -44,11 +44,11 @@ describe('Extract type from TTExpression', () => {
       type UserQueryOperation = { __typename?: 'Query', user: { __typename?: 'User', id: string, name: string }, users: Array<{ __typename?: 'User', id: string, email: string }> };
     `);
 
-    const result = await extractTypeFromTTExpression(code, schema);
+    const result = await extractTypeFromLiteral(code, schema);
 
-    expect(formatTS(result.staticType)).toEqual(expectedStatic);
-    expect(result.variableType).toEqual(
-      `TypedDocumentNode<${expectedOperation}, ${expectedVariables}>`
-    );
+    expect(formatGQL(result.literal)).toEqual(formatGQL(code));
+    expect(result.variables).toEqual(expectedVariables);
+    expect(result.result).toEqual(expectedResult);
+    expect(formatTS(result.staticTypes)).toEqual(expectedStaticTypes);
   });
 });

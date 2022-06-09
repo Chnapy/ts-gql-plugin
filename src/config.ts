@@ -1,4 +1,8 @@
 export type Config = {
+  /**
+   * Path to GraphQL schema.
+   */
   schema?: string;
-  verbose?: boolean;
+
+  logLevel?: 'default' | 'verbose' | 'debug';
 };

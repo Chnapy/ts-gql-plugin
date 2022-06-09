@@ -196,6 +196,7 @@ module.exports = {
         'unicorn/no-useless-undefined': 'off',
         'unicorn/no-array-callback-reference': 'off',
         'unicorn/no-array-reduce': 'off',
+        'unicorn/no-abusive-eslint-disable': 'off',
       }),
     },
   ],

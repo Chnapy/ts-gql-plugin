@@ -3,18 +3,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type TSL from 'typescript/lib/tsserverlibrary';
 import { extractTypeFromSchema } from './extract-type-from-schema';
-import { extractTypeFromTTExpression } from './extract-type-from-ttexpression';
-import {
-  parseTTExpressionOccurenceList,
-  TTExpressionOccurence,
-} from './parse-ttexpression-occurence-list';
-import {
-  DraftScript,
-  updateScriptWithTTOccurence,
-} from './update-script-with-ttoccurrence';
+import { extractTypeFromLiteral } from './extract-type-from-literal';
+import { parseLiteralOccurenceList } from './parse-literal-occurence-list';
 import { promisify } from 'node:util';
 import { Config } from '../config';
 import { Logger } from '../utils/logger';
+import { generateBottomContent } from './generate-bottom-content';
+
+const isNonNullable = <I>(item: I | null): item is I => !!item;
 
 const getLogError = (logger: Logger, filename?: string) => (error: unknown) => {
   if (error instanceof Error) {
@@ -22,7 +18,7 @@ const getLogError = (logger: Logger, filename?: string) => (error: unknown) => {
   }
 };
 
-const noopSnapshot = async (filename: string, snapshot: TSL.IScriptSnapshot) =>
+const noopSnapshot = async (_filename: string, snapshot: TSL.IScriptSnapshot) =>
   snapshot;
 
 export const createScriptSnapshotUpdater = (
@@ -58,29 +54,19 @@ export const createScriptSnapshotUpdater = (
       try {
         const initialScriptText = snaphost.getText(0, snaphost.getLength());
 
-        const ttExpressionOccurenceList =
-          parseTTExpressionOccurenceList(initialScriptText);
+        const literalOccurenceList =
+          parseLiteralOccurenceList(initialScriptText);
 
-        if (ttExpressionOccurenceList.length === 0) {
+        if (literalOccurenceList.length === 0) {
           return snaphost;
         }
 
-        const isNonNullable = <I>(item: I | null): item is I => !!item;
-
         const schemaDocument = await schemaDocumentPromise;
 
-        const occurencePromiseList = ttExpressionOccurenceList.map(
-          async (occurence: TTExpressionOccurence) => {
+        const documentInfosPromiseList = literalOccurenceList.map(
+          async (literal) => {
             try {
-              const types = await extractTypeFromTTExpression(
-                occurence.content,
-                schemaDocument
-              );
-
-              return {
-                occurence,
-                types,
-              };
+              return await extractTypeFromLiteral(literal, schemaDocument);
             } catch (error) {
               logError(error);
               return null;
@@ -88,35 +74,21 @@ export const createScriptSnapshotUpdater = (
           }
         );
 
-        const [staticGlobals, occurencesAndTypes] = await Promise.all([
+        const [staticGlobals, documentInfosList] = await Promise.all([
           staticGlobalsPromise,
-          Promise.all(occurencePromiseList).then((list) =>
+          Promise.all(documentInfosPromiseList).then((list) =>
             list.filter(isNonNullable)
           ),
         ]);
 
-        const finalScript = occurencesAndTypes.reduce<DraftScript>(
-          (draftScript, { occurence, types }) =>
-            updateScriptWithTTOccurence(
-              draftScript,
-              occurence,
-              types.variableType
-            ),
-          {
-            text: initialScriptText,
-            offset: 0,
-          }
+        const bottomContent = generateBottomContent(
+          documentInfosList,
+          staticGlobals
         );
 
-        finalScript.text += `
-            ${staticGlobals}
-            
-            ${occurencesAndTypes
-              .map(({ types }) => types.staticType)
-              .join('\n\n')}
-          `;
+        const finalScriptText = initialScriptText + bottomContent;
 
-        return tsl.ScriptSnapshot.fromString(finalScript.text);
+        return tsl.ScriptSnapshot.fromString(finalScriptText);
       } catch (mainError) {
         logError(mainError);
         return snaphost;

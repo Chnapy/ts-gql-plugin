@@ -1,0 +1,10 @@
+.devcontainer
+.github
+.yarn
+src
+example
+.*
+*.json
+*.yml
+*.ts
+*.lock

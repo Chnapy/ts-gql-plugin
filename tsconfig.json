@@ -19,5 +19,5 @@
     "lib": ["ESNext", "dom"],
     "tsBuildInfoFile": "./node_modules/.cache/.tsbuildinfo"
   },
-  "include": ["./src/**/*", "./*.js", "./*.ts"]
+  "include": ["src", "example", "./*.js", "./*.ts"]
 }
