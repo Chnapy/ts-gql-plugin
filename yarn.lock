@@ -5036,8 +5036,8 @@ __metadata:
     vite: 2.9.10
     vitest: 0.9.4
   peerDependencies:
-    graphql: 16.5.0
-    graphql-tag: 2.12.6
+    graphql: ">= 16"
+    graphql-tag: ">= 2"
   languageName: unknown
   linkType: soft
 

@@ -1,6 +1,7 @@
 .devcontainer
 .github
 .yarn
+node_modules
 src
 example
 .*
