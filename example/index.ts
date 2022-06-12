@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { gql } from 'graphql-tag';
 import { useQuery } from '@apollo/client';
 

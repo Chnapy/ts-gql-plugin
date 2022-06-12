@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable unicorn/consistent-function-scoping */
 import fs from 'node:fs';
-import ts from 'typescript';
 import { Logger } from '../utils/logger';
-import { createScriptSnapshotUpdater } from './create-script-snapshot-updater';
+import { createSourceUpdater } from './create-source-updater';
 import { formatTS } from './test-utils';
 import * as createUniqueStringExport from '../utils/create-unique-string';
 
-describe('Create script snapshot updater', () => {
+describe('Create source updater', () => {
   const initialReadFile = fs.readFile;
   const setFSReadFile = (
     fn: (
@@ -28,8 +27,6 @@ describe('Create script snapshot updater', () => {
     debug: vi.fn(),
   });
 
-  const emptySnapshot = {} as ts.IScriptSnapshot;
-
   beforeEach(() => {
     setFSReadFile(
       vi.fn((...args) => {
@@ -45,8 +42,7 @@ describe('Create script snapshot updater', () => {
   it('gives noop function on any error', async () => {
     const logger = createFakeLogger();
 
-    const updateScriptSnapshot = createScriptSnapshotUpdater(
-      null as any,
+    const updateScriptSnapshot = createSourceUpdater(
       null as any,
       null as any,
       logger
@@ -54,29 +50,20 @@ describe('Create script snapshot updater', () => {
 
     expect(logger.error).toHaveBeenCalled();
 
-    expect(await updateScriptSnapshot('', emptySnapshot)).toBe(emptySnapshot);
+    expect(await updateScriptSnapshot('', '')).toBe('');
   });
 
   it('gives noop function if schema not defined', async () => {
     const logger = createFakeLogger();
 
-    const updateScriptSnapshot = createScriptSnapshotUpdater(
-      {
-        ScriptSnapshot: {
-          fromString: vi.fn(),
-        },
-      },
-      '',
-      {},
-      logger
-    );
+    const updateScriptSnapshot = createSourceUpdater('', {}, logger);
 
     expect(logger.error).toHaveBeenCalled();
 
-    expect(await updateScriptSnapshot('', emptySnapshot)).toBe(emptySnapshot);
+    expect(await updateScriptSnapshot('', '')).toBe('');
   });
 
-  it('gives same snapshot if no occurrence found', async () => {
+  it('gives same source if no occurrence found', async () => {
     const logger = createFakeLogger();
 
     const schema = `
@@ -103,18 +90,13 @@ describe('Create script snapshot updater', () => {
       initialReadFile(path, options, cb);
     });
 
-    const updateScriptSnapshot = createScriptSnapshotUpdater(
-      {
-        ScriptSnapshot: {
-          fromString: vi.fn(),
-        },
-      },
+    const updateScriptSnapshot = createSourceUpdater(
       '',
       { schema: schemaPath },
       logger
     );
 
-    const snapshot = ts.ScriptSnapshot.fromString(`
+    const source = `
       import { useCartPrice } from 'web-client/components/organisms/cart/hooks/UseCartPrice';
       
       export const CartList: React.FC = () => {
@@ -139,16 +121,16 @@ describe('Create script snapshot updater', () => {
       };
       
       export default CartList;
-    `);
+    `;
 
-    const result = await updateScriptSnapshot('', snapshot);
+    const result = await updateScriptSnapshot('', source);
 
     expect(logger.error).not.toHaveBeenCalled();
 
-    expect(result).toBe(snapshot);
+    expect(result).toBe(source);
   });
 
-  it('gives updated snapshot', async () => {
+  it('gives updated source', async () => {
     const logger = createFakeLogger();
 
     const schema = `
@@ -182,8 +164,7 @@ describe('Create script snapshot updater', () => {
     );
     createUniqueStringSpy.mockImplementationOnce(() => '_unique_module_name');
 
-    const updateScriptSnapshot = createScriptSnapshotUpdater(
-      ts,
+    const updateScriptSnapshot = createSourceUpdater(
       '',
       { schema: schemaPath },
       logger
@@ -211,7 +192,7 @@ describe('Create script snapshot updater', () => {
   }
   \`)`;
 
-    const snapshot = ts.ScriptSnapshot.fromString(`
+    const snapshot = `
       import { useCartPrice } from 'web-client/components/organisms/cart/hooks/UseCartPrice';
       
       export const CartList: React.FC = () => {
@@ -238,13 +219,13 @@ describe('Create script snapshot updater', () => {
       };
       
       export default CartList;
-    `);
+    `;
 
     const result = await updateScriptSnapshot('', snapshot);
 
     expect(logger.error).not.toHaveBeenCalled();
 
-    expect(formatTS(result.getText(0, result.getLength()))).toEqual(
+    expect(formatTS(result)).toEqual(
       formatTS(`
     import { useCartPrice } from 'web-client/components/organisms/cart/hooks/UseCartPrice';
     
@@ -300,8 +281,6 @@ describe('Create script snapshot updater', () => {
             4,
             -1
           )}]: TypedDocumentNode<TotoQueryOperation, TotoQueryVariables>;
-
-          [k: string]: DocumentNode;
         }
 
         type Maybe<T> = T | null;

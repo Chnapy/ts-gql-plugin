@@ -1,18 +1,18 @@
-import type TS from 'typescript/lib/tsserverlibrary';
-import { Config } from './config';
-import { createScriptSnapshotUpdater } from './script-snapshot/create-script-snapshot-updater';
+import TSL from 'typescript/lib/tsserverlibrary';
+import { PluginConfig } from './plugin-config';
+import { createSourceUpdater } from './source-update/create-source-updater';
 import { createLogger } from './utils/logger';
 import { objectOverride } from './utils/object-override';
 import { waitPromiseSync } from './utils/wait-promise-sync';
+import { isValidFilename, isValidSourceFile } from './utils/is-valid-file';
+import { getSnapshotSource } from './utils/get-snapshot-source';
 
-const tsFilenameRegex = /.+[^.d].tsx?$/;
-
-const init = (modules: { typescript: typeof TS }) => {
+const init = (modules: { typescript: typeof TSL }) => {
   const ts = modules.typescript;
 
   const create = (info: ts.server.PluginCreateInfo) => {
     const { project, languageService } = info;
-    const config = info.config as Config;
+    const config = info.config as PluginConfig;
 
     const logger = createLogger(config.logLevel, project.projectService.logger);
 
@@ -24,24 +24,23 @@ const init = (modules: { typescript: typeof TS }) => {
 
     const overrideTS = objectOverride(ts);
 
-    const updateScriptSnapshot = createScriptSnapshotUpdater(
-      ts,
-      directory,
-      config,
-      logger
-    );
+    const updateSource = createSourceUpdater(directory, config, logger);
 
     overrideTS(
       'createLanguageServiceSourceFile',
       (initialFn) =>
         (fileName, scriptSnapshot, ...rest) => {
-          if (tsFilenameRegex.test(fileName)) {
+          if (isValidFilename(fileName)) {
             logger.verbose(`create - Filename ${fileName}`);
-            const previousSnapshot = scriptSnapshot;
-            scriptSnapshot = waitPromiseSync(
-              updateScriptSnapshot(fileName, scriptSnapshot)
+
+            const initialSource = getSnapshotSource(scriptSnapshot);
+            const updatedSource = waitPromiseSync(
+              updateSource(fileName, initialSource)
             );
-            if (previousSnapshot !== scriptSnapshot) {
+
+            if (initialSource !== updatedSource) {
+              scriptSnapshot = TSL.ScriptSnapshot.fromString(updatedSource);
+
               logger.verbose(`script updated - Filename ${fileName}`);
               logger.debug(
                 scriptSnapshot.getText(0, scriptSnapshot.getLength())
@@ -57,13 +56,17 @@ const init = (modules: { typescript: typeof TS }) => {
       'updateLanguageServiceSourceFile',
       (initialFn) =>
         (sourceFile, scriptSnapshot, ...rest) => {
-          if (tsFilenameRegex.test(sourceFile.fileName)) {
+          if (isValidSourceFile(sourceFile)) {
             logger.verbose(`update - Filename ${sourceFile.fileName}`);
-            const previousSnapshot = scriptSnapshot;
-            scriptSnapshot = waitPromiseSync(
-              updateScriptSnapshot(sourceFile.fileName, scriptSnapshot)
+
+            const initialSource = getSnapshotSource(scriptSnapshot);
+            const updatedSource = waitPromiseSync(
+              updateSource(sourceFile.fileName, initialSource)
             );
-            if (previousSnapshot !== scriptSnapshot) {
+
+            if (initialSource !== updatedSource) {
+              scriptSnapshot = TSL.ScriptSnapshot.fromString(updatedSource);
+
               logger.verbose(
                 `script updated - Filename ${sourceFile.fileName}`
               );

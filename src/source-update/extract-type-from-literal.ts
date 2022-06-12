@@ -7,10 +7,7 @@ const variablesRegex = /type (\w+Variables) = /s;
 const operationsRegex = /type (\w+Operation) = /s;
 
 type CodegenPlugin = typeof plugins[number];
-const plugins = [
-  // typescriptPlugin,
-  typescriptOperationsPlugin,
-];
+const plugins = [typescriptOperationsPlugin];
 
 export const extractTypeFromLiteral = async (
   literal: string,

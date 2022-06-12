@@ -1,4 +1,4 @@
-export type Config = {
+export type PluginConfig = {
   /**
    * Path to GraphQL schema.
    */

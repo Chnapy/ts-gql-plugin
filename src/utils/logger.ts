@@ -1,10 +1,10 @@
 import type TSL from 'typescript/lib/tsserverlibrary';
-import { Config } from '../config';
+import { PluginConfig } from '../plugin-config';
 
 export type Logger = ReturnType<typeof createLogger>;
 
 export const createLogger = (
-  logLevel: Config['logLevel'] = 'default',
+  logLevel: PluginConfig['logLevel'] = 'default',
   logger: Pick<TSL.server.Logger, 'info'>
 ) => {
   const log = (message: string) => logger.info(`[ts-gql-plugin] ${message}`);

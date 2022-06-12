@@ -1,11 +1,12 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
+    "moduleResolution": "node",
     "plugins": [
       {
         "name": "ts-gql-plugin",
         "schema": "./schema.graphql",
-        "logLevel": "debug"
+        "logLevel": "verbose"
       }
     ]
   },

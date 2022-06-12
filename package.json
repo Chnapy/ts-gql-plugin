@@ -3,7 +3,14 @@
   "version": "0.1.0",
   "packageManager": "yarn@3.2.1",
   "license": "MIT",
-  "main": "./dist/index.js",
+  "main": "./dist/plugin.js",
+  "exports": {
+    ".": "./dist/plugin.js",
+    "./tools": "./dist/tools.js"
+  },
+  "files": [
+    "dist"
+  ],
   "description": "TypeScript Language Service Plugin for GraphQL DocumentNode typing",
   "author": {
     "name": "Richard Haddad"
@@ -28,7 +35,8 @@
     "c:type": "tsc --noEmit",
     "c:test": "yarn c:test:watch --run",
     "c:test:watch": "vitest --outputTruncateLength=9999 --passWithNoTests",
-    "build": "tsc -p tsconfig.build.json"
+    "build": "tsc -p tsconfig.build.json",
+    "c:type-gql": "ts-node tsc-gql/tsc-gql.ts -p ./example/tsconfig.json"
   },
   "dependencies": {
     "@graphql-codegen/core": "2.5.1",
@@ -41,7 +49,7 @@
     "graphql-tag": ">= 2"
   },
   "devDependencies": {
-    "@apollo/client": "3.6.6",
+    "@apollo/client": "3.6.7",
     "@babel/core": "7.17.9",
     "@babel/eslint-parser": "7.17.0",
     "@types/deasync": "0.1.2",
@@ -59,8 +67,9 @@
     "graphql": "16.5.0",
     "graphql-tag": "2.12.6",
     "prettier": "2.6.2",
+    "ts-node": "10.8.1",
     "tslib": "2.4.0",
-    "typescript": "4.6.3",
+    "typescript": "4.7.3",
     "vite": "2.9.10",
     "vitest": "0.9.4"
   }

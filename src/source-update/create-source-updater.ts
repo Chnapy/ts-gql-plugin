@@ -1,12 +1,11 @@
 import { parse } from 'graphql';
 import fs from 'node:fs';
 import path from 'node:path';
-import type TSL from 'typescript/lib/tsserverlibrary';
 import { extractTypeFromSchema } from './extract-type-from-schema';
 import { extractTypeFromLiteral } from './extract-type-from-literal';
 import { parseLiteralOccurenceList } from './parse-literal-occurence-list';
 import { promisify } from 'node:util';
-import { Config } from '../config';
+import { PluginConfig } from '../plugin-config';
 import { Logger } from '../utils/logger';
 import { generateBottomContent } from './generate-bottom-content';
 
@@ -18,13 +17,12 @@ const getLogError = (logger: Logger, filename?: string) => (error: unknown) => {
   }
 };
 
-const noopSnapshot = async (_filename: string, snapshot: TSL.IScriptSnapshot) =>
-  snapshot;
+const noopSource = async (_filename: string, initialSource: string) =>
+  initialSource;
 
-export const createScriptSnapshotUpdater = (
-  tsl: Pick<typeof TSL, 'ScriptSnapshot'>,
+export const createSourceUpdater = (
   directory: string,
-  config: Config,
+  config: PluginConfig,
   logger: Logger
 ) => {
   const logErrorRoot = getLogError(logger);
@@ -48,17 +46,14 @@ export const createScriptSnapshotUpdater = (
       extractTypeFromSchema
     );
 
-    return async (filename: string, snaphost: TSL.IScriptSnapshot) => {
+    return async (filename: string, initialSource: string) => {
       const logError = getLogError(logger, filename);
 
       try {
-        const initialScriptText = snaphost.getText(0, snaphost.getLength());
-
-        const literalOccurenceList =
-          parseLiteralOccurenceList(initialScriptText);
+        const literalOccurenceList = parseLiteralOccurenceList(initialSource);
 
         if (literalOccurenceList.length === 0) {
-          return snaphost;
+          return initialSource;
         }
 
         const schemaDocument = await schemaDocumentPromise;
@@ -86,16 +81,16 @@ export const createScriptSnapshotUpdater = (
           staticGlobals
         );
 
-        const finalScriptText = initialScriptText + bottomContent;
+        const finalSource = initialSource + bottomContent;
 
-        return tsl.ScriptSnapshot.fromString(finalScriptText);
+        return finalSource;
       } catch (mainError) {
         logError(mainError);
-        return snaphost;
+        return initialSource;
       }
     };
   } catch (rootError) {
     logErrorRoot(rootError);
-    return noopSnapshot;
+    return noopSource;
   }
 };

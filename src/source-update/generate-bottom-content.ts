@@ -45,8 +45,6 @@ declare module 'graphql-tag' {
 
     interface DocumentMap {
       ${documentMapContent}
-
-      [k: string]: DocumentNode;
     }
 
     ${staticCode}

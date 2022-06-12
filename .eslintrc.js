@@ -31,7 +31,6 @@ const jsRules = {
   'no-array-constructor': ['error'],
   'no-bitwise': ['error'],
   'no-caller': ['error'],
-  'no-console': ['error', { allow: ['error', 'warn'] }],
   'no-continue': ['error'],
   'no-else-return': ['error'],
   'no-empty-function': ['error', { allow: ['constructors'] }],
@@ -132,8 +131,13 @@ module.exports = {
     es6: true,
   },
   parserOptions: {
-    project: ['./tsconfig.json'],
+    project: [
+      './tsconfig.json',
+      './example/tsconfig.json',
+      './tsc-gql/tsconfig.json',
+    ],
     tsconfigRootDir: '.',
+    sourceType: 'module',
     ecmaVersion: 8, // to enable features such as async/await
   },
   extends: ['eslint:recommended'],
@@ -158,7 +162,6 @@ module.exports = {
         'prefer-object-spread': 'off',
       }),
     },
-    // This configuration will apply only to TypeScript files
     {
       files: ['**/*.ts', '**/*.tsx'],
       parser: '@typescript-eslint/parser',
