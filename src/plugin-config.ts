@@ -1,8 +1,9 @@
 export type PluginConfig = {
   /**
-   * Path to GraphQL schema.
+   * Path to GraphQL config file.
+   * @see https://www.graphql-config.com/docs/user/user-introduction#examples
    */
-  schema?: string;
+  graphqlConfigPath?: string;
 
   logLevel?: 'default' | 'verbose' | 'debug';
 };

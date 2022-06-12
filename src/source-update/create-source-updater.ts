@@ -1,13 +1,10 @@
-import { parse } from 'graphql';
-import fs from 'node:fs';
-import path from 'node:path';
-import { extractTypeFromSchema } from './extract-type-from-schema';
-import { extractTypeFromLiteral } from './extract-type-from-literal';
-import { parseLiteralOccurenceList } from './parse-literal-occurence-list';
-import { promisify } from 'node:util';
+import { loadConfigSync } from 'graphql-config';
 import { PluginConfig } from '../plugin-config';
 import { Logger } from '../utils/logger';
+import { extractTypeFromLiteral } from './extract-type-from-literal';
+import { extractTypeFromSchema } from './extract-type-from-schema';
 import { generateBottomContent } from './generate-bottom-content';
+import { parseLiteralOccurenceList } from './parse-literal-occurence-list';
 
 const isNonNullable = <I>(item: I | null): item is I => !!item;
 
@@ -27,24 +24,24 @@ export const createSourceUpdater = (
 ) => {
   const logErrorRoot = getLogError(logger);
 
-  const readFile = promisify(fs.readFile);
-
   try {
-    const { schema: schemaPath } = config;
-    if (!schemaPath) {
-      throw new Error('GraphQL schema path not defined in config');
-    }
+    const { graphqlConfigPath } = config;
 
-    const schemaDocumentPromise = readFile(
-      path.resolve(directory, schemaPath),
-      {
-        encoding: 'utf8',
-      }
-    ).then(parse);
+    const graphqlConfig = loadConfigSync({
+      rootDir: directory,
+      filepath: graphqlConfigPath,
+      throwOnMissing: true,
+      throwOnEmpty: true,
+    });
 
-    const staticGlobalsPromise = schemaDocumentPromise.then(
-      extractTypeFromSchema
-    );
+    const schemaInfosPromise = graphqlConfig
+      .getDefault()
+      .getSchema('DocumentNode')
+      .then(async (schemaDocument) => ({
+        schemaDocument,
+        staticGlobals: await extractTypeFromSchema(schemaDocument),
+      }))
+      .catch(logErrorRoot);
 
     return async (filename: string, initialSource: string) => {
       const logError = getLogError(logger, filename);
@@ -52,11 +49,16 @@ export const createSourceUpdater = (
       try {
         const literalOccurenceList = parseLiteralOccurenceList(initialSource);
 
-        if (literalOccurenceList.length === 0) {
+        const schemaInfos = await schemaInfosPromise;
+        if (!schemaInfos) {
           return initialSource;
         }
 
-        const schemaDocument = await schemaDocumentPromise;
+        const { schemaDocument, staticGlobals } = schemaInfos;
+
+        if (literalOccurenceList.length === 0) {
+          return initialSource;
+        }
 
         const documentInfosPromiseList = literalOccurenceList.map(
           async (literal) => {
@@ -69,12 +71,9 @@ export const createSourceUpdater = (
           }
         );
 
-        const [staticGlobals, documentInfosList] = await Promise.all([
-          staticGlobalsPromise,
-          Promise.all(documentInfosPromiseList).then((list) =>
-            list.filter(isNonNullable)
-          ),
-        ]);
+        const documentInfosList = await Promise.all(
+          documentInfosPromiseList
+        ).then((list) => list.filter(isNonNullable));
 
         const bottomContent = generateBottomContent(
           documentInfosList,
