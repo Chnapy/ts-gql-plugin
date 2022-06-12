@@ -1,38 +1,48 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable unicorn/consistent-function-scoping */
-import fs from 'node:fs';
+import { parse } from 'graphql';
+import * as createUniqueStringExport from '../utils/create-unique-string';
 import { Logger } from '../utils/logger';
 import { createSourceUpdater } from './create-source-updater';
 import { formatTS } from './test-utils';
-import * as createUniqueStringExport from '../utils/create-unique-string';
 
 describe('Create source updater', () => {
-  const initialReadFile = fs.readFile;
-  const setFSReadFile = (
-    fn: (
-      path: string,
-      options: any,
-      cb: (error: any, data: any) => void
-    ) => void
-  ) => {
-    fs.readFile = Object.assign(fn as any, {
-      __promisify__: fn,
-    });
-  };
+  vi.mock('graphql-config', () => ({
+    loadConfigSync: ({ filepath }: any) => ({
+      getDefault: () => ({
+        getSchema: () =>
+          new Promise((resolve, reject) => {
+            if (filepath === 'ok') {
+              return resolve(
+                parse(`
+                  type User {
+                    id: ID!
+                    oauthId: String!
+                    email: String!
+                    name: String!
+                    picture: String
+                  }
+
+                  type Query {
+                    users: [User!]!
+                    user(id: ID!): User!
+                    toto(id: ID!): User!
+                  }
+                `)
+              );
+            }
+
+            reject(new Error('SCHEMA NOT FOUND'));
+          }),
+      }),
+    }),
+  }));
 
   const createFakeLogger = (): Logger => ({
     log: vi.fn(),
     error: vi.fn(),
     verbose: vi.fn(),
     debug: vi.fn(),
-  });
-
-  beforeEach(() => {
-    setFSReadFile(
-      vi.fn((...args) => {
-        throw new Error(`fs.readFile should be overriden [${args}]`);
-      })
-    );
   });
 
   afterEach(() => {
@@ -58,41 +68,17 @@ describe('Create source updater', () => {
 
     const updateScriptSnapshot = createSourceUpdater('', {}, logger);
 
-    expect(logger.error).toHaveBeenCalled();
-
     expect(await updateScriptSnapshot('', '')).toBe('');
+
+    expect(logger.error).toHaveBeenCalled();
   });
 
   it('gives same source if no occurrence found', async () => {
     const logger = createFakeLogger();
 
-    const schema = `
-    type User {
-      id: ID!
-      oauthId: String!
-      email: String!
-      name: String!
-      picture: String
-    }
-    
-    type Query {
-      users: [User!]!
-      user(id: ID!): User!
-    }
-    `;
-
-    const schemaPath = 'foobar';
-
-    setFSReadFile((path, options, cb) => {
-      if (path.toString().endsWith(schemaPath)) {
-        cb(null, schema);
-      }
-      initialReadFile(path, options, cb);
-    });
-
     const updateScriptSnapshot = createSourceUpdater(
       '',
-      { schema: schemaPath },
+      { graphqlConfigPath: 'ok' },
       logger
     );
 
@@ -133,31 +119,6 @@ describe('Create source updater', () => {
   it('gives updated source', async () => {
     const logger = createFakeLogger();
 
-    const schema = `
-      type User {
-        id: ID!
-        oauthId: String!
-        email: String!
-        name: String!
-        picture: String
-      }
-      
-      type Query {
-        users: [User!]!
-        user(id: ID!): User!
-        toto(id: ID!): User!
-      }
-    `;
-
-    const schemaPath = 'foobar';
-
-    setFSReadFile((path, options, cb) => {
-      if (path.toString().endsWith(schemaPath)) {
-        cb(null, schema);
-      }
-      initialReadFile(path, options, cb);
-    });
-
     const createUniqueStringSpy = vi.spyOn(
       createUniqueStringExport,
       'createUniqueString'
@@ -166,7 +127,7 @@ describe('Create source updater', () => {
 
     const updateScriptSnapshot = createSourceUpdater(
       '',
-      { schema: schemaPath },
+      { graphqlConfigPath: 'ok' },
       logger
     );
 

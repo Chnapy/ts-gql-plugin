@@ -5,7 +5,6 @@
     "plugins": [
       {
         "name": "ts-gql-plugin",
-        "schema": "./schema.graphql",
         "logLevel": "verbose"
       }
     ]
