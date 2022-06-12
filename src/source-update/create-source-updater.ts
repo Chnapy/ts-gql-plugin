@@ -32,10 +32,12 @@ export const createSourceUpdater = (
       filepath: graphqlConfigPath,
       throwOnMissing: true,
       throwOnEmpty: true,
-    });
+    }).getDefault();
+
+    logger.log(`GraphQL config loaded from ${graphqlConfig.filepath}`);
+    logger.log(`GraphQL schema loaded from ${graphqlConfig.schema}`);
 
     const schemaInfosPromise = graphqlConfig
-      .getDefault()
       .getSchema('DocumentNode')
       .then(async (schemaDocument) => ({
         schemaDocument,
