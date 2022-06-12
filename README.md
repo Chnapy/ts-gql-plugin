@@ -27,11 +27,19 @@ Then add plugin to your `tsconfig.json`
   "compilerOptions": {
     "plugins": [
       {
-        "name": "ts-gql-plugin",
-        "schema": "./schema.graphql"
+        "name": "ts-gql-plugin"
       }
     ]
   }
+}
+```
+
+Since this plugin use [graphql-config](https://www.graphql-config.com/docs/user/user-introduction) you should add a config file targeting your GraphQL schema.
+
+```json
+// .graphqlrc
+{
+  "schema": "./schema.graphql"
 }
 ```
 
@@ -69,10 +77,10 @@ gql(`#graphql
 
 ## Configuration
 
-| Property | Description                                                                          |
-| -------- | ------------------------------------------------------------------------------------ |
-| schema   | **Required.** Path to GraphQL schema.                                                |
-| logLevel | Plugin log level. Values `'default'` - `'verbose'` - `'debug'`. Default `'default'`. |
+| Property          | Description                                                                                                                                                                                           |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| graphqlConfigPath | Optional. Path to GraphQL config file. By default `graphql-config` will lookup to current directory [multiple file naming](https://www.graphql-config.com/docs/user/user-usage#config-search-places). |
+| logLevel          | Optional. Plugin log level. Values `'default'` - `'verbose'` - `'debug'`. Default `'default'`.                                                                                                        |
 
 > Checkout config type in [plugin-config.ts](./src/plugin-config.ts).
 
@@ -102,6 +110,8 @@ You can see plugin logs openning TS server log
 ```
 
 Then search for `ts-gql-plugin` occurences.
+
+> To see more logs consider passing `logLevel` to `'verbose'` !
 
 ### GraphQL extension
 
@@ -147,7 +157,7 @@ gql`
 
 ### Issues
 
-Please fill issues with relevant logs.
+Please fill issues with reproductible steps & relevant logs (check VSCode [TS server logs](#ts-server-logs)).
 
 ### Work on this project - get started
 
