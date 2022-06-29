@@ -6,4 +6,9 @@ export type PluginConfig = {
   graphqlConfigPath?: string;
 
   logLevel?: 'default' | 'verbose' | 'debug';
+
+  /**
+   * Regex applied to operation to extract its project name.
+   */
+  projectNameRegex?: string;
 };

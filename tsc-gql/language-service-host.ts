@@ -22,6 +22,8 @@ export const createLanguageServiceHost = (
     })
   );
 
+  const browsedFileNames = new Set<string>();
+
   return {
     getScriptFileNames: () => fileNames,
     getScriptVersion: () => '0',
@@ -31,6 +33,12 @@ export const createLanguageServiceHost = (
       }
 
       const source = fs.readFileSync(fileName).toString();
+
+      if (browsedFileNames.has(fileName)) {
+        return ts.ScriptSnapshot.fromString(source);
+      }
+
+      browsedFileNames.add(fileName);
 
       if (isValidFilename(fileName)) {
         return ts.ScriptSnapshot.fromString(

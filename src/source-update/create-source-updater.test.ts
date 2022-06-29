@@ -9,12 +9,13 @@ import { formatTS } from './test-utils';
 describe('Create source updater', () => {
   vi.mock('graphql-config', () => ({
     loadConfigSync: ({ filepath }: any) => ({
-      getDefault: () => ({
-        getSchema: () =>
-          new Promise((resolve, reject) => {
-            if (filepath === 'ok') {
-              return resolve(
-                parse(`
+      projects: {
+        default: {
+          getSchema: () =>
+            new Promise((resolve, reject) => {
+              if (filepath === 'ok') {
+                return resolve(
+                  parse(`
                   type User {
                     id: ID!
                     oauthId: String!
@@ -29,12 +30,13 @@ describe('Create source updater', () => {
                     toto(id: ID!): User!
                   }
                 `)
-              );
-            }
+                );
+              }
 
-            reject(new Error('SCHEMA NOT FOUND'));
-          }),
-      }),
+              reject(new Error('SCHEMA NOT FOUND'));
+            }),
+        },
+      },
     }),
   }));
 
@@ -69,8 +71,6 @@ describe('Create source updater', () => {
     const updateScriptSnapshot = createSourceUpdater('', {}, logger);
 
     expect(await updateScriptSnapshot('', '')).toBe('');
-
-    expect(logger.error).toHaveBeenCalled();
   });
 
   it('gives same source if no occurrence found', async () => {

@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 
 const { data: abc } = useQuery(
   gql(`#graphql
-  query User1($id: ID!) {
+  query CatalogUser1($id: ID!) {
     user(id: $id) {
       id
       name
@@ -17,7 +17,7 @@ const { data: abc } = useQuery(
 
 const { data } = useQuery(
   gql(`#graphql
-  query User2($id: ID!) {
+  query CatalogUser2($id: ID!) {
     user(id: $id) {
       id
       name
@@ -31,7 +31,7 @@ const { data } = useQuery(
 
 const { data: foo } = useQuery(
   gql(`#graphql
-  query User3($id: ID!) {
+  query ProfileUser1($id: ID!) {
     user(id: $id) {
       id
       name
@@ -45,7 +45,7 @@ const { data: foo } = useQuery(
 
 const { data: azer } = useQuery(
   gql(`#graphql
-  query User4($id: ID!) {
+  query ProfileUser2($id: ID!) {
     authByGoogle(code: "foo") {
       id
       accessToken
