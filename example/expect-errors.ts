@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 
 const { data } = useQuery(
   gql(`#graphql
-  query UserFoo($id: ID!) {
+  query CatalogUserFoo($id: ID!) {
     user(id: $id) {
       id
       name
