@@ -81,8 +81,65 @@ gql(`#graphql
 | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | graphqlConfigPath | Optional. Path to GraphQL config file. By default `graphql-config` will lookup to current directory [multiple file naming](https://www.graphql-config.com/docs/user/user-usage#config-search-places). |
 | logLevel          | Optional. Plugin log level. Values `'default'` - `'verbose'` - `'debug'`. Default `'default'`.                                                                                                        |
+| projectNameRegex | Optional. For multi-projects GraphQL config, regex for extracting project name from operation. |
 
 > Checkout config type in [plugin-config.ts](./src/plugin-config.ts).
+### Multi-projects configuration
+
+If you should handle multiple GraphQL projects (= multiple schemas), define projects into your graphql-config file.
+
+```json
+// .graphqlrc
+{
+  "projects": {
+    "Catalog": {
+      "schema": "./catalog/schema.graphql"
+    },
+    "Channel": {
+      "schema": "./channel/schema.graphql"
+    },
+  }
+}
+```
+
+Then into your plugin config define project name regex, following your own constraints.
+This regex is used to extract project name from operations.
+```json
+{
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "ts-gql-plugin",
+        "projectNameRegex": "([A-Z][a-z]*)"
+      }
+    ]
+  }
+}
+```
+
+Finally, create your operations following regex constraints.
+
+```ts
+gql(`#graphql
+  query CatalogProduct($id: ID!) {
+    product(id: $id) {
+      id
+      name
+    }
+  }
+`);
+
+gql(`#graphql
+  query ChannelItem($id: ID!) {
+    item(id: $id) {
+      id
+      name
+    }
+  }
+`);
+```
+
+With this kind of configuration, each of these operations match corresponding project, so its own schema.
 
 ## VSCode
 
