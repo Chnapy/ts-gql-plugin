@@ -7,5 +7,6 @@
 !.yarn/versions
 
 node_modules/
+coverage/
 
 dist/
