@@ -6,8 +6,7 @@ import { createSourceUpdater } from './create-source-updater';
 import { formatTS } from './test-utils';
 import { join } from 'node:path';
 
-const resolveTestFile = (path: string) =>
-  require.resolve(join('/workspace/src/test-files', path));
+const resolveTestFile = (path: string) => join('src/test-files', path);
 
 const singleProjectPath = resolveTestFile('single-project/.graphqlrc');
 const multiProjectPath = resolveTestFile('multi-project/.graphqlrc');
