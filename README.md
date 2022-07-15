@@ -77,13 +77,45 @@ gql(`
 
 ## Configuration
 
+Configuration can be done at 2 levels: in tsconfig.json and in graphql-config file.
+
+### tsconfig.json
+
 | Property          | Description                                                                                                                                                                                           |
 | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | graphqlConfigPath | Optional. Path to GraphQL config file. By default `graphql-config` will lookup to current directory [multiple file naming](https://www.graphql-config.com/docs/user/user-usage#config-search-places). |
 | logLevel          | Optional. Plugin log level. Values `'default'` - `'verbose'` - `'debug'`. Default `'default'`.                                                                                                        |
-| projectNameRegex | Optional. For multi-projects GraphQL config, regex for extracting project name from operation. |
+| projectNameRegex  | Optional. For multi-projects GraphQL config, regex for extracting project name from operation.                                                                                                        |
 
 > Checkout config type in [plugin-config.ts](./src/plugin-config.ts).
+
+### graphql-config
+
+You can add project-related configuration using extension `"ts-gql"`.
+
+```json
+// .graphqlrc
+{
+  "schema": "./schema.graphql",
+  "extensions": {
+    "ts-gql": {
+      "codegenConfig": {
+        "defaultScalarType": "unknown",
+        "scalars": {
+          "DateTime": "String"
+        }
+      }
+    }
+  }
+}
+```
+
+| Property      | Description                                                                                                                                                                                                                                                                                                                                                |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| codegenConfig | Optional. [graphql-codegen](https://www.graphql-code-generator.com/) configuration, using plugins [typescript](https://www.graphql-code-generator.com/plugins/typescript/typescript#config-api-reference) and [typescript-operations](https://www.graphql-code-generator.com/plugins/typescript/typescript-operations#config-api-reference) configuration. |
+
+> Checkout config type in [extension-config.ts](./src/extension-config.ts).
+
 ### Multi-projects configuration
 
 If you should handle multiple GraphQL projects (= multiple schemas), define projects into your graphql-config file.
@@ -97,13 +129,16 @@ If you should handle multiple GraphQL projects (= multiple schemas), define proj
     },
     "Channel": {
       "schema": "./channel/schema.graphql"
-    },
+    }
   }
 }
 ```
 
+> graphql-config extensions should not be added in root level, but in each projects
+
 Then into your plugin config define project name regex, following your own constraints.
 This regex is used to extract project name from operations.
+
 ```json
 {
   "compilerOptions": {

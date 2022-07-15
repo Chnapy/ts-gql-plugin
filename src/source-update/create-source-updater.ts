@@ -43,7 +43,8 @@ export const createSourceUpdater = (
 
               return await extractTypeFromLiteral(
                 literal,
-                project.schemaDocument
+                project.schemaDocument,
+                project.extension.codegenConfig
               );
             } catch (error) {
               logger.error(error);
