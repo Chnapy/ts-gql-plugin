@@ -2,7 +2,7 @@ import { gql } from 'graphql-tag';
 import { useQuery } from '@apollo/client';
 
 const { data } = useQuery(
-  gql(`#graphql
+  gql(`
   query CatalogUserFoo($id: ID!) {
     user(id: $id) {
       id

@@ -60,7 +60,7 @@ A concrete example:
 import { gql } from 'graphql-tag';
 
 // TypedDocumentNode<{ user, users }, { id }>
-gql(`#graphql
+gql(`
   query User1($id: ID!) {
     user(id: $id) {
       id
@@ -120,7 +120,7 @@ This regex is used to extract project name from operations.
 Finally, create your operations following regex constraints.
 
 ```ts
-gql(`#graphql
+gql(`
   query CatalogProduct($id: ID!) {
     product(id: $id) {
       id
@@ -129,7 +129,7 @@ gql(`#graphql
   }
 `);
 
-gql(`#graphql
+gql(`
   query ChannelItem($id: ID!) {
     item(id: $id) {
       id
@@ -173,14 +173,6 @@ Then search for `ts-gql-plugin` occurences.
 ### GraphQL extension
 
 To have highlighting between other features, you can use [GraphQL extension](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql) for VSCode.
-
-Just keep in mind this extension requires to add a specific tag (`#graphql`) into your literals to be highlighten:
-
-```ts
-gql(`#graphql
-  query {...}
-`);
-```
 
 ## CLI
 
