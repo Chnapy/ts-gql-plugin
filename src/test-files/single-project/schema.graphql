@@ -1,0 +1,13 @@
+type User {
+  id: ID!
+  oauthId: String!
+  email: String!
+  name: String!
+  picture: String
+}
+
+type Query {
+  users: [User!]!
+  user(id: ID!): User!
+  toto(id: ID!): User!
+}

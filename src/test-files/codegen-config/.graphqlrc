@@ -1,0 +1,13 @@
+{
+  "schema": "./schema.graphql",
+  "extensions": {
+    "ts-gql": {
+      "codegenConfig": {
+        "defaultScalarType": "unknown",
+        "scalars": {
+          "DateTime": "String"
+        }
+      }
+    }
+  }
+}

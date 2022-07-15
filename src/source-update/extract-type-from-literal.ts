@@ -11,7 +11,8 @@ const plugins = [typescriptOperationsPlugin];
 
 export const extractTypeFromLiteral = async (
   literal: string,
-  schema: DocumentNode
+  schema: DocumentNode,
+  codegenConfig: typescriptOperationsPlugin.TypeScriptDocumentsPluginConfig = {}
 ): Promise<DocumentInfos> => {
   const document = parse(literal);
 
@@ -23,9 +24,10 @@ export const extractTypeFromLiteral = async (
     {}
   );
 
-  const config = {
+  const config: typescriptOperationsPlugin.TypeScriptDocumentsPluginConfig = {
     noExport: true,
     operationResultSuffix: 'Operation',
+    ...codegenConfig,
     // typesPrefix: 'I',
     // globalNamespace: true,
     // preResolveTypes: false,

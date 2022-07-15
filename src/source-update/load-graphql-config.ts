@@ -1,8 +1,16 @@
 import { DocumentNode } from 'graphql';
 import { loadConfigSync } from 'graphql-config';
+import { ExtensionConfig } from '../extension-config';
 import { PluginConfig } from '../plugin-config';
 import { Logger } from '../tools';
+import { getProjectExtension, tsGqlExtension } from './extension';
 import { extractTypeFromSchema } from './extract-type-from-schema';
+
+type ProjectInfos = {
+  schemaDocument: DocumentNode;
+  staticGlobals: string;
+  extension: ExtensionConfig;
+};
 
 const defaultProjectName = 'default';
 
@@ -19,6 +27,7 @@ export const loadGraphQLConfig = (
     filepath: graphqlConfigPath,
     throwOnMissing: true,
     throwOnEmpty: true,
+    extensions: [tsGqlExtension],
   });
 
   const graphqlProjectsMap = graphqlConfig.projects;
@@ -38,19 +47,18 @@ export const loadGraphQLConfig = (
   );
 
   const schemaInfosPromiseMap = graphqlProjects.reduce<
-    Record<
-      string,
-      Promise<{
-        schemaDocument: DocumentNode;
-        staticGlobals: string;
-      } | null>
-    >
+    Record<string, Promise<ProjectInfos | null>>
   >((map, project) => {
+    const extension = getProjectExtension(project);
     map[project.name] = project
       .getSchema('DocumentNode')
       .then(async (schemaDocument) => ({
         schemaDocument,
-        staticGlobals: await extractTypeFromSchema(schemaDocument),
+        staticGlobals: await extractTypeFromSchema(
+          schemaDocument,
+          extension.codegenConfig
+        ),
+        extension,
       }))
       .catch(logger.error);
 

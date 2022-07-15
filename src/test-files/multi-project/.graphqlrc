@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "Catalog": {
+      "schema": "./catalog-schema.graphql"
+    },
+    "Channel": {
+      "schema": "./channel-schema.graphql"
+    }
+  }
+}

@@ -6,7 +6,8 @@ type CodegenPlugin = typeof plugins[number];
 const plugins = [typescriptPlugin];
 
 export const extractTypeFromSchema = async (
-  schema: DocumentNode
+  schema: DocumentNode,
+  codegenConfig: typescriptPlugin.TypeScriptPluginConfig = {}
 ): Promise<string> => {
   const pluginMap = plugins.reduce<Record<number, CodegenPlugin>>(
     (map, plugin, i) => {
@@ -16,8 +17,9 @@ export const extractTypeFromSchema = async (
     {}
   );
 
-  const config = {
+  const config: typescriptPlugin.TypeScriptPluginConfig = {
     noExport: true,
+    ...codegenConfig,
     // operationResultSuffix: 'Operation',
     // typesPrefix: 'I',
     // globalNamespace: true,
