@@ -1,5 +1,5 @@
 export const isValidFilename = (filename: string) => {
-  const tsFilenameRegex = /.+[^.d].tsx?$/;
+  const tsFilenameRegex = /^.+(?<!\.d)\.tsx?$/;
 
   return tsFilenameRegex.test(filename);
 };
