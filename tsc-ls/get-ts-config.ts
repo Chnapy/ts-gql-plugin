@@ -2,7 +2,7 @@ import path from 'node:path';
 import ts from 'typescript';
 
 export const getTSConfig = () => {
-  const args = ts.sys.args.slice(1);
+  const args = ts.sys.args;
 
   const commandLine = ts.parseCommandLine(args, ts.sys.readFile);
 

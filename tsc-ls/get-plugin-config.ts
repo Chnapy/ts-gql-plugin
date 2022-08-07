@@ -1,7 +1,9 @@
 import { PluginConfig } from 'ts-gql-plugin/tools';
 import ts from 'typescript';
 
-export const getPluginConfig = (options: ts.CompilerOptions): PluginConfig => {
+export const getPluginConfig = (
+  options: ts.CompilerOptions
+): PluginConfig | null => {
   const plugins: unknown[] = Array.isArray(options.plugins)
     ? options.plugins
     : [];
@@ -13,11 +15,5 @@ export const getPluginConfig = (options: ts.CompilerOptions): PluginConfig => {
       (plugin as Record<string, unknown>).name === 'ts-gql-plugin'
   );
 
-  if (!config) {
-    throw new Error(
-      'ts-gql-plugin not found in tsconfig#compilerOptions.plugins[]'
-    );
-  }
-
-  return config;
+  return config ?? null;
 };

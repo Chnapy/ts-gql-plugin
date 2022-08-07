@@ -5580,6 +5580,8 @@ __metadata:
   peerDependencies:
     graphql: ">= 16"
     graphql-tag: ">= 2"
+  bin:
+    ts-gql: ./tsc-ls/dist/tsc-ls.js
   languageName: unknown
   linkType: soft
 

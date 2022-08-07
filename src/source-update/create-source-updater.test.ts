@@ -24,13 +24,16 @@ describe('Create source updater', () => {
   it('gives noop function on any error', async () => {
     const logger = createFakeLogger();
 
+    const errorCatcher = vi.fn(() => null);
+
     const updateScriptSnapshot = createSourceUpdater(
       null as any,
       null as any,
-      logger
+      logger,
+      errorCatcher
     );
 
-    expect(logger.error).toHaveBeenCalled();
+    expect(errorCatcher).toHaveBeenCalled();
 
     expect(await updateScriptSnapshot('', '')).toBe('');
   });
@@ -38,7 +41,14 @@ describe('Create source updater', () => {
   it('gives noop function if schema not defined', async () => {
     const logger = createFakeLogger();
 
-    const updateScriptSnapshot = createSourceUpdater('', {}, logger);
+    const errorCatcher = vi.fn(() => null);
+
+    const updateScriptSnapshot = createSourceUpdater(
+      '',
+      {},
+      logger,
+      errorCatcher
+    );
 
     expect(await updateScriptSnapshot('', '')).toBe('');
   });
@@ -49,7 +59,10 @@ describe('Create source updater', () => {
     const updateScriptSnapshot = createSourceUpdater(
       '',
       { graphqlConfigPath: singleProjectPath },
-      logger
+      logger,
+      (err) => {
+        throw err;
+      }
     );
 
     const source = `
@@ -98,7 +111,10 @@ describe('Create source updater', () => {
     const updateScriptSnapshot = createSourceUpdater(
       '',
       { graphqlConfigPath: singleProjectPath },
-      logger
+      logger,
+      (err) => {
+        throw err;
+      }
     );
 
     const query1 = `gql(\`
@@ -300,7 +316,10 @@ describe('Create source updater', () => {
         graphqlConfigPath: multiProjectPath,
         projectNameRegex: '([A-Z][a-z]*)',
       },
-      logger
+      logger,
+      (err) => {
+        throw err;
+      }
     );
 
     const query1 = `gql(\`
@@ -527,7 +546,10 @@ describe('Create source updater', () => {
     const updateScriptSnapshot = createSourceUpdater(
       '',
       { graphqlConfigPath: codegenConfigPath },
-      logger
+      logger,
+      (err) => {
+        throw err;
+      }
     );
 
     const query1 = `gql(\`
