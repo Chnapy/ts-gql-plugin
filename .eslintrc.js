@@ -134,7 +134,7 @@ module.exports = {
     project: [
       './tsconfig.json',
       './example/tsconfig.json',
-      './tsc-gql/tsconfig.json',
+      './tsc-ls/tsconfig.json',
     ],
     tsconfigRootDir: '.',
     sourceType: 'module',

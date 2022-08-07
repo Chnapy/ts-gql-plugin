@@ -1,9 +1,17 @@
+import ts from 'typescript/lib/tsserverlibrary';
 import { PluginConfig } from '../plugin-config';
 import { Logger } from '../utils/logger';
 import { extractTypeFromLiteral } from './extract-type-from-literal';
 import { generateBottomContent } from './generate-bottom-content';
 import { loadGraphQLConfig } from './load-graphql-config';
 import { parseLiteralOccurenceList } from './parse-literal-occurence-list';
+
+export type ErrorCatcher = (
+  err: unknown,
+  sourceFile?: ts.SourceFile,
+  start?: number,
+  length?: number
+) => null;
 
 const isNonNullable = <I>(item: I | null): item is I => !!item;
 
@@ -13,17 +21,22 @@ const noopSource = async (_filename: string, initialSource: string) =>
 export const createSourceUpdater = (
   directory: string,
   config: PluginConfig,
-  logger: Logger
+  logger: Logger,
+  errorCatcher: ErrorCatcher
 ) => {
   try {
     const { getProjectFromLiteral } = loadGraphQLConfig(
       directory,
       logger,
+      errorCatcher,
       config
     );
 
     return async (filename: string, initialSource: string) => {
       logger.setFilename(filename);
+
+      const createSourceFile = () =>
+        ts.createSourceFile(filename, initialSource, ts.ScriptTarget.ESNext);
 
       try {
         const literalOccurenceList = parseLiteralOccurenceList(initialSource);
@@ -47,7 +60,12 @@ export const createSourceUpdater = (
                 project.extension.codegenConfig
               );
             } catch (error) {
-              logger.error(error);
+              errorCatcher(
+                error,
+                createSourceFile(),
+                initialSource.indexOf(literal),
+                literal.length
+              );
               return null;
             }
           }
@@ -70,12 +88,12 @@ export const createSourceUpdater = (
 
         return finalSource;
       } catch (mainError) {
-        logger.error(mainError);
+        errorCatcher(mainError, createSourceFile());
         return initialSource;
       }
     };
   } catch (rootError) {
-    logger.error(rootError);
+    errorCatcher(rootError);
     return noopSource;
   }
 };

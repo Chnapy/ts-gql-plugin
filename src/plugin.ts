@@ -1,13 +1,23 @@
 import TSL from 'typescript/lib/tsserverlibrary';
 import { PluginConfig } from './plugin-config';
-import { createSourceUpdater } from './source-update/create-source-updater';
+import {
+  createSourceUpdater,
+  ErrorCatcher,
+} from './source-update/create-source-updater';
 import { createLogger } from './utils/logger';
 import { objectOverride } from './utils/object-override';
 import { waitPromiseSync } from './utils/wait-promise-sync';
 import { isValidFilename, isValidSourceFile } from './utils/is-valid-file';
 import { getSnapshotSource } from './utils/get-snapshot-source';
 
-const init = (modules: { typescript: typeof TSL }) => {
+type CompilerOptions = {
+  errorCatcher?: ErrorCatcher;
+};
+
+const init = (
+  modules: { typescript: typeof TSL },
+  compilerOptions: CompilerOptions = {}
+) => {
   const ts = modules.typescript;
 
   const create = (info: ts.server.PluginCreateInfo) => {
@@ -24,7 +34,12 @@ const init = (modules: { typescript: typeof TSL }) => {
 
     const overrideTS = objectOverride(ts);
 
-    const updateSource = createSourceUpdater(directory, config, logger);
+    const updateSource = createSourceUpdater(
+      directory,
+      config,
+      logger,
+      compilerOptions.errorCatcher ?? logger.error
+    );
 
     overrideTS(
       'createLanguageServiceSourceFile',

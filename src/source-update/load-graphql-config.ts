@@ -2,7 +2,7 @@ import { DocumentNode } from 'graphql';
 import { loadConfigSync } from 'graphql-config';
 import { ExtensionConfig } from '../extension-config';
 import { PluginConfig } from '../plugin-config';
-import { Logger } from '../tools';
+import { ErrorCatcher, Logger } from '../tools';
 import { getProjectExtension, tsGqlExtension } from './extension';
 import { extractTypeFromSchema } from './extract-type-from-schema';
 
@@ -17,6 +17,7 @@ const defaultProjectName = 'default';
 export const loadGraphQLConfig = (
   directory: string,
   logger: Logger,
+  errorCatcher: ErrorCatcher,
   {
     graphqlConfigPath,
     projectNameRegex,
@@ -60,7 +61,7 @@ export const loadGraphQLConfig = (
         ),
         extension,
       }))
-      .catch(logger.error);
+      .catch(errorCatcher);
 
     return map;
   }, {});

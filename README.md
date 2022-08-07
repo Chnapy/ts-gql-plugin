@@ -216,7 +216,7 @@ Because of [Language Service design limitations](https://github.com/microsoft/Ty
 There is no concrete solution for this issue, [it's requested for a while](https://github.com/microsoft/TypeScript/issues/16607).
 But a workaround is possible, creating a script which run build/type-check using Language Service, and so this plugin.
 
-You can find a working example in [tsc-gql/tsc-gql.ts](./tsc-gql/tsc-gql.ts).
+You can find a working example in [tsc-ls/tsc-ls.ts](./tsc-ls/tsc-ls.ts).
 
 Check also how this script is used in [package.json](./package.json) with script `c:type-gql`.
 
