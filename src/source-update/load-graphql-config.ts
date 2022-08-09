@@ -1,8 +1,9 @@
 import { DocumentNode } from 'graphql';
 import { loadConfigSync } from 'graphql-config';
+import { ErrorCatcher } from '../create-error-catcher';
 import { ExtensionConfig } from '../extension-config';
 import { PluginConfig } from '../plugin-config';
-import { ErrorCatcher, Logger } from '../tools';
+import { Logger } from '../tools';
 import { getProjectExtension, tsGqlExtension } from './extension';
 import { extractTypeFromSchema } from './extract-type-from-schema';
 

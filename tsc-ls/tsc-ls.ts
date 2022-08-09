@@ -1,5 +1,7 @@
 #!/usr/bin/env ts-node
 
+// TODO remove this folder, use tsc-ls package instead
+
 import ts from 'typescript/lib/tsserverlibrary';
 import { getPluginConfig } from './get-plugin-config';
 import { createLanguageServiceHost } from './language-service-host';
@@ -12,8 +14,6 @@ const pluginConfig = getPluginConfig(tsConfig.options);
 
 const languageServiceHost = createLanguageServiceHost(tsConfig, basePath);
 
-const diagnostics: ts.Diagnostic[] = [];
-
 const languageService = initPlugin({
   basePath,
   pluginConfig,
@@ -22,17 +22,14 @@ const languageService = initPlugin({
     ts.createDocumentRegistry()
   ),
   languageServiceHost,
-  diagnostics,
 });
 
 process.nextTick(() => {
   const program = languageService.getProgram();
   const files = program!.getSourceFiles();
 
-  diagnostics.push(
-    ...files.flatMap((sf) =>
-      languageService.getSemanticDiagnostics(sf.fileName)
-    )
+  const diagnostics = files.flatMap((sf) =>
+    languageService.getSemanticDiagnostics(sf.fileName)
   );
 
   process.stdout.write(
