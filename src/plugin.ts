@@ -1,28 +1,23 @@
 import TSL from 'typescript/lib/tsserverlibrary';
+import { createErrorCatcher } from './create-error-catcher';
+import { createLanguageServiceProxy } from './create-language-service-proxy';
 import { PluginConfig } from './plugin-config';
-import {
-  createSourceUpdater,
-  ErrorCatcher,
-} from './source-update/create-source-updater';
+import { createSourceUpdater } from './source-update/create-source-updater';
+import { getSnapshotSource } from './utils/get-snapshot-source';
+import { isValidFilename, isValidSourceFile } from './utils/is-valid-file';
+import { isVSCodeEnv } from './utils/is-vscode-env';
 import { createLogger } from './utils/logger';
 import { objectOverride } from './utils/object-override';
 import { waitPromiseSync } from './utils/wait-promise-sync';
-import { isValidFilename, isValidSourceFile } from './utils/is-valid-file';
-import { getSnapshotSource } from './utils/get-snapshot-source';
 
-type CompilerOptions = {
-  errorCatcher?: ErrorCatcher;
-};
-
-const init = (
-  modules: { typescript: typeof TSL },
-  compilerOptions: CompilerOptions = {}
-) => {
+const init = (modules: { typescript: typeof TSL }) => {
   const ts = modules.typescript;
 
   const create = (info: ts.server.PluginCreateInfo) => {
     const { project, languageService } = info;
     const config = info.config as PluginConfig;
+
+    const vsCodeEnv = isVSCodeEnv();
 
     const logger = createLogger(config.logLevel, project.projectService.logger);
 
@@ -30,7 +25,16 @@ const init = (
 
     logger.log('Plugin started');
 
+    logger.log(`Running in ${vsCodeEnv ? 'VS Code' : 'CLI'} env`);
+
     logger.log(`Plugin config ${JSON.stringify(config)}`);
+
+    const { errorCatcher, gqlDiagnosticsMap } = createErrorCatcher(logger);
+
+    const languageServiceProxy = createLanguageServiceProxy(
+      languageService,
+      gqlDiagnosticsMap
+    );
 
     const overrideTS = objectOverride(ts);
 
@@ -38,7 +42,8 @@ const init = (
       directory,
       config,
       logger,
-      compilerOptions.errorCatcher ?? logger.error
+      errorCatcher,
+      project.getCompilerOptions().target
     );
 
     overrideTS(
@@ -95,7 +100,7 @@ const init = (
         }
     );
 
-    return languageService;
+    return languageServiceProxy;
   };
 
   return { create };

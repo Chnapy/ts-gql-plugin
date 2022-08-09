@@ -8,12 +8,8 @@
     ".": "./dist/plugin.js",
     "./tools": "./dist/tools.js"
   },
-  "bin": {
-    "ts-gql": "./tsc-ls/dist/tsc-ls.js"
-  },
   "files": [
-    "dist",
-    "tsc-ls/dist"
+    "dist"
   ],
   "description": "TypeScript Language Service Plugin for GraphQL DocumentNode typing",
   "author": {
@@ -39,7 +35,7 @@
     "c:type": "tsc --noEmit",
     "c:test": "yarn c:test:watch --run",
     "c:test:watch": "vitest --outputTruncateLength=9999 --passWithNoTests",
-    "build": "tsc -p tsconfig.build.json && tsc -p tsc-ls/tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json",
     "c:type-gql": "ts-node tsc-ls/tsc-ls.ts -p ./example/tsconfig.json"
   },
   "dependencies": {

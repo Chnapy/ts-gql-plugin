@@ -1,17 +1,11 @@
 import ts from 'typescript/lib/tsserverlibrary';
+import { ErrorCatcher } from '../create-error-catcher';
 import { PluginConfig } from '../plugin-config';
 import { Logger } from '../utils/logger';
 import { extractTypeFromLiteral } from './extract-type-from-literal';
 import { generateBottomContent } from './generate-bottom-content';
 import { loadGraphQLConfig } from './load-graphql-config';
 import { parseLiteralOccurenceList } from './parse-literal-occurence-list';
-
-export type ErrorCatcher = (
-  err: unknown,
-  sourceFile?: ts.SourceFile,
-  start?: number,
-  length?: number
-) => null;
 
 const isNonNullable = <I>(item: I | null): item is I => !!item;
 
@@ -22,7 +16,8 @@ export const createSourceUpdater = (
   directory: string,
   config: PluginConfig,
   logger: Logger,
-  errorCatcher: ErrorCatcher
+  errorCatcher: ErrorCatcher,
+  scriptTarget: ts.ScriptTarget = ts.ScriptTarget.ESNext
 ) => {
   try {
     const { getProjectFromLiteral } = loadGraphQLConfig(
@@ -36,7 +31,7 @@ export const createSourceUpdater = (
       logger.setFilename(filename);
 
       const createSourceFile = () =>
-        ts.createSourceFile(filename, initialSource, ts.ScriptTarget.ESNext);
+        ts.createSourceFile(filename, initialSource, scriptTarget);
 
       try {
         const literalOccurenceList = parseLiteralOccurenceList(initialSource);
