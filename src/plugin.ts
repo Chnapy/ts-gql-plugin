@@ -1,6 +1,6 @@
 import TSL from 'typescript/lib/tsserverlibrary';
 import { createErrorCatcher } from './create-error-catcher';
-import { createLanguageServiceProxy } from './create-language-service-proxy';
+import { createLanguageServiceWithDiagnostics } from './create-language-service-proxy';
 import { PluginConfig } from './plugin-config';
 import { createSourceUpdater } from './source-update/create-source-updater';
 import { getSnapshotSource } from './utils/get-snapshot-source';
@@ -29,11 +29,12 @@ const init = (modules: { typescript: typeof TSL }) => {
 
     logger.log(`Plugin config ${JSON.stringify(config)}`);
 
-    const { errorCatcher, gqlDiagnosticsMap } = createErrorCatcher(logger);
+    const languageServiceWithDiagnostics =
+      createLanguageServiceWithDiagnostics(languageService);
 
-    const languageServiceProxy = createLanguageServiceProxy(
-      languageService,
-      gqlDiagnosticsMap
+    const errorCatcher = createErrorCatcher(
+      languageServiceWithDiagnostics.pluginsDiagnostics,
+      logger
     );
 
     const overrideTS = objectOverride(ts);
@@ -100,7 +101,7 @@ const init = (modules: { typescript: typeof TSL }) => {
         }
     );
 
-    return languageServiceProxy;
+    return languageServiceWithDiagnostics;
   };
 
   return { create };
