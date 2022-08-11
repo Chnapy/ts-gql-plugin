@@ -9,9 +9,10 @@ export type ErrorCatcher = (
   length?: number
 ) => null;
 
-export const createErrorCatcher = (logger: Logger) => {
-  const gqlDiagnosticsMap = new Map<string, ts.Diagnostic[]>();
-
+export const createErrorCatcher = (
+  pluginsDiagnostics: Map<string, ts.Diagnostic[]>,
+  logger: Logger
+) => {
   const vsCodeEnv = isVSCodeEnv();
 
   const errorCatcher: ErrorCatcher = (
@@ -42,9 +43,9 @@ export const createErrorCatcher = (logger: Logger) => {
     }
 
     if (sourceFile) {
-      const gqlDiagnostics = gqlDiagnosticsMap.get(sourceFile.fileName) ?? [];
+      const gqlDiagnostics = pluginsDiagnostics.get(sourceFile.fileName) ?? [];
 
-      gqlDiagnosticsMap.set(sourceFile.fileName, [
+      pluginsDiagnostics.set(sourceFile.fileName, [
         ...gqlDiagnostics,
         {
           category: ts.DiagnosticCategory.Error,
@@ -60,8 +61,5 @@ export const createErrorCatcher = (logger: Logger) => {
     return null;
   };
 
-  return {
-    errorCatcher,
-    gqlDiagnosticsMap,
-  };
+  return errorCatcher;
 };
