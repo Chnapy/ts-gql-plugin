@@ -16,16 +16,14 @@ import { parseLiteralOccurenceList } from './parse-literal-occurence-list';
 
 const isNonNullable = <I>(item: I | null): item is I => !!item;
 
-const noopSource = async (_filename: string, initialSource: string) =>
-  initialSource;
+const noopSource = async (sourceFile: ts.SourceFile) => sourceFile.text;
 
 export const createSourceUpdater = (
   directory: string,
   config: PluginConfig,
   logger: Logger,
-  errorCatcher: ErrorCatcher,
-  scriptTarget: ts.ScriptTarget = ts.ScriptTarget.ESNext
-) => {
+  errorCatcher: ErrorCatcher
+): typeof noopSource => {
   try {
     const { graphqlConfigPath, projectNameRegex } = config;
 
@@ -44,18 +42,16 @@ export const createSourceUpdater = (
     const cachedLiteralParser = createCachedLiteralParser({
       cachedSchemaLoader,
       projectNameRegex,
-      scriptTarget,
       errorCatcher,
     });
 
-    return async (filename: string, initialSource: string) => {
-      logger.setFilename(filename);
+    return async (sourceFile: ts.SourceFile) => {
+      const { fileName, text: initialSource } = sourceFile;
 
-      const createSourceFile = () =>
-        ts.createSourceFile(filename, initialSource, scriptTarget);
+      logger.setFilename(fileName);
 
       try {
-        const literalOccurenceList = parseLiteralOccurenceList(initialSource);
+        const literalOccurenceList = parseLiteralOccurenceList(sourceFile);
 
         if (literalOccurenceList.length === 0) {
           return initialSource;
@@ -67,8 +63,7 @@ export const createSourceUpdater = (
           ): Promise<CachedLiteralParserValue<DocumentInfosWithLiteral> | null> => {
             const cachedValue = await cachedLiteralParser.getItemOrCreate({
               literal,
-              filename,
-              initialSource,
+              sourceFile,
             });
 
             return (
@@ -104,7 +99,7 @@ export const createSourceUpdater = (
 
         return finalSource;
       } catch (mainError) {
-        errorCatcher(mainError, createSourceFile());
+        errorCatcher(mainError, sourceFile);
         return initialSource;
       }
     };
