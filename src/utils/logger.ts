@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import type TSL from 'typescript/lib/tsserverlibrary';
 import { PluginConfig } from '../plugin-config';
 
@@ -37,6 +39,32 @@ export const createLogger = (
       }
 
       log(message);
+    },
+    debugTime: () => {
+      if (!debug) {
+        return () => void 0;
+      }
+
+      const startTime = Date.now();
+
+      return (message: string) => {
+        const duration = Date.now() - startTime; // ms
+        log(`${message}: ${duration} ms`);
+      };
+    },
+    debugToFile: (message: () => string) => {
+      if (!debug) {
+        return;
+      }
+
+      const time = new Date().toISOString();
+
+      const dir = `ts-gql-plugin-logs/${time.slice(0, 10)}`;
+      const logFileName = `${time}-${filename?.replaceAll('/', '\\')}.log`;
+
+      fs.mkdirSync(dir, { recursive: true });
+
+      fs.writeFileSync(path.join(dir, logFileName), message());
     },
     setFilename: (newFilename: string) => {
       filename = newFilename;

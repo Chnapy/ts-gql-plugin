@@ -10,3 +10,4 @@ node_modules/
 coverage/
 
 dist/
+ts-gql-plugin-logs/

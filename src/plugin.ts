@@ -56,6 +56,7 @@ const init: PluginInit = ({ typescript: ts }) => ({
         (fileName, scriptSnapshot, ...rest) => {
           if (isValidFilename(fileName)) {
             logger.verbose(`create - Filename ${fileName}`);
+            const debugTime = logger.debugTime();
 
             resetFileDiagnostics(fileName);
 
@@ -67,8 +68,8 @@ const init: PluginInit = ({ typescript: ts }) => ({
             if (initialSource !== updatedSource) {
               scriptSnapshot = TSL.ScriptSnapshot.fromString(updatedSource);
 
-              logger.verbose(`script updated - Filename ${fileName}`);
-              logger.debug(
+              debugTime(`create - Filename updated ${fileName}`);
+              logger.debugToFile(() =>
                 scriptSnapshot.getText(0, scriptSnapshot.getLength())
               );
             }
@@ -84,6 +85,7 @@ const init: PluginInit = ({ typescript: ts }) => ({
         (sourceFile, scriptSnapshot, ...rest) => {
           if (isValidSourceFile(sourceFile)) {
             logger.verbose(`update - Filename ${sourceFile.fileName}`);
+            const debugTime = logger.debugTime();
 
             resetFileDiagnostics(sourceFile.fileName);
 
@@ -95,10 +97,8 @@ const init: PluginInit = ({ typescript: ts }) => ({
             if (initialSource !== updatedSource) {
               scriptSnapshot = TSL.ScriptSnapshot.fromString(updatedSource);
 
-              logger.verbose(
-                `script updated - Filename ${sourceFile.fileName}`
-              );
-              logger.debug(
+              debugTime(`update - Filename updated ${sourceFile.fileName}`);
+              logger.debugToFile(() =>
                 scriptSnapshot.getText(0, scriptSnapshot.getLength())
               );
             }

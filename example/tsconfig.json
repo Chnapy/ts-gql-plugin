@@ -6,7 +6,7 @@
     "plugins": [
       {
         "name": "ts-gql-plugin",
-        "logLevel": "verbose",
+        "logLevel": "debug",
         "projectNameRegex": "([A-Z][a-z]*)"
       }
     ]
