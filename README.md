@@ -213,14 +213,7 @@ To have highlighting between other features, you can use [GraphQL extension](htt
 
 Because of [Language Service design limitations](https://github.com/microsoft/TypeScript/wiki/Writing-a-Language-Service-Plugin#whats-a-language-service-plugin) `tsc` does not load plugins. So building or type-checking your files using CLI cannot use `ts-gql-plugin`.
 
-There is no concrete solution for this issue, [it's requested for a while](https://github.com/microsoft/TypeScript/issues/16607).
-But a workaround is possible, creating a script which run build/type-check using Language Service, and so this plugin.
-
-You can find a working example in [tsc-ls/tsc-ls.ts](./tsc-ls/tsc-ls.ts).
-
-Check also how this script is used in [package.json](./package.json) with script `c:type-gql`.
-
-Making your own script, be sure to import from `ts-gql-plugin/tools`.
+As a workaround you can use [`tsc-ls`](https://github.com/chnapy/tsc-ls), a compiler handling language service plugins.
 
 ## Caveats & constraints
 

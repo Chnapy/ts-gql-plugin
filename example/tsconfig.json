@@ -2,6 +2,7 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "moduleResolution": "node",
+    "noEmit": true,
     "plugins": [
       {
         "name": "ts-gql-plugin",

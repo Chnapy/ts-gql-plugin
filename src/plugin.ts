@@ -1,3 +1,4 @@
+import { PluginInit } from 'tsc-ls';
 import TSL from 'typescript/lib/tsserverlibrary';
 import { createErrorCatcher } from './create-error-catcher';
 import { createLanguageServiceWithDiagnostics } from './create-language-service-proxy';
@@ -10,10 +11,8 @@ import { createLogger } from './utils/logger';
 import { objectOverride } from './utils/object-override';
 import { waitPromiseSync } from './utils/wait-promise-sync';
 
-const init = (modules: { typescript: typeof TSL }) => {
-  const ts = modules.typescript;
-
-  const create = (info: ts.server.PluginCreateInfo) => {
+const init: PluginInit = ({ typescript: ts }) => ({
+  create: (info) => {
     const { project, languageService } = info;
     const config = info.config as PluginConfig;
 
@@ -37,6 +36,10 @@ const init = (modules: { typescript: typeof TSL }) => {
       logger
     );
 
+    const resetFileDiagnostics = (fileName: string) => {
+      languageServiceWithDiagnostics.pluginsDiagnostics.delete(fileName);
+    };
+
     const overrideTS = objectOverride(ts);
 
     const updateSource = createSourceUpdater(
@@ -53,6 +56,8 @@ const init = (modules: { typescript: typeof TSL }) => {
         (fileName, scriptSnapshot, ...rest) => {
           if (isValidFilename(fileName)) {
             logger.verbose(`create - Filename ${fileName}`);
+
+            resetFileDiagnostics(fileName);
 
             const initialSource = getSnapshotSource(scriptSnapshot);
             const updatedSource = waitPromiseSync(
@@ -80,6 +85,8 @@ const init = (modules: { typescript: typeof TSL }) => {
           if (isValidSourceFile(sourceFile)) {
             logger.verbose(`update - Filename ${sourceFile.fileName}`);
 
+            resetFileDiagnostics(sourceFile.fileName);
+
             const initialSource = getSnapshotSource(scriptSnapshot);
             const updatedSource = waitPromiseSync(
               updateSource(sourceFile.fileName, initialSource)
@@ -102,9 +109,7 @@ const init = (modules: { typescript: typeof TSL }) => {
     );
 
     return languageServiceWithDiagnostics;
-  };
-
-  return { create };
-};
+  },
+});
 
 export = init;

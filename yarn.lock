@@ -5545,6 +5545,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ts-gql-plugin@link:./::locator=ts-gql-plugin%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "ts-gql-plugin@link:./::locator=ts-gql-plugin%40workspace%3A."
+  languageName: node
+  linkType: soft
+
 "ts-gql-plugin@workspace:.":
   version: 0.0.0-use.local
   resolution: "ts-gql-plugin@workspace:."
@@ -5572,7 +5578,9 @@ __metadata:
     graphql-config: 4.3.1
     graphql-tag: 2.12.6
     prettier: 2.6.2
+    ts-gql-plugin: "link:./"
     ts-node: 10.8.1
+    tsc-ls: 0.0.4
     tslib: 2.4.0
     typescript: 4.7.3
     vite: 2.9.10
@@ -5580,6 +5588,7 @@ __metadata:
   peerDependencies:
     graphql: ">= 16"
     graphql-tag: ">= 2"
+    typescript: ">= 4"
   languageName: unknown
   linkType: soft
 
@@ -5648,6 +5657,17 @@ __metadata:
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
   checksum: 356e2647b8b1e6ab00380c0537fa569b63bd9b6f006cc40fd650f81fae1817bd8fecc075300036950d8f45c1d85b95be33cd1e48a1a424a7d86c3dbb42bf60e5
+  languageName: node
+  linkType: hard
+
+"tsc-ls@npm:0.0.4":
+  version: 0.0.4
+  resolution: "tsc-ls@npm:0.0.4"
+  peerDependencies:
+    typescript: ">=4.0.0"
+  bin:
+    tsc-ls: dist/bin.js
+  checksum: fd3a38ffaa907b84d6d07bfb0ad6bcba705d92709f85a8099b933920026ce41949ac8647b270a20db3d1ed9be32d163e7da4310eede2fcf55a23808dba9f2b2c
   languageName: node
   linkType: hard
 
