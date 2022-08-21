@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1661097778507,
+  "lastUpdate": 1661118599854,
   "repoUrl": "https://github.com/Chnapy/ts-gql-plugin",
   "entries": {
     "\"with ts-gql-plugin\" vs \"without ts-gql-plugin\" Benchmark": [
@@ -87,6 +87,37 @@ window.BENCHMARK_DATA = {
             "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
             "value": 16.78,
             "range": "±3.18%",
+            "unit": "%",
+            "extra": "10 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "richardhaddad@hotmail.fr",
+            "name": "Richard Haddad",
+            "username": "Chnapy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9467879d57a5dc1f7a9055a2703c215a19234bd5",
+          "message": "enable yarn zero-install (#25)",
+          "timestamp": "2022-08-21T23:48:23+02:00",
+          "tree_id": "b84604e3265d7878e99d8b145d3f765d72eb9ee4",
+          "url": "https://github.com/Chnapy/ts-gql-plugin/commit/9467879d57a5dc1f7a9055a2703c215a19234bd5"
+        },
+        "date": 1661118599214,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
+            "value": 17.93,
+            "range": "±2.27%",
             "unit": "%",
             "extra": "10 samples"
           }
