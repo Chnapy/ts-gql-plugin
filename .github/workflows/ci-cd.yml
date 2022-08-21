@@ -20,8 +20,6 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'yarn'
 
-      - run: yarn install --immutable
-
       - name: Check - Yarn dedupe
         run: yarn dedupe -c
 

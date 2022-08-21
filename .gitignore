@@ -1,12 +1,14 @@
-.pnp.*
-**/.yarn/*
+# Yarn zero-install
+.yarn/*
+!.yarn/cache
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+!.yarn/unplugged
 
-node_modules/
+/node_modules/
 coverage/
 
 dist/

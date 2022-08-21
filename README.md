@@ -24,13 +24,13 @@ Then add plugin to your `tsconfig.json`
 
 ```json5
 {
-  "compilerOptions": {
-    "plugins": [
+  compilerOptions: {
+    plugins: [
       {
-        "name": "ts-gql-plugin"
-      }
-    ]
-  }
+        name: 'ts-gql-plugin',
+      },
+    ],
+  },
 }
 ```
 
@@ -39,7 +39,7 @@ Since this plugin use [graphql-config](https://www.graphql-config.com/docs/user/
 ```json5
 // .graphqlrc
 {
-  "schema": "./schema.graphql"
+  schema: './schema.graphql',
 }
 ```
 
@@ -99,17 +99,17 @@ You can add project-related configuration using extension `"ts-gql"`.
 ```json5
 // .graphqlrc
 {
-  "schema": "./schema.graphql",
-  "extensions": {
-    "ts-gql": {
-      "codegenConfig": {
-        "defaultScalarType": "unknown",
-        "scalars": {
-          "DateTime": "String"
-        }
-      }
-    }
-  }
+  schema: './schema.graphql',
+  extensions: {
+    'ts-gql': {
+      codegenConfig: {
+        defaultScalarType: 'unknown',
+        scalars: {
+          DateTime: 'String',
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -126,14 +126,14 @@ If you should handle multiple GraphQL projects (= multiple schemas), define proj
 ```json5
 // .graphqlrc
 {
-  "projects": {
-    "Catalog": {
-      "schema": "./catalog/schema.graphql"
+  projects: {
+    Catalog: {
+      schema: './catalog/schema.graphql',
     },
-    "Channel": {
-      "schema": "./channel/schema.graphql"
-    }
-  }
+    Channel: {
+      schema: './channel/schema.graphql',
+    },
+  },
 }
 ```
 
@@ -144,14 +144,14 @@ This regex is used to extract project name from operations.
 
 ```json5
 {
-  "compilerOptions": {
-    "plugins": [
+  compilerOptions: {
+    plugins: [
       {
-        "name": "ts-gql-plugin",
-        "projectNameRegex": "([A-Z][a-z]*)"
-      }
-    ]
-  }
+        name: 'ts-gql-plugin',
+        projectNameRegex: '([A-Z][a-z]*)',
+      },
+    ],
+  },
 }
 ```
 
@@ -249,12 +249,6 @@ Please fill issues with reproductible steps & relevant logs (check VSCode [TS se
 
 This project uses [devcontainers](https://code.visualstudio.com/docs/remote/containers) and is made to work on it.
 
-Install dependencies
-
-```
-yarn install
-```
-
 Run checkers
 
 ```
@@ -267,11 +261,4 @@ Build
 
 ```
 yarn build
-```
-
-Example project needs specific install
-
-```
-cd example
-yarn install
 ```
