@@ -5615,6 +5615,9 @@ __metadata:
     graphql: ">= 16"
     graphql-tag: ">= 2"
     typescript: ">= 4"
+  dependenciesMeta:
+    esbuild@0.14.43:
+      built: true
   languageName: unknown
   linkType: soft
 
