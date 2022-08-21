@@ -4,14 +4,7 @@
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.cache/.tsbuildinfo",
     "outDir": "./node_modules/.cache/dist",
-    "moduleResolution": "node",
-    "plugins": [
-      {
-        "name": "ts-gql-plugin",
-        "logLevel": "debug",
-        "projectNameRegex": "([A-Z][a-z]*)"
-      }
-    ]
+    "moduleResolution": "node"
   },
-  "include": ["."]
+  "include": ["index.ts"]
 }

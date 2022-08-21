@@ -26,19 +26,19 @@ export const createLogger = (
   return {
     log,
     error,
-    verbose: (message: string) => {
+    verbose: (message: () => string) => {
       if (!verbose && !debug) {
         return;
       }
 
-      log(message);
+      log(message());
     },
-    debug: (message: string) => {
+    debug: (message: () => string) => {
       if (!debug) {
         return;
       }
 
-      log(message);
+      log(message());
     },
     debugTime: () => {
       if (!debug) {
@@ -64,7 +64,11 @@ export const createLogger = (
 
       fs.mkdirSync(dir, { recursive: true });
 
-      fs.writeFileSync(path.join(dir, logFileName), message());
+      const filePath = path.join(process.cwd(), dir, logFileName);
+
+      fs.writeFileSync(filePath, message());
+
+      log(`Debug log written to ${filePath}`);
     },
     setFilename: (newFilename: string) => {
       filename = newFilename;

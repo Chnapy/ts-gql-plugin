@@ -3,7 +3,13 @@
   "compilerOptions": {
     "incremental": true,
     "types": ["vitest/globals"],
-    "tsBuildInfoFile": "./node_modules/.cache/.tsbuildinfo"
+    "tsBuildInfoFile": "./node_modules/.cache/.tsbuildinfo",
+    "outDir": "./node_modules/.cache/dist"
   },
-  "include": ["src", "./*.js", "./*.ts"]
+  "include": ["src", "benchmark", "./*.js", "./*.ts"],
+  "references": [
+    {
+      "path": "example"
+    }
+  ]
 }

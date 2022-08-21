@@ -55,7 +55,7 @@ const init: PluginInit = ({ typescript: ts }) => ({
       (initialFn) =>
         (fileName, scriptSnapshot, ...rest) => {
           if (isValidFilename(fileName)) {
-            logger.verbose(`create - Filename ${fileName}`);
+            logger.verbose(() => `create - Filename ${fileName}`);
             const debugTime = logger.debugTime();
 
             resetFileDiagnostics(fileName);
@@ -84,7 +84,7 @@ const init: PluginInit = ({ typescript: ts }) => ({
       (initialFn) =>
         (sourceFile, scriptSnapshot, ...rest) => {
           if (isValidSourceFile(sourceFile)) {
-            logger.verbose(`update - Filename ${sourceFile.fileName}`);
+            logger.verbose(() => `update - Filename ${sourceFile.fileName}`);
             const debugTime = logger.debugTime();
 
             resetFileDiagnostics(sourceFile.fileName);

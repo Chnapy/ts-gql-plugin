@@ -32,11 +32,11 @@
     "c:format": "prettier -w .",
     "c:lint": "eslint . --cache --cache-location node_modules/.cache/.eslintcache",
     "c:lint:fix": "yarn c:lint --fix",
-    "c:type": "tsc --noEmit",
+    "c:type": "tsc-ls -b",
     "c:test": "yarn c:test:watch --run",
     "c:test:watch": "vitest --outputTruncateLength=9999 --passWithNoTests",
     "build": "tsc -p tsconfig.build.json",
-    "c:type-gql": "tsc-ls -b ./example"
+    "benchmark": "ts-node --transpile-only benchmark/benchmark.ts"
   },
   "dependencies": {
     "@graphql-codegen/core": "2.5.1",
@@ -54,11 +54,13 @@
     "@apollo/client": "3.6.7",
     "@babel/core": "7.17.9",
     "@babel/eslint-parser": "7.17.0",
+    "@types/benchmark": "2.1.1",
     "@types/deasync": "0.1.2",
     "@types/node": "17.0.23",
     "@types/prettier": "2.6.3",
     "@typescript-eslint/eslint-plugin": "5.18.0",
     "@typescript-eslint/parser": "5.18.0",
+    "benchmark": "2.1.4",
     "c8": "7.11.3",
     "eslint": "8.13.0",
     "eslint-config-prettier": "8.5.0",
