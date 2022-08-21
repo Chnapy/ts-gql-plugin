@@ -1,33 +1,29 @@
-import tsl from 'typescript/lib/tsserverlibrary';
+import { Diagnostic } from 'typescript/lib/tsserverlibrary';
+import { LanguageServiceWithDiagnostics } from 'tsc-ls';
 
 const pluginsDiagnosticsProperty: keyof LanguageServiceWithDiagnostics =
   'pluginsDiagnostics';
 
-const getSemanticDiagnosticsProperty: keyof tsl.LanguageService =
+const getSemanticDiagnosticsProperty: keyof LanguageServiceWithDiagnostics =
   'getSemanticDiagnostics';
 
-export type LanguageServiceWithDiagnostics = tsl.LanguageService & {
-  pluginsDiagnostics: Map<string, tsl.Diagnostic[]>;
-};
-
 export const createLanguageServiceWithDiagnostics = (
-  languageService: tsl.LanguageService
-): LanguageServiceWithDiagnostics => {
-  const gqlDiagnosticsMap = new Map<string, tsl.Diagnostic[]>();
+  languageService: LanguageServiceWithDiagnostics
+) => {
+  const gqlDiagnosticsMap = new Map<string, Diagnostic[]>();
 
   /**
    * Add graphql errors to diagnostics
    */
-  const getSemanticDiagnostics: tsl.LanguageService['getSemanticDiagnostics'] =
+  const getSemanticDiagnostics: LanguageServiceWithDiagnostics['getSemanticDiagnostics'] =
     (fileName) => [
       ...(proxy.pluginsDiagnostics.get(fileName) ?? []),
       ...languageService.getSemanticDiagnostics(fileName),
     ];
 
-  const proxy = new Proxy(languageService as LanguageServiceWithDiagnostics, {
+  const proxy = new Proxy(languageService, {
     get: (target, property) => {
       if (property === pluginsDiagnosticsProperty) {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         return target[pluginsDiagnosticsProperty] ?? gqlDiagnosticsMap;
       }
 
@@ -35,9 +31,9 @@ export const createLanguageServiceWithDiagnostics = (
         return getSemanticDiagnostics;
       }
 
-      return target[property as keyof tsl.LanguageService];
+      return target[property as keyof LanguageServiceWithDiagnostics];
     },
-  });
+  }) as Required<LanguageServiceWithDiagnostics>;
 
   return proxy;
 };

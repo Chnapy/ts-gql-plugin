@@ -18,6 +18,8 @@ describe('Create source updater', () => {
     error: vi.fn(),
     verbose: vi.fn(),
     debug: vi.fn(),
+    debugTime: vi.fn(),
+    debugToFile: vi.fn(),
     setFilename: vi.fn(),
   });
 

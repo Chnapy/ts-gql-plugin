@@ -1,3 +1,4 @@
+import { PluginInit } from 'tsc-ls';
 import TSL from 'typescript/lib/tsserverlibrary';
 import { createErrorCatcher } from './create-error-catcher';
 import { createLanguageServiceWithDiagnostics } from './create-language-service-proxy';
@@ -10,10 +11,8 @@ import { createLogger } from './utils/logger';
 import { objectOverride } from './utils/object-override';
 import { waitPromiseSync } from './utils/wait-promise-sync';
 
-const init = (modules: { typescript: typeof TSL }) => {
-  const ts = modules.typescript;
-
-  const create = (info: ts.server.PluginCreateInfo) => {
+const init: PluginInit = ({ typescript: ts }) => ({
+  create: (info) => {
     const { project, languageService } = info;
     const config = info.config as PluginConfig;
 
@@ -37,6 +36,10 @@ const init = (modules: { typescript: typeof TSL }) => {
       logger
     );
 
+    const resetFileDiagnostics = (fileName: string) => {
+      languageServiceWithDiagnostics.pluginsDiagnostics.delete(fileName);
+    };
+
     const overrideTS = objectOverride(ts);
 
     const updateSource = createSourceUpdater(
@@ -52,7 +55,10 @@ const init = (modules: { typescript: typeof TSL }) => {
       (initialFn) =>
         (fileName, scriptSnapshot, ...rest) => {
           if (isValidFilename(fileName)) {
-            logger.verbose(`create - Filename ${fileName}`);
+            logger.verbose(() => `create - Filename ${fileName}`);
+            const debugTime = logger.debugTime();
+
+            resetFileDiagnostics(fileName);
 
             const initialSource = getSnapshotSource(scriptSnapshot);
             const updatedSource = waitPromiseSync(
@@ -62,8 +68,8 @@ const init = (modules: { typescript: typeof TSL }) => {
             if (initialSource !== updatedSource) {
               scriptSnapshot = TSL.ScriptSnapshot.fromString(updatedSource);
 
-              logger.verbose(`script updated - Filename ${fileName}`);
-              logger.debug(
+              debugTime(`create - Filename updated ${fileName}`);
+              logger.debugToFile(() =>
                 scriptSnapshot.getText(0, scriptSnapshot.getLength())
               );
             }
@@ -78,7 +84,10 @@ const init = (modules: { typescript: typeof TSL }) => {
       (initialFn) =>
         (sourceFile, scriptSnapshot, ...rest) => {
           if (isValidSourceFile(sourceFile)) {
-            logger.verbose(`update - Filename ${sourceFile.fileName}`);
+            logger.verbose(() => `update - Filename ${sourceFile.fileName}`);
+            const debugTime = logger.debugTime();
+
+            resetFileDiagnostics(sourceFile.fileName);
 
             const initialSource = getSnapshotSource(scriptSnapshot);
             const updatedSource = waitPromiseSync(
@@ -88,10 +97,8 @@ const init = (modules: { typescript: typeof TSL }) => {
             if (initialSource !== updatedSource) {
               scriptSnapshot = TSL.ScriptSnapshot.fromString(updatedSource);
 
-              logger.verbose(
-                `script updated - Filename ${sourceFile.fileName}`
-              );
-              logger.debug(
+              debugTime(`update - Filename updated ${sourceFile.fileName}`);
+              logger.debugToFile(() =>
                 scriptSnapshot.getText(0, scriptSnapshot.getLength())
               );
             }
@@ -102,9 +109,7 @@ const init = (modules: { typescript: typeof TSL }) => {
     );
 
     return languageServiceWithDiagnostics;
-  };
-
-  return { create };
-};
+  },
+});
 
 export = init;
