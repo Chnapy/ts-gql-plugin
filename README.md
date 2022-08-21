@@ -22,7 +22,7 @@ npm install -D ts-gql-plugin
 
 Then add plugin to your `tsconfig.json`
 
-```json
+```json5
 {
   "compilerOptions": {
     "plugins": [
@@ -36,7 +36,7 @@ Then add plugin to your `tsconfig.json`
 
 Since this plugin use [graphql-config](https://www.graphql-config.com/docs/user/user-introduction) you should add a config file targeting your GraphQL schema.
 
-```json
+```json5
 // .graphqlrc
 {
   "schema": "./schema.graphql"
@@ -96,7 +96,7 @@ Configuration can be done at 2 levels: in tsconfig.json and in graphql-config fi
 
 You can add project-related configuration using extension `"ts-gql"`.
 
-```json
+```json5
 // .graphqlrc
 {
   "schema": "./schema.graphql",
@@ -123,7 +123,7 @@ You can add project-related configuration using extension `"ts-gql"`.
 
 If you should handle multiple GraphQL projects (= multiple schemas), define projects into your graphql-config file.
 
-```json
+```json5
 // .graphqlrc
 {
   "projects": {
@@ -142,7 +142,7 @@ If you should handle multiple GraphQL projects (= multiple schemas), define proj
 Then into your plugin config define project name regex, following your own constraints.
 This regex is used to extract project name from operations.
 
-```json
+```json5
 {
   "compilerOptions": {
     "plugins": [
