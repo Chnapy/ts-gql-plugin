@@ -6,10 +6,5 @@
     "tsBuildInfoFile": "./node_modules/.cache/.tsbuildinfo",
     "outDir": "./node_modules/.cache/dist"
   },
-  "include": ["src", "benchmark", "./*.js", "./*.ts"],
-  "references": [
-    {
-      "path": "example"
-    }
-  ]
+  "include": ["src", "benchmark", "./*.js", "./*.ts"]
 }

@@ -1,7 +1,6 @@
 name: Benchmark
 
 on:
-  pull_request:
   push:
     branches:
       - master
@@ -20,6 +19,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
+
+      - run: yarn install --immutable
 
       - name: Build
         run: yarn build

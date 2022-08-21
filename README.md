@@ -233,6 +233,12 @@ gql`
 - as described upper, CLI is not handled out-of-box because of `tsc` design limitations
 - because TypeScript compiler does not handle async operations, required by some dependencies, so use of [`deasync`](https://github.com/abbr/deasync) is required. This lib can cause issue in your script, so consider wrap its execution into `process.nextTick()`
 
+## Benchmark
+
+You can see performance impact using `ts-gql-plugin`: https://chnapy.github.io/ts-gql-plugin/dev/bench
+
+Keep in mind that this benchmark shows the "worst case": it's done using a [tsconfig](./example/tsconfig.benchmark1.json) including only a single [index.ts](./example/index.ts) file with only `gql` operations, so plugin use is overrepresented.
+
 ## Contribute
 
 ### Issues
