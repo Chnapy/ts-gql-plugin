@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1661118599854,
+  "lastUpdate": 1661118683432,
   "repoUrl": "https://github.com/Chnapy/ts-gql-plugin",
   "entries": {
     "\"with ts-gql-plugin\" vs \"without ts-gql-plugin\" Benchmark": [
@@ -118,6 +118,37 @@ window.BENCHMARK_DATA = {
             "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
             "value": 17.93,
             "range": "±2.27%",
+            "unit": "%",
+            "extra": "10 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "richardhaddad@hotmail.fr",
+            "name": "Richard Haddad",
+            "username": "Chnapy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "74438b37fb6b64dd2c1a883485c259808c364430",
+          "message": "Update README.md",
+          "timestamp": "2022-08-21T23:49:49+02:00",
+          "tree_id": "b5e5ef6581000bdbac11672a17aa0a86d4c017fd",
+          "url": "https://github.com/Chnapy/ts-gql-plugin/commit/74438b37fb6b64dd2c1a883485c259808c364430"
+        },
+        "date": 1661118682662,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
+            "value": 17.98,
+            "range": "±1.45%",
             "unit": "%",
             "extra": "10 samples"
           }
