@@ -53,8 +53,7 @@ declare module 'graphql-tag' {
   }
 
   export function gql<Literal extends keyof ${moduleName}.DocumentMap>(
-    literals: Literal | readonly string[],
-    ...args: any[]
+    literals: Literal
   ): ${moduleName}.DocumentMap[Literal];
 }
 `;
