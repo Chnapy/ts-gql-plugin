@@ -35,6 +35,9 @@ jobs:
       - name: Build
         run: yarn build
 
+      - name: Check - Example type
+        run: yarn c:type ./example
+
       - name: Publish to NPM (dry-run on PR)
         uses: JS-DevTools/npm-publish@v1
         with:

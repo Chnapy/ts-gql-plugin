@@ -50,7 +50,7 @@ const jsRules = {
   'no-proto': ['error'],
   'no-restricted-globals': ['error'],
   'no-return-assign': ['error'],
-  'no-underscore-dangle': ['error', { allow: ['_id'] }],
+  'no-underscore-dangle': ['error', { allow: ['_id', '__apiType'] }],
   'no-unneeded-ternary': ['error'],
   'no-unused-expressions': ['error', { allowShortCircuit: true }],
   'no-useless-call': ['error'],
