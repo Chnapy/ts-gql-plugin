@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1661118683432,
+  "lastUpdate": 1661199786623,
   "repoUrl": "https://github.com/Chnapy/ts-gql-plugin",
   "entries": {
     "\"with ts-gql-plugin\" vs \"without ts-gql-plugin\" Benchmark": [
@@ -149,6 +149,37 @@ window.BENCHMARK_DATA = {
             "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
             "value": 17.98,
             "range": "±1.45%",
+            "unit": "%",
+            "extra": "10 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "richardhaddad@hotmail.fr",
+            "name": "Richard Haddad",
+            "username": "Chnapy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8d849b06d8b65b2f2db11d2b899bfbc5b7f4ce77",
+          "message": "Fix gql no call-expressions typing (#26)\n\n* fix gql no call-expressions typing\r\nadd example type-check into CI",
+          "timestamp": "2022-08-22T22:21:29+02:00",
+          "tree_id": "5403e61a6765ca91431aa07fa62ffb81f02e21ee",
+          "url": "https://github.com/Chnapy/ts-gql-plugin/commit/8d849b06d8b65b2f2db11d2b899bfbc5b7f4ce77"
+        },
+        "date": 1661199785294,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
+            "value": 19.4,
+            "range": "±9.32%",
             "unit": "%",
             "extra": "10 samples"
           }
