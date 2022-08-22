@@ -295,8 +295,7 @@ describe('Create source updater', () => {
       }
 
       export function gql<Literal extends keyof _unique_module_name.DocumentMap>(
-        literals: Literal | readonly string[],
-        ...args: any[]
+        literals: Literal
       ): _unique_module_name.DocumentMap[Literal];
     }
   `)
@@ -528,8 +527,7 @@ describe('Create source updater', () => {
       }
 
       export function gql<Literal extends keyof _unique_module_name.DocumentMap>(
-        literals: Literal | readonly string[],
-        ...args: any[]
+        literals: Literal
       ): _unique_module_name.DocumentMap[Literal];
     }
   `)
@@ -732,8 +730,7 @@ describe('Create source updater', () => {
       }
 
       export function gql<Literal extends keyof _unique_module_name.DocumentMap>(
-        literals: Literal | readonly string[],
-        ...args: any[]
+        literals: Literal
       ): _unique_module_name.DocumentMap[Literal];
     }
   `)
