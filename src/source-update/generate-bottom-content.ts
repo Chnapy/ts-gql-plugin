@@ -1,14 +1,17 @@
 import { createUniqueString } from '../utils/create-unique-string';
 
 export type DocumentInfos = {
-  literal: string;
   variables: string;
   result: string;
   staticTypes: string;
 };
 
+export type DocumentInfosWithLiteral = DocumentInfos & {
+  literal: string;
+};
+
 export const generateBottomContent = (
-  documentInfosList: DocumentInfos[],
+  documentInfosList: DocumentInfosWithLiteral[],
   staticCode: string
 ) => {
   const documentMapContent = documentInfosList

@@ -1,6 +1,6 @@
 import { parse } from 'graphql';
 import { extractTypeFromLiteral } from './extract-type-from-literal';
-import { formatGQL, formatTS } from './test-utils';
+import { formatTS } from './test-utils';
 
 describe('Extract type from literal', () => {
   it('extracts type from correct string', async () => {
@@ -46,7 +46,6 @@ describe('Extract type from literal', () => {
 
     const result = await extractTypeFromLiteral(code, schema);
 
-    expect(formatGQL(result.literal)).toEqual(formatGQL(code));
     expect(result.variables).toEqual(expectedVariables);
     expect(result.result).toEqual(expectedResult);
     expect(formatTS(result.staticTypes)).toEqual(expectedStaticTypes);

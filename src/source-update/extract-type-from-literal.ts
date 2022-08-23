@@ -61,7 +61,6 @@ export const extractTypeFromLiteral = async (
   }
 
   return {
-    literal,
     variables,
     result,
     staticTypes,
