@@ -1,4 +1,4 @@
-name: CI - CD
+name: CI
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   checks:
-    name: Checks & deploy
+    name: Checks
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -37,9 +37,3 @@ jobs:
 
       - name: Check - Example type
         run: yarn c:type ./example
-
-      - name: Publish to NPM (dry-run on PR)
-        uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          dry-run: ${{ github.ref != 'refs/heads/master' }}

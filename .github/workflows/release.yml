@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  checks:
+    name: Release to NPM
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+
+      - name: Build
+        run: yarn build
+
+      - name: Publish to NPM - if package version changed
+        id: publish
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create new release - if published to NPM before
+        if: ${{ steps.publish.outputs.type != 'none' }}
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.publish.outputs.version }}
+          generate_release_notes: true
