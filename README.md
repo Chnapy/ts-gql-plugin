@@ -240,6 +240,10 @@ You can see performance impact using `ts-gql-plugin`: https://chnapy.github.io/t
 
 Keep in mind that this benchmark shows the "worst case": it's done using a [tsconfig](./example/tsconfig.benchmark1.json) including only a single [index.ts](./example/index.ts) file with only `gql` operations, so plugin use is overrepresented.
 
+## Changelog
+
+Checkout [releases](https://github.com/Chnapy/ts-gql-plugin/releases) to see each version changes.
+
 ## Contribute
 
 ### Issues
