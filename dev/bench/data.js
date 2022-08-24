@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1661365140051,
+  "lastUpdate": 1661365261915,
   "repoUrl": "https://github.com/Chnapy/ts-gql-plugin",
   "entries": {
     "\"with ts-gql-plugin\" vs \"without ts-gql-plugin\" Benchmark": [
@@ -273,6 +273,37 @@ window.BENCHMARK_DATA = {
             "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
             "value": 19.39,
             "range": "±7.66%",
+            "unit": "%",
+            "extra": "10 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "richardhaddad@hotmail.fr",
+            "name": "Richard Haddad",
+            "username": "Chnapy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "710e298c83d3a4a9a0eba72d672cff30e558aa70",
+          "message": "Add complete cache system for loaders & parser (#28)\n\n* add complete cache system for loaders & parser\r\n\r\n* enable benchmark dry-run on PRs\r\n\r\n* refactor files organization\r\n\r\n* add cache-system tests\r\n\r\n* upgrade to 1.3.4",
+          "timestamp": "2022-08-24T20:19:01+02:00",
+          "tree_id": "db70d8aeae6ecb98b48958ccc5447bd4aa4e03ab",
+          "url": "https://github.com/Chnapy/ts-gql-plugin/commit/710e298c83d3a4a9a0eba72d672cff30e558aa70"
+        },
+        "date": 1661365260104,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
+            "value": 18.82,
+            "range": "±5.57%",
             "unit": "%",
             "extra": "10 samples"
           }
