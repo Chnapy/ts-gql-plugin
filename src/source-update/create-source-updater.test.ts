@@ -3,7 +3,7 @@
 import * as createUniqueStringExport from '../utils/create-unique-string';
 import { Logger } from '../utils/logger';
 import { createSourceUpdater } from './create-source-updater';
-import { formatTS } from './test-utils';
+import { formatTS } from '../utils/test-utils';
 import { join } from 'node:path';
 
 const resolveTestFile = (path: string) => join('src/test-files', path);

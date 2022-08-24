@@ -1,7 +1,6 @@
 import { GraphQLProjectConfig, loadConfig } from 'graphql-config';
-import fs from 'node:fs';
 import { tsGqlExtension } from '../source-update/extension';
-import { createCacheSystem } from '../utils/cache-system';
+import { checkFileLastUpdate, createCacheSystem } from '../utils/cache-system';
 import { Logger } from '../utils/logger';
 
 type CreateCachedGraphQLConfigLoaderOptions = {
@@ -65,9 +64,7 @@ export const createCachedGraphQLConfigLoader = ({
     checkValidity: async (currentItem) => {
       const { configFilePath } = await currentItem.value;
 
-      const { mtimeMs } = fs.statSync(configFilePath);
-
-      return mtimeMs <= currentItem.dateTime;
+      return checkFileLastUpdate(configFilePath, currentItem.dateTime);
     },
     sizeLimit: 40,
   });

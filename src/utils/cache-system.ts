@@ -1,4 +1,5 @@
 import { isVSCodeEnv } from './is-vscode-env';
+import fs from 'node:fs';
 
 type CacheSystemOptions<O, I> = {
   getKeyFromInput: (input: I) => string;
@@ -13,6 +14,12 @@ type CacheItem<O, I> = {
   input: I;
   value: Promise<O>;
   dateTime: number;
+};
+
+export const checkFileLastUpdate = (filePath: string, lastDateTime: number) => {
+  const { mtimeMs } = fs.statSync(filePath);
+
+  return mtimeMs <= lastDateTime;
 };
 
 export const createCacheSystem = <O, I>({

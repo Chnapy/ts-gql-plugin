@@ -1,11 +1,10 @@
 import { DocumentNode } from 'graphql';
-import fs from 'node:fs';
 import path from 'node:path';
 import { ErrorCatcher } from '../create-error-catcher';
 import { ExtensionConfig } from '../extension-config';
+import { generateTypeFromSchema } from '../generators/generate-type-from-schema';
 import { getProjectExtension } from '../source-update/extension';
-import { extractTypeFromSchema } from '../source-update/extract-type-from-schema';
-import { createCacheSystem } from '../utils/cache-system';
+import { checkFileLastUpdate, createCacheSystem } from '../utils/cache-system';
 import { CachedGraphQLConfigLoader } from './cached-graphql-config-loader';
 
 type CreateCachedSchemaLoaderOptions = {
@@ -60,7 +59,7 @@ export const createCachedSchemaLoader = ({
           async (schemaDocument): Promise<ProjectInfos> => ({
             schemaFilePath,
             schemaDocument,
-            staticGlobals: await extractTypeFromSchema(
+            staticGlobals: await generateTypeFromSchema(
               schemaDocument,
               extension.codegenConfig
             ),
@@ -85,9 +84,7 @@ export const createCachedSchemaLoader = ({
         return false;
       }
 
-      const { mtimeMs } = fs.statSync(project.schemaFilePath);
-
-      return mtimeMs <= currentItem.dateTime;
+      return checkFileLastUpdate(project.schemaFilePath, currentItem.dateTime);
     },
     sizeLimit: 40,
   });

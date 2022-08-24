@@ -1,5 +1,5 @@
 import { parseLiteralOccurenceList } from './parse-literal-occurence-list';
-import { formatGQL } from './test-utils';
+import { formatGQL } from '../utils/test-utils';
 
 describe('Parse literal occurence list', () => {
   it('parse literal occurence list', () => {

@@ -11,7 +11,7 @@ import { Logger } from '../utils/logger';
 import {
   generateBottomContent,
   DocumentInfosWithLiteral,
-} from './generate-bottom-content';
+} from '../generators/generate-bottom-content';
 import { parseLiteralOccurenceList } from './parse-literal-occurence-list';
 
 const isNonNullable = <I>(item: I | null): item is I => !!item;

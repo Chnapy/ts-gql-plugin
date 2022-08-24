@@ -1,7 +1,7 @@
 import ts from 'typescript/lib/tsserverlibrary';
 import { ErrorCatcher } from '../create-error-catcher';
-import { extractTypeFromLiteral } from '../source-update/extract-type-from-literal';
-import { DocumentInfos } from '../source-update/generate-bottom-content';
+import { generateTypeFromLiteral } from '../generators/generate-type-from-literal';
+import { DocumentInfos } from '../generators/generate-bottom-content';
 import { createCacheSystem } from '../utils/cache-system';
 import { CachedSchemaLoader, defaultProjectName } from './cached-schema-loader';
 
@@ -60,7 +60,7 @@ export const createCachedLiteralParser = ({
         const project = await getProjectFromLiteral(literal);
 
         return {
-          documentInfos: await extractTypeFromLiteral(
+          documentInfos: await generateTypeFromLiteral(
             literal,
             project.schemaDocument,
             project.extension.codegenConfig
