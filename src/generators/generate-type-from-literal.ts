@@ -9,7 +9,7 @@ const operationsRegex = /type (\w+Operation) = /s;
 type CodegenPlugin = typeof plugins[number];
 const plugins = [typescriptOperationsPlugin];
 
-export const extractTypeFromLiteral = async (
+export const generateTypeFromLiteral = async (
   literal: string,
   schema: DocumentNode,
   codegenConfig: typescriptOperationsPlugin.TypeScriptDocumentsPluginConfig = {}
@@ -61,7 +61,6 @@ export const extractTypeFromLiteral = async (
   }
 
   return {
-    literal,
     variables,
     result,
     staticTypes,

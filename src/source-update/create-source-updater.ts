@@ -1,10 +1,17 @@
 import ts from 'typescript/lib/tsserverlibrary';
+import { createCachedGraphQLConfigLoader } from '../cached/cached-graphql-config-loader';
+import {
+  createCachedLiteralParser,
+  CachedLiteralParserValue,
+} from '../cached/cached-literal-parser';
+import { createCachedSchemaLoader } from '../cached/cached-schema-loader';
 import { ErrorCatcher } from '../create-error-catcher';
 import { PluginConfig } from '../plugin-config';
 import { Logger } from '../utils/logger';
-import { extractTypeFromLiteral } from './extract-type-from-literal';
-import { generateBottomContent } from './generate-bottom-content';
-import { loadGraphQLConfig } from './load-graphql-config';
+import {
+  generateBottomContent,
+  DocumentInfosWithLiteral,
+} from '../generators/generate-bottom-content';
 import { parseLiteralOccurenceList } from './parse-literal-occurence-list';
 
 const isNonNullable = <I>(item: I | null): item is I => !!item;
@@ -20,12 +27,26 @@ export const createSourceUpdater = (
   scriptTarget: ts.ScriptTarget = ts.ScriptTarget.ESNext
 ) => {
   try {
-    const { getProjectFromLiteral } = loadGraphQLConfig(
+    const { graphqlConfigPath, projectNameRegex } = config;
+
+    const cachedGraphQLConfigLoader = createCachedGraphQLConfigLoader({
       directory,
+      graphqlConfigPath,
+      projectNameRegex,
       logger,
+    });
+
+    const cachedSchemaLoader = createCachedSchemaLoader({
+      cachedGraphQLConfigLoader,
       errorCatcher,
-      config
-    );
+    });
+
+    const cachedLiteralParser = createCachedLiteralParser({
+      cachedSchemaLoader,
+      projectNameRegex,
+      scriptTarget,
+      errorCatcher,
+    });
 
     return async (filename: string, initialSource: string) => {
       logger.setFilename(filename);
@@ -40,29 +61,25 @@ export const createSourceUpdater = (
           return initialSource;
         }
 
-        const staticGlobalsSet = new Set<string>();
-
         const documentInfosPromiseList = literalOccurenceList.map(
-          async (literal) => {
-            try {
-              const project = await getProjectFromLiteral(literal);
+          async (
+            literal
+          ): Promise<CachedLiteralParserValue<DocumentInfosWithLiteral> | null> => {
+            const cachedValue = await cachedLiteralParser.getItemOrCreate({
+              literal,
+              filename,
+              initialSource,
+            });
 
-              staticGlobalsSet.add(project.staticGlobals);
-
-              return await extractTypeFromLiteral(
-                literal,
-                project.schemaDocument,
-                project.extension.codegenConfig
-              );
-            } catch (error) {
-              errorCatcher(
-                error,
-                createSourceFile(),
-                initialSource.indexOf(literal),
-                literal.length
-              );
-              return null;
-            }
+            return (
+              cachedValue && {
+                ...cachedValue,
+                documentInfos: {
+                  literal,
+                  ...cachedValue.documentInfos,
+                },
+              }
+            );
           }
         );
 
@@ -74,8 +91,12 @@ export const createSourceUpdater = (
           return initialSource;
         }
 
+        const staticGlobalsSet = new Set(
+          documentInfosList.map((infos) => infos.staticGlobals)
+        );
+
         const bottomContent = generateBottomContent(
-          documentInfosList,
+          documentInfosList.map((infos) => infos.documentInfos),
           [...staticGlobalsSet].join('\n')
         );
 

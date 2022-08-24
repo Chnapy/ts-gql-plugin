@@ -5,7 +5,7 @@ import { DocumentNode } from 'graphql';
 type CodegenPlugin = typeof plugins[number];
 const plugins = [typescriptPlugin];
 
-export const extractTypeFromSchema = async (
+export const generateTypeFromSchema = async (
   schema: DocumentNode,
   codegenConfig: typescriptPlugin.TypeScriptPluginConfig = {}
 ): Promise<string> => {

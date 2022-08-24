@@ -1,9 +1,9 @@
 import { parse } from 'graphql';
-import { formatTS } from './test-utils';
-import { extractTypeFromSchema } from './extract-type-from-schema';
+import { formatTS } from '../utils/test-utils';
+import { generateTypeFromSchema } from './generate-type-from-schema';
 
-describe('Extract type from schema', () => {
-  it('extracts type from correct string', async () => {
+describe('Generate type from schema', () => {
+  it('generates type from correct string', async () => {
     const schema = parse(`
     type User {
       id: ID!
@@ -55,7 +55,7 @@ describe('Extract type from schema', () => {
       };
     `;
 
-    const result = await extractTypeFromSchema(schema);
+    const result = await generateTypeFromSchema(schema);
 
     expect(formatTS(result)).toEqual(formatTS(expected));
   });
