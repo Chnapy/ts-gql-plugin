@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/ts-gql-plugin)](https://www.npmjs.com/package/ts-gql-plugin)
 [![license](https://img.shields.io/npm/l/ts-gql-plugin)](https://github.com/chnapy/ts-gql-plugin/blob/master/LICENSE)
-[![CI - CD](https://github.com/Chnapy/ts-gql-plugin/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/Chnapy/ts-gql-plugin/actions/workflows/ci-cd.yml)
+[![CI - CD](https://github.com/Chnapy/ts-gql-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/Chnapy/ts-gql-plugin/actions/workflows/ci.yml)
 
 A [TypeScript Language Service Plugin](https://github.com/Microsoft/TypeScript/wiki/Writing-a-Language-Service-Plugin) adding GraphQL DocumentNode typing.
 
