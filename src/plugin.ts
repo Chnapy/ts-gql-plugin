@@ -109,14 +109,28 @@ const init: PluginInit = ({ typescript: ts }) => ({
 
             resetFileDiagnostics(sourceFile.fileName);
 
-            const updatedSource = waitPromiseSync(updateSource(sourceFile));
+            const sourceText = scriptSnapshot.getText(
+              0,
+              scriptSnapshot.getLength()
+            );
+
+            const clonedSourceFile = ts.createSourceFile(
+              sourceFile.fileName,
+              sourceText,
+              sourceFile.languageVersion
+            );
+
+            const updatedSource = waitPromiseSync(
+              updateSource(clonedSourceFile)
+            );
 
             if (sourceFile.text !== updatedSource) {
-              scriptSnapshot = TSL.ScriptSnapshot.fromString(updatedSource);
+              const updatedScriptSnapshot =
+                TSL.ScriptSnapshot.fromString(updatedSource);
 
               const updatedSourceFile = initialFn(
                 sourceFile,
-                scriptSnapshot,
+                updatedScriptSnapshot,
                 ...rest
               );
 
