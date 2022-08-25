@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1661464939815,
+  "lastUpdate": 1661465335402,
   "repoUrl": "https://github.com/Chnapy/ts-gql-plugin",
   "entries": {
     "\"with ts-gql-plugin\" vs \"without ts-gql-plugin\" Benchmark": [
@@ -366,6 +366,37 @@ window.BENCHMARK_DATA = {
             "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
             "value": 22.97,
             "range": "±1.35%",
+            "unit": "%",
+            "extra": "10 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "richardhaddad@hotmail.fr",
+            "name": "Richard Haddad",
+            "username": "Chnapy"
+          },
+          "committer": {
+            "email": "richardhaddad@hotmail.fr",
+            "name": "Richard Haddad",
+            "username": "Chnapy"
+          },
+          "distinct": true,
+          "id": "05c4cfd0b8c0e815ca554c76ef5a7ee6d9ef40a5",
+          "message": "upgrade to 1.3.5",
+          "timestamp": "2022-08-25T22:07:02Z",
+          "tree_id": "881371bdf18e853302cc4f0f183a422d04fa7f3b",
+          "url": "https://github.com/Chnapy/ts-gql-plugin/commit/05c4cfd0b8c0e815ca554c76ef5a7ee6d9ef40a5"
+        },
+        "date": 1661465334621,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
+            "value": 23.01,
+            "range": "±6.90%",
             "unit": "%",
             "extra": "10 samples"
           }
