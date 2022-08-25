@@ -23,24 +23,24 @@ npm install -D ts-gql-plugin
 
 Then add plugin to your `tsconfig.json`
 
-```json5
+```jsonc
 {
-  compilerOptions: {
-    plugins: [
+  "compilerOptions": {
+    "plugins": [
       {
-        name: 'ts-gql-plugin',
-      },
-    ],
-  },
+        "name": "ts-gql-plugin"
+      }
+    ]
+  }
 }
 ```
 
 Since this plugin use [graphql-config](https://www.graphql-config.com/docs/user/user-introduction) you should add a config file targeting your GraphQL schema.
 
-```json5
+```jsonc
 // .graphqlrc
 {
-  schema: './schema.graphql',
+  "schema": "./schema.graphql"
 }
 ```
 
@@ -97,20 +97,20 @@ Configuration can be done at 2 levels: in tsconfig.json and in graphql-config fi
 
 You can add project-related configuration using extension `"ts-gql"`.
 
-```json5
+```jsonc
 // .graphqlrc
 {
-  schema: './schema.graphql',
-  extensions: {
-    'ts-gql': {
-      codegenConfig: {
-        defaultScalarType: 'unknown',
-        scalars: {
-          DateTime: 'String',
-        },
-      },
-    },
-  },
+  "schema": "./schema.graphql",
+  "extensions": {
+    "ts-gql": {
+      "codegenConfig": {
+        "defaultScalarType": "unknown",
+        "scalars": {
+          "DateTime": "String"
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -124,17 +124,17 @@ You can add project-related configuration using extension `"ts-gql"`.
 
 If you should handle multiple GraphQL projects (= multiple schemas), define projects into your graphql-config file.
 
-```json5
+```jsonc
 // .graphqlrc
 {
-  projects: {
-    Catalog: {
-      schema: './catalog/schema.graphql',
+  "projects": {
+    "Catalog": {
+      "schema": "./catalog/schema.graphql"
     },
-    Channel: {
-      schema: './channel/schema.graphql',
-    },
-  },
+    "Channel": {
+      "schema": "./channel/schema.graphql"
+    }
+  }
 }
 ```
 
@@ -143,16 +143,16 @@ If you should handle multiple GraphQL projects (= multiple schemas), define proj
 Then into your plugin config define project name regex, following your own constraints.
 This regex is used to extract project name from operations.
 
-```json5
+```jsonc
 {
-  compilerOptions: {
-    plugins: [
+  "compilerOptions": {
+    "plugins": [
       {
-        name: 'ts-gql-plugin',
-        projectNameRegex: '([A-Z][a-z]*)',
-      },
-    ],
-  },
+        "name": "ts-gql-plugin",
+        "projectNameRegex": "([A-Z][a-z]*)"
+      }
+    ]
+  }
 }
 ```
 
