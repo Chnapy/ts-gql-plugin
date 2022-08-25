@@ -1,14 +1,24 @@
-const getParseRegex = () => /gql\(`([^`]+)`\)(?!\sas\s)/gs;
+import ts from 'typescript';
+import { gqlPluckFromCodeStringSync } from '@graphql-tools/graphql-tag-pluck';
 
-export const parseLiteralOccurenceList = (text: string): string[] => {
-  const parseRegex = getParseRegex();
-
-  const literals: string[] = [];
-
-  let match: RegExpExecArray | null = null;
-  while ((match = parseRegex.exec(text))) {
-    literals.push(match[1]);
+/**
+ * Parse source file and extract every valid gql template literals from it.
+ */
+export const parseLiteralOccurenceList = (
+  sourceFile: ts.SourceFile
+): string[] => {
+  // start with regex test for performance considerations
+  if (!/gql\(`([^`]+)`\)(?!\sas\s)/s.test(sourceFile.text)) {
+    return [];
   }
 
-  return literals;
+  const sources = gqlPluckFromCodeStringSync(
+    sourceFile.fileName,
+    sourceFile.text,
+    {
+      skipIndent: true,
+    }
+  );
+
+  return sources.map(({ body }) => body);
 };

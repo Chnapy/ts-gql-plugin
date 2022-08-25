@@ -8,7 +8,6 @@ import { CachedSchemaLoader, defaultProjectName } from './cached-schema-loader';
 type CreateCachedLiteralParserOptions = {
   cachedSchemaLoader: CachedSchemaLoader;
   projectNameRegex: string | undefined;
-  scriptTarget: ts.ScriptTarget;
   errorCatcher: ErrorCatcher;
 };
 
@@ -20,8 +19,7 @@ export type CachedLiteralParserValue<D extends DocumentInfos = DocumentInfos> =
 
 type CachedLiteralParserInput = {
   literal: string;
-  filename: string;
-  initialSource: string;
+  sourceFile: ts.SourceFile;
 };
 
 export type CachedLiteralParser = ReturnType<typeof createCachedLiteralParser>;
@@ -29,7 +27,6 @@ export type CachedLiteralParser = ReturnType<typeof createCachedLiteralParser>;
 export const createCachedLiteralParser = ({
   cachedSchemaLoader,
   projectNameRegex,
-  scriptTarget,
   errorCatcher,
 }: CreateCachedLiteralParserOptions) => {
   const getProjectNameFromLiteral = (literal: string) =>
@@ -55,7 +52,7 @@ export const createCachedLiteralParser = ({
     CachedLiteralParserInput
   >({
     getKeyFromInput: (input) => input.literal.replaceAll(/\s/gi, ''),
-    create: async ({ literal, filename, initialSource }) => {
+    create: async ({ literal, sourceFile }) => {
       try {
         const project = await getProjectFromLiteral(literal);
 
@@ -70,8 +67,8 @@ export const createCachedLiteralParser = ({
       } catch (error) {
         errorCatcher(
           error,
-          ts.createSourceFile(filename, initialSource, scriptTarget),
-          initialSource.indexOf(literal),
+          sourceFile,
+          sourceFile.text.indexOf(literal),
           literal.length
         );
         return null;

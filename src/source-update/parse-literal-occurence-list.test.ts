@@ -1,5 +1,5 @@
 import { parseLiteralOccurenceList } from './parse-literal-occurence-list';
-import { formatGQL } from '../utils/test-utils';
+import { createSourceFile, formatGQL } from '../utils/test-utils';
 
 describe('Parse literal occurence list', () => {
   it('parse literal occurence list', () => {
@@ -72,7 +72,9 @@ export const CartList: React.FC = () => {
 export default CartList;
     `;
 
-    expect(parseLiteralOccurenceList(code).map(formatGQL)).toEqual([
+    expect(
+      parseLiteralOccurenceList(createSourceFile(code)).map(formatGQL)
+    ).toEqual([
       formatGQL(`
           query User($id: ID!) {
             user(id: $id) {
@@ -96,7 +98,7 @@ export default CartList;
     ]);
   });
 
-  it('ignores AsExpressions', () => {
+  it('ignores comments', () => {
     const code = `
 import { VendorProductListItem } from 'web-client/components/organisms';
 import { CartItemRemoved } from 'web-client/components/organisms/cart/cartList/CartItemRemoved';
@@ -127,8 +129,10 @@ export const CartList: React.FC = () => {
         email
       }
     }
-  \`) as any);
+  \`));
   const cartItems = useGraphQLArray(cartData?.cartItems);
+
+  /*
   const [deleteCartItem] = useOrderCartItemDeleteMutation(
     gql(\`
       mutation UserDelete($id: ID!) {
@@ -145,6 +149,8 @@ export const CartList: React.FC = () => {
       ],
       awaitRefetchQueries: true,
     });
+*/
+
   const [removedVendorProductId, setRemovedVendorProductId] = React.useState<string | null>(null);
   const cartPrice = useCartPrice();
 
@@ -166,12 +172,18 @@ export const CartList: React.FC = () => {
 export default CartList;
     `;
 
-    expect(parseLiteralOccurenceList(code).map(formatGQL)).toEqual([
+    expect(
+      parseLiteralOccurenceList(createSourceFile(code)).map(formatGQL)
+    ).toEqual([
       formatGQL(`
-          mutation UserDelete($id: ID!) {
+          query User($id: ID!) {
             user(id: $id) {
               id
               name
+            }
+            users {
+              id
+              email
             }
           }
         `),

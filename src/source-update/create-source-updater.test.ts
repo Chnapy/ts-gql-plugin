@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable unicorn/consistent-function-scoping */
+import { join } from 'node:path';
 import * as createUniqueStringExport from '../utils/create-unique-string';
 import { Logger } from '../utils/logger';
 import { createSourceUpdater } from './create-source-updater';
-import { formatTS } from '../utils/test-utils';
-import { join } from 'node:path';
+import { createSourceFile, formatTS } from '../utils/test-utils';
 
 const resolveTestFile = (path: string) => join('src/test-files', path);
 
@@ -37,7 +37,7 @@ describe('Create source updater', () => {
 
     expect(errorCatcher).toHaveBeenCalled();
 
-    expect(await updateScriptSnapshot('', '')).toBe('');
+    expect(await updateScriptSnapshot(createSourceFile(''))).toBe('');
   });
 
   it('gives noop function if schema not defined', async () => {
@@ -52,7 +52,7 @@ describe('Create source updater', () => {
       errorCatcher
     );
 
-    expect(await updateScriptSnapshot('', '')).toBe('');
+    expect(await updateScriptSnapshot(createSourceFile(''))).toBe('');
   });
 
   it('gives same source if no occurrence found', async () => {
@@ -94,7 +94,7 @@ describe('Create source updater', () => {
       export default CartList;
     `;
 
-    const result = await updateScriptSnapshot('', source);
+    const result = await updateScriptSnapshot(createSourceFile(source));
 
     expect(logger.error).not.toHaveBeenCalled();
 
@@ -170,7 +170,7 @@ describe('Create source updater', () => {
       export default CartList;
     `;
 
-    const result = await updateScriptSnapshot('', snapshot);
+    const result = await updateScriptSnapshot(createSourceFile(snapshot));
 
     expect(logger.error).not.toHaveBeenCalled();
 
@@ -374,7 +374,7 @@ describe('Create source updater', () => {
       export default CartList;
     `;
 
-    const result = await updateScriptSnapshot('', snapshot);
+    const result = await updateScriptSnapshot(createSourceFile(snapshot));
 
     expect(logger.error).not.toHaveBeenCalled();
 
@@ -603,7 +603,7 @@ describe('Create source updater', () => {
       export default CartList;
     `;
 
-    const result = await updateScriptSnapshot('', snapshot);
+    const result = await updateScriptSnapshot(createSourceFile(snapshot));
 
     expect(logger.error).not.toHaveBeenCalled();
 
