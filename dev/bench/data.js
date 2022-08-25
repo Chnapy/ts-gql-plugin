@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1661365520999,
+  "lastUpdate": 1661464939815,
   "repoUrl": "https://github.com/Chnapy/ts-gql-plugin",
   "entries": {
     "\"with ts-gql-plugin\" vs \"without ts-gql-plugin\" Benchmark": [
@@ -335,6 +335,37 @@ window.BENCHMARK_DATA = {
             "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
             "value": 16,
             "range": "±2.77%",
+            "unit": "%",
+            "extra": "10 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "richardhaddad@hotmail.fr",
+            "name": "Richard Haddad",
+            "username": "Chnapy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0dd8982f4c33622627c4aa984d8433474833a997",
+          "message": "Refactor literal parser using AST instead of regex (#22)\n\n* refactor literal parser using AST instead of regex\r\n\r\n* use of graphql-tag-pluck for literals extract",
+          "timestamp": "2022-08-26T00:00:18+02:00",
+          "tree_id": "e686988fbe9bb3397335bf89d708e6ef93cf40e8",
+          "url": "https://github.com/Chnapy/ts-gql-plugin/commit/0dd8982f4c33622627c4aa984d8433474833a997"
+        },
+        "date": 1661464937880,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
+            "value": 22.97,
+            "range": "±1.35%",
             "unit": "%",
             "extra": "10 samples"
           }
