@@ -2,7 +2,7 @@ import { format } from 'prettier';
 import ts from 'typescript/lib/tsserverlibrary';
 
 export const createSourceFile = (code: string) =>
-  ts.createSourceFile('foo.ts', code, ts.ScriptTarget.ESNext);
+  ts.createSourceFile('foo.tsx', code, ts.ScriptTarget.ESNext);
 
 export const formatTS = (str: string) =>
   format(str, {

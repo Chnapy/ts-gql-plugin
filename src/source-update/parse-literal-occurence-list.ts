@@ -1,6 +1,5 @@
 import ts from 'typescript';
-
-const expectedTags: ReadonlySet<string> = new Set(['gql', 'graphql']);
+import { gqlPluckFromCodeStringSync } from '@graphql-tools/graphql-tag-pluck';
 
 /**
  * Parse source file and extract every valid gql template literals from it.
@@ -8,37 +7,18 @@ const expectedTags: ReadonlySet<string> = new Set(['gql', 'graphql']);
 export const parseLiteralOccurenceList = (
   sourceFile: ts.SourceFile
 ): string[] => {
-  const getText = (node: ts.Node) => node.getText(sourceFile);
+  // start with regex test for performance considerations
+  if (!/gql\(`([^`]+)`\)(?!\sas\s)/s.test(sourceFile.text)) {
+    return [];
+  }
 
-  const extractTemplateLiterals = (
-    node: ts.Node,
-    parentIsAsExpression = false
-  ): ts.TemplateLiteral[] => {
-    const isAsExpression = ts.isAsExpression(node);
-
-    const next = () =>
-      node
-        .getChildren(sourceFile)
-        .flatMap((child) => extractTemplateLiterals(child, isAsExpression));
-
-    if (!parentIsAsExpression && ts.isCallExpression(node)) {
-      const tag = getText(node.expression);
-      if (!expectedTags.has(tag)) {
-        return next();
-      }
-
-      const templateLiteral = node.arguments.find(ts.isTemplateLiteral);
-      if (!templateLiteral) {
-        return next();
-      }
-
-      return [templateLiteral];
+  const sources = gqlPluckFromCodeStringSync(
+    sourceFile.fileName,
+    sourceFile.text,
+    {
+      skipIndent: true,
     }
-
-    return next();
-  };
-
-  return extractTemplateLiterals(sourceFile).map((templateLiteral) =>
-    getText(templateLiteral).slice(1, -1)
   );
+
+  return sources.map(({ body }) => body);
 };
