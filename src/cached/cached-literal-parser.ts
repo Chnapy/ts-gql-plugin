@@ -14,7 +14,7 @@ type CreateCachedLiteralParserOptions = {
 export type CachedLiteralParserValue<D extends DocumentInfos = DocumentInfos> =
   {
     documentInfos: D;
-    staticGlobals: string;
+    staticGlobals: string[];
   } | null;
 
 type CachedLiteralParserInput = {

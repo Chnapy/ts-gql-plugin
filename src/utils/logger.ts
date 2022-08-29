@@ -1,12 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type TSL from 'typescript/lib/tsserverlibrary';
-import { PluginConfig } from '../plugin-config';
+import { defaultPluginConfig, PluginConfig } from '../plugin-config';
 
 export type Logger = ReturnType<typeof createLogger>;
 
 export const createLogger = (
-  logLevel: PluginConfig['logLevel'] = 'default',
+  logLevel: PluginConfig['logLevel'] = defaultPluginConfig.logLevel,
   logger: Pick<TSL.server.Logger, 'info'>
 ) => {
   let filename: string | undefined = undefined;

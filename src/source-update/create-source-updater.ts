@@ -13,6 +13,7 @@ import {
   DocumentInfosWithLiteral,
 } from '../generators/generate-bottom-content';
 import { parseLiteralOccurenceList } from './parse-literal-occurence-list';
+import { parseTsGqlTags } from './parse-ts-gql-tags';
 
 const isNonNullable = <I>(item: I | null): item is I => !!item;
 
@@ -53,7 +54,12 @@ export const createSourceUpdater = (
       try {
         const literalOccurenceList = parseLiteralOccurenceList(sourceFile);
 
-        if (literalOccurenceList.length === 0) {
+        const projectNamesFromTsGqlTags = parseTsGqlTags(sourceFile);
+
+        if (
+          literalOccurenceList.length + projectNamesFromTsGqlTags.length ===
+          0
+        ) {
           return initialSource;
         }
 
@@ -82,13 +88,24 @@ export const createSourceUpdater = (
           documentInfosPromiseList
         ).then((list) => list.filter(isNonNullable));
 
-        if (documentInfosList.length === 0) {
+        const globalsFromTsGqlTags = await Promise.all(
+          projectNamesFromTsGqlTags.map(async (projectName) => {
+            const schemaItem = await cachedSchemaLoader.getItemOrCreate({
+              projectName,
+            });
+
+            return schemaItem?.staticGlobals;
+          })
+        ).then((list) => list.filter(isNonNullable));
+
+        const staticGlobalsSet = new Set([
+          ...documentInfosList.flatMap((infos) => infos.staticGlobals),
+          ...globalsFromTsGqlTags.flat(),
+        ]);
+
+        if (staticGlobalsSet.size === 0) {
           return initialSource;
         }
-
-        const staticGlobalsSet = new Set(
-          documentInfosList.map((infos) => infos.staticGlobals)
-        );
 
         const bottomContent = generateBottomContent(
           documentInfosList.map((infos) => infos.documentInfos),

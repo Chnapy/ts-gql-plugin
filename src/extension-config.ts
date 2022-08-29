@@ -3,7 +3,9 @@ import { TypeScriptDocumentsPluginConfig } from '@graphql-codegen/typescript-ope
 
 export type ExtensionConfig = {
   /**
-   * Codegen config for code generation.
+   * [`graphql-codegen`](https://www.graphql-code-generator.com/) configuration,
+   * using plugins [typescript](https://www.graphql-code-generator.com/plugins/typescript/typescript#config-api-reference)
+   * and [typescript-operations](https://www.graphql-code-generator.com/plugins/typescript/typescript-operations#config-api-reference) configuration.
    */
   codegenConfig?: TypeScriptPluginConfig & TypeScriptDocumentsPluginConfig;
 };

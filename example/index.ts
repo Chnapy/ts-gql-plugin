@@ -7,7 +7,7 @@ const { data: abc } = useQuery(
     user(id: $id) {
       id
       name
-  }
+    }
     users {
       id
     }

@@ -19,14 +19,15 @@ describe('Generate type from schema', () => {
     }
     `);
 
-    const expected = `
-      type Maybe<T> = T | null;
-      type InputMaybe<T> = Maybe<T>;
-      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-      type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-      type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+    const expected = [
+      'export type Maybe<T> = T | null;',
+      'export type InputMaybe<T> = Maybe<T>;',
+      'export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };',
+      'export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };',
+      'export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };',
+      `
       /** All built-in and custom scalars, mapped to their actual values */
-      type Scalars = {
+      export interface Scalars {
         ID: string;
         String: string;
         Boolean: boolean;
@@ -34,7 +35,7 @@ describe('Generate type from schema', () => {
         Float: number;
       };
       
-      type User = {
+      export interface CatalogUser {
         __typename?: 'User';
         id: Scalars['ID'];
         oauthId: Scalars['String'];
@@ -43,20 +44,20 @@ describe('Generate type from schema', () => {
         picture?: Maybe<Scalars['String']>;
       };
       
-      type Query = {
+      export interface CatalogQuery {
         __typename?: 'Query';
-        users: Array<User>;
-        user: User;
+        users: Array<CatalogUser>;
+        user: CatalogUser;
       };
       
-      
-      type QueryUserArgs = {
+      export interface CatalogQueryUserArgs {
         id: Scalars['ID'];
       };
-    `;
+    `,
+    ];
 
-    const result = await generateTypeFromSchema(schema);
+    const result = await generateTypeFromSchema(schema, 'Catalog');
 
-    expect(formatTS(result)).toEqual(formatTS(expected));
+    expect(result.map(formatTS)).toEqual(expected.map(formatTS));
   });
 });

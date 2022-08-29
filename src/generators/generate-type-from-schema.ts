@@ -1,14 +1,16 @@
 import { codegen } from '@graphql-codegen/core';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 import { DocumentNode } from 'graphql';
+import { parseWithRegex } from '../utils/parse-with-regex';
 
 type CodegenPlugin = typeof plugins[number];
 const plugins = [typescriptPlugin];
 
 export const generateTypeFromSchema = async (
   schema: DocumentNode,
+  projectName?: string,
   codegenConfig: typescriptPlugin.TypeScriptPluginConfig = {}
-): Promise<string> => {
+): Promise<string[]> => {
   const pluginMap = plugins.reduce<Record<number, CodegenPlugin>>(
     (map, plugin, i) => {
       map[i + 1] = plugin;
@@ -18,13 +20,10 @@ export const generateTypeFromSchema = async (
   );
 
   const config: typescriptPlugin.TypeScriptPluginConfig = {
-    noExport: true,
+    enumsAsTypes: true,
+    declarationKind: 'interface',
+    typesPrefix: projectName,
     ...codegenConfig,
-    // operationResultSuffix: 'Operation',
-    // typesPrefix: 'I',
-    // globalNamespace: true,
-    // preResolveTypes: false,
-    // mergeFragmentTypes: true,
   };
 
   const staticType = await codegen({
@@ -38,5 +37,15 @@ export const generateTypeFromSchema = async (
     pluginMap,
   });
 
-  return staticType;
+  const redundantTypesRegex = /.*type (.+?)(<.*)?=.+;/g;
+
+  const redundantTypes = parseWithRegex(
+    staticType,
+    redundantTypesRegex,
+    (foundArray) => foundArray?.[0]?.trim()
+  );
+
+  const uniqueStaticTypes = staticType.replaceAll(redundantTypesRegex, '');
+
+  return [...redundantTypes, uniqueStaticTypes];
 };

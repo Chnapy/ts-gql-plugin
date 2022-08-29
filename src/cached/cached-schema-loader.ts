@@ -15,7 +15,7 @@ type CreateCachedSchemaLoaderOptions = {
 type ProjectInfos = {
   schemaFilePath?: string;
   schemaDocument: DocumentNode;
-  staticGlobals: string;
+  staticGlobals: string[];
   extension: ExtensionConfig;
 };
 
@@ -61,6 +61,7 @@ export const createCachedSchemaLoader = ({
             schemaDocument,
             staticGlobals: await generateTypeFromSchema(
               schemaDocument,
+              projectName === defaultProjectName ? undefined : projectName,
               extension.codegenConfig
             ),
             extension,

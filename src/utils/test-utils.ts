@@ -10,3 +10,5 @@ export const formatTS = (str: string) =>
   });
 
 export const formatGQL = (str: string) => format(str, { parser: 'graphql' });
+
+export const formatSpaces = (str: string) => str.replaceAll(/\s/g, '');

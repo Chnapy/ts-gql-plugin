@@ -3,10 +3,9 @@
   "version": "1.3.5",
   "packageManager": "yarn@3.2.1",
   "license": "MIT",
-  "main": "./dist/plugin.js",
+  "main": "./dist/index.js",
   "exports": {
-    ".": "./dist/plugin.js",
-    "./tools": "./dist/tools.js"
+    ".": "./dist/index.js"
   },
   "files": [
     "dist"
@@ -29,7 +28,7 @@
     "url": "https://github.com/chnapy/ts-gql-plugin/issues"
   },
   "scripts": {
-    "c:format": "prettier -w .",
+    "c:format:fix": "prettier -w .",
     "c:lint": "eslint . --cache --cache-location node_modules/.cache/.eslintcache",
     "c:lint:fix": "yarn c:lint --fix",
     "c:type": "tsc-ls -b",
