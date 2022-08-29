@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable unicorn/consistent-function-scoping */
 import { join } from 'node:path';
-import * as createUniqueStringExport from '../utils/create-unique-string';
 import { Logger } from '../utils/logger';
 import { createSourceUpdater } from './create-source-updater';
 import { createSourceFile, formatTS } from '../utils/test-utils';
@@ -104,12 +103,6 @@ describe('Create source updater', () => {
   it('gives updated source', async () => {
     const logger = createFakeLogger();
 
-    const createUniqueStringSpy = vi.spyOn(
-      createUniqueStringExport,
-      'createUniqueString'
-    );
-    createUniqueStringSpy.mockImplementationOnce(() => '_unique_module_name');
-
     const updateScriptSnapshot = createSourceUpdater(
       '',
       { graphqlConfigPath: singleProjectPath },
@@ -205,11 +198,10 @@ describe('Create source updater', () => {
 
     /* eslint-disable */
 
-    declare module 'graphql-tag' {
-      module _unique_module_name {
+      module TsGql {
         type DocumentNode = import('graphql').DocumentNode;
 
-        interface TypedDocumentNode<
+        export interface TypedDocumentNode<
           Result = { [key: string]: unknown },
           Variables = { [key: string]: unknown }
         > extends DocumentNode {
@@ -221,28 +213,34 @@ describe('Create source updater', () => {
           __apiType?: (variables: Variables) => Result;
         }
 
-        interface DocumentMap {
-          [${query1.slice(
-            4,
-            -1
-          )}]: TypedDocumentNode<UserQueryOperation, UserQueryVariables>;
-          [${query2.slice(
-            4,
-            -1
-          )}]: TypedDocumentNode<TotoQueryOperation, TotoQueryVariables>;
+        export interface DocumentMap {
+          [${query1.slice(4, -1)}]: TypedDocumentNode<{
+            __typename?: "Query";
+            user: { __typename?: "User"; id: string; name: string };
+            users: Array<{ __typename?: "User"; id: string; email: string }>;
+          }, Exact<{
+            id: Scalars["ID"];
+          }>>;
+          [${query2.slice(4, -1)}]: TypedDocumentNode<{
+            __typename?: "Query";
+            toto: { __typename?: "User"; id: string; email: string };
+          }, Exact<{
+            id: Scalars["ID"];
+          }>>;
         }
 
-        type Maybe<T> = T | null;
-        type InputMaybe<T> = Maybe<T>;
-        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
           [SubKey in K]?: Maybe<T[SubKey]>;
         };
-        type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
           [SubKey in K]: Maybe<T[SubKey]>;
         };
+
         /** All built-in and custom scalars, mapped to their actual values */
-        type Scalars = {
+        export interface Scalars {
           ID: string;
           String: string;
           Boolean: boolean;
@@ -250,7 +248,7 @@ describe('Create source updater', () => {
           Float: number;
         };
         
-        type User = {
+        export interface User {
           __typename?: "User";
           id: Scalars["ID"];
           oauthId: Scalars["String"];
@@ -259,44 +257,26 @@ describe('Create source updater', () => {
           picture?: Maybe<Scalars["String"]>;
         };
     
-        type Query = {
+        export interface Query {
            __typename?: "Query";
            users: Array<User>;
            user: User;
            toto: User;
          };
          
-         type QueryUserArgs = {
+         export interface QueryUserArgs {
            id: Scalars["ID"];
          };
          
-          type QueryTotoArgs = {
+         export interface QueryTotoArgs {
             id: Scalars["ID"];
-          };
-    
-          type UserQueryVariables = Exact<{
-            id: Scalars["ID"];
-          }>;
-          
-          type UserQueryOperation = {
-            __typename?: "Query";
-            user: { __typename?: "User"; id: string; name: string };
-            users: Array<{ __typename?: "User"; id: string; email: string }>;
-          };
-    
-          type TotoQueryVariables = Exact<{
-            id: Scalars["ID"];
-          }>;
-          
-          type TotoQueryOperation = {
-            __typename?: "Query";
-            toto: { __typename?: "User"; id: string; email: string };
           };
       }
 
-      export function gql<Literal extends keyof _unique_module_name.DocumentMap>(
+    declare module 'graphql-tag' {
+      export function gql<Literal extends keyof TsGql.DocumentMap>(
         literals: Literal
-      ): _unique_module_name.DocumentMap[Literal];
+      ): TsGql.DocumentMap[Literal];
     }
   `)
     );
@@ -304,12 +284,6 @@ describe('Create source updater', () => {
 
   it('gives updated source on multi-projects config', async () => {
     const logger = createFakeLogger();
-
-    const createUniqueStringSpy = vi.spyOn(
-      createUniqueStringExport,
-      'createUniqueString'
-    );
-    createUniqueStringSpy.mockImplementationOnce(() => '_unique_module_name');
 
     const updateScriptSnapshot = createSourceUpdater(
       '',
@@ -409,11 +383,10 @@ describe('Create source updater', () => {
 
     /* eslint-disable */
 
-    declare module 'graphql-tag' {
-      module _unique_module_name {
+      module TsGql {
         type DocumentNode = import('graphql').DocumentNode;
 
-        interface TypedDocumentNode<
+        export interface TypedDocumentNode<
           Result = { [key: string]: unknown },
           Variables = { [key: string]: unknown }
         > extends DocumentNode {
@@ -425,28 +398,34 @@ describe('Create source updater', () => {
           __apiType?: (variables: Variables) => Result;
         }
 
-        interface DocumentMap {
-          [${query1.slice(
-            4,
-            -1
-          )}]: TypedDocumentNode<CatalogUserQueryOperation, CatalogUserQueryVariables>;
-          [${query2.slice(
-            4,
-            -1
-          )}]: TypedDocumentNode<ChannelTotoQueryOperation, ChannelTotoQueryVariables>;
+        export interface DocumentMap {
+          [${query1.slice(4, -1)}]: TypedDocumentNode<{
+            __typename?: "Query";
+            user: { __typename?: "User"; id: string; name: string };
+            users: Array<{ __typename?: "User"; id: string; email: string }>;
+          }, Exact<{
+            id: Scalars["ID"];
+          }>>;
+          [${query2.slice(4, -1)}]: TypedDocumentNode<{
+            __typename?: "Query";
+            toto: { __typename?: "Item"; id: string; value: string };
+          }, Exact<{
+            id: Scalars["ID"];
+          }>>;
         }
 
-        type Maybe<T> = T | null;
-        type InputMaybe<T> = Maybe<T>;
-        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
           [SubKey in K]?: Maybe<T[SubKey]>;
         };
-        type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
           [SubKey in K]: Maybe<T[SubKey]>;
         };
+
         /** All built-in and custom scalars, mapped to their actual values */
-        type Scalars = {
+        export interface Scalars {
           ID: string;
           String: string;
           Boolean: boolean;
@@ -454,7 +433,7 @@ describe('Create source updater', () => {
           Float: number;
         };
         
-        type User = {
+        export interface CatalogUser {
           __typename?: "User";
           id: Scalars["ID"];
           oauthId: Scalars["String"];
@@ -463,27 +442,18 @@ describe('Create source updater', () => {
           picture?: Maybe<Scalars["String"]>;
         };
     
-        type Query = {
+        export interface CatalogQuery {
            __typename?: "Query";
-           users: Array<User>;
-           user: User;
+           users: Array<CatalogUser>;
+           user: CatalogUser;
          };
          
-         type QueryUserArgs = {
+         export interface CatalogQueryUserArgs {
            id: Scalars["ID"];
          };
 
-         type Maybe<T> = T | null;
-         type InputMaybe<T> = Maybe<T>;
-         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-         type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-           [SubKey in K]?: Maybe<T[SubKey]>;
-         };
-         type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-           [SubKey in K]: Maybe<T[SubKey]>;
-         };
          /** All built-in and custom scalars, mapped to their actual values */
-         type Scalars = {
+         export interface Scalars {
            ID: string;
            String: string;
            Boolean: boolean;
@@ -491,44 +461,26 @@ describe('Create source updater', () => {
            Float: number;
          };
 
-         type Item = {
+         export interface ChannelItem {
            __typename?: "Item";
            id: Scalars["ID"];
            value: Scalars["String"];
          };
         
-         type Query = {
+         export interface ChannelQuery {
            __typename?: "Query";
-           toto: Item;
+           toto: ChannelItem;
          };
          
-          type QueryTotoArgs = {
+         export interface ChannelQueryTotoArgs {
             id: Scalars["ID"];
-          };
-    
-          type CatalogUserQueryVariables = Exact<{
-            id: Scalars["ID"];
-          }>;
-          
-          type CatalogUserQueryOperation = {
-            __typename?: "Query";
-            user: { __typename?: "User"; id: string; name: string };
-            users: Array<{ __typename?: "User"; id: string; email: string }>;
-          };
-    
-          type ChannelTotoQueryVariables = Exact<{
-            id: Scalars["ID"];
-          }>;
-          
-          type ChannelTotoQueryOperation = {
-            __typename?: "Query";
-            toto: { __typename?: "Item"; id: string; value: string };
           };
       }
 
-      export function gql<Literal extends keyof _unique_module_name.DocumentMap>(
+    declare module 'graphql-tag' {
+      export function gql<Literal extends keyof TsGql.DocumentMap>(
         literals: Literal
-      ): _unique_module_name.DocumentMap[Literal];
+      ): TsGql.DocumentMap[Literal];
     }
   `)
     );
@@ -536,12 +488,6 @@ describe('Create source updater', () => {
 
   it('gives updated source with codegen config', async () => {
     const logger = createFakeLogger();
-
-    const createUniqueStringSpy = vi.spyOn(
-      createUniqueStringExport,
-      'createUniqueString'
-    );
-    createUniqueStringSpy.mockImplementationOnce(() => '_unique_module_name');
 
     const updateScriptSnapshot = createSourceUpdater(
       '',
@@ -638,11 +584,10 @@ describe('Create source updater', () => {
 
     /* eslint-disable */
 
-    declare module 'graphql-tag' {
-      module _unique_module_name {
+      module TsGql {
         type DocumentNode = import('graphql').DocumentNode;
 
-        interface TypedDocumentNode<
+        export interface TypedDocumentNode<
           Result = { [key: string]: unknown },
           Variables = { [key: string]: unknown }
         > extends DocumentNode {
@@ -654,28 +599,34 @@ describe('Create source updater', () => {
           __apiType?: (variables: Variables) => Result;
         }
 
-        interface DocumentMap {
-          [${query1.slice(
-            4,
-            -1
-          )}]: TypedDocumentNode<UserQueryOperation, UserQueryVariables>;
-          [${query2.slice(
-            4,
-            -1
-          )}]: TypedDocumentNode<TotoQueryOperation, TotoQueryVariables>;
+        export interface DocumentMap {
+          [${query1.slice(4, -1)}]: TypedDocumentNode<{
+            __typename?: "Query";
+            user: { __typename?: "User"; id: string; name: string };
+            users: Array<{ __typename?: "User"; id: string; email: string }>;
+          }, Exact<{
+            id: Scalars["ID"];
+          }>>;
+          [${query2.slice(4, -1)}]: TypedDocumentNode<{
+            __typename?: "Query";
+            toto: { __typename?: "User"; id: string; email: string };
+          }, Exact<{
+            id: Scalars["ID"];
+          }>>;
         }
 
-        type Maybe<T> = T | null;
-        type InputMaybe<T> = Maybe<T>;
-        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-        type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+        export type Maybe<T> = T | null;
+        export type InputMaybe<T> = Maybe<T>;
+        export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
           [SubKey in K]?: Maybe<T[SubKey]>;
         };
-        type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+        export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
           [SubKey in K]: Maybe<T[SubKey]>;
         };
+
         /** All built-in and custom scalars, mapped to their actual values */
-        type Scalars = {
+        export interface Scalars {
           ID: string;
           String: string;
           Boolean: boolean;
@@ -684,7 +635,7 @@ describe('Create source updater', () => {
           DateTime: String;
         };
         
-        type User = {
+        export interface User {
           __typename?: "User";
           id: Scalars["ID"];
           oauthId: Scalars["String"];
@@ -694,44 +645,26 @@ describe('Create source updater', () => {
           createdAt?: Maybe<Scalars["DateTime"]>;
         };
     
-        type Query = {
+        export interface Query {
            __typename?: "Query";
            users: Array<User>;
            user: User;
            toto: User;
          };
          
-         type QueryUserArgs = {
+         export interface QueryUserArgs {
            id: Scalars["ID"];
          };
          
-          type QueryTotoArgs = {
+         export interface QueryTotoArgs {
             id: Scalars["ID"];
-          };
-    
-          type UserQueryVariables = Exact<{
-            id: Scalars["ID"];
-          }>;
-          
-          type UserQueryOperation = {
-            __typename?: "Query";
-            user: { __typename?: "User"; id: string; name: string };
-            users: Array<{ __typename?: "User"; id: string; email: string }>;
-          };
-    
-          type TotoQueryVariables = Exact<{
-            id: Scalars["ID"];
-          }>;
-          
-          type TotoQueryOperation = {
-            __typename?: "Query";
-            toto: { __typename?: "User"; id: string; email: string };
           };
       }
 
-      export function gql<Literal extends keyof _unique_module_name.DocumentMap>(
+    declare module 'graphql-tag' {
+      export function gql<Literal extends keyof TsGql.DocumentMap>(
         literals: Literal
-      ): _unique_module_name.DocumentMap[Literal];
+      ): TsGql.DocumentMap[Literal];
     }
   `)
     );

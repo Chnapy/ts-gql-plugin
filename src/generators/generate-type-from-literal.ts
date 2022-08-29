@@ -3,9 +3,6 @@ import * as typescriptOperationsPlugin from '@graphql-codegen/typescript-operati
 import { DocumentNode, parse } from 'graphql';
 import { DocumentInfos } from './generate-bottom-content';
 
-const variablesRegex = /type (\w+Variables) = /s;
-const operationsRegex = /type (\w+Operation) = /s;
-
 type CodegenPlugin = typeof plugins[number];
 const plugins = [typescriptOperationsPlugin];
 
@@ -25,13 +22,7 @@ export const generateTypeFromLiteral = async (
   );
 
   const config: typescriptOperationsPlugin.TypeScriptDocumentsPluginConfig = {
-    noExport: true,
-    operationResultSuffix: 'Operation',
     ...codegenConfig,
-    // typesPrefix: 'I',
-    // globalNamespace: true,
-    // preResolveTypes: false,
-    // mergeFragmentTypes: true,
   };
 
   const staticTypes = await codegen({
@@ -50,19 +41,20 @@ export const generateTypeFromLiteral = async (
     pluginMap,
   });
 
-  const variables = variablesRegex.exec(staticTypes)?.[1];
-  if (!variables) {
-    throw new Error(`Variables type name not found by regex: ${staticTypes}`);
+  const typeRegex = /\s=\s(.*?);\n$/gms;
+
+  const variablesType = typeRegex.exec(staticTypes)?.[1];
+  if (!variablesType) {
+    throw new Error(`Variables type not found by regex: ${staticTypes}`);
   }
 
-  const result = operationsRegex.exec(staticTypes)?.[1];
-  if (!result) {
-    throw new Error(`Operation type name not found by regex: ${staticTypes}`);
+  const operationType = typeRegex.exec(staticTypes)?.[1];
+  if (!operationType) {
+    throw new Error(`Operation type not found by regex: ${staticTypes}`);
   }
 
   return {
-    variables,
-    result,
-    staticTypes,
+    variablesType,
+    operationType,
   };
 };

@@ -10,7 +10,7 @@ import { createLogger } from './utils/logger';
 import { objectOverride } from './utils/object-override';
 import { waitPromiseSync } from './utils/wait-promise-sync';
 
-const init: PluginInit = ({ typescript: ts }) => ({
+export const init: PluginInit = ({ typescript: ts }) => ({
   create: (info) => {
     const { project, languageService } = info;
     const config = info.config as PluginConfig;
@@ -148,5 +148,3 @@ const init: PluginInit = ({ typescript: ts }) => ({
     return languageServiceWithDiagnostics;
   },
 });
-
-export = init;

@@ -1,14 +1,13 @@
-import { createUniqueString } from '../utils/create-unique-string';
-
 export type DocumentInfos = {
-  variables: string;
-  result: string;
-  staticTypes: string;
+  variablesType: string;
+  operationType: string;
 };
 
 export type DocumentInfosWithLiteral = DocumentInfos & {
   literal: string;
 };
+
+const moduleName = 'TsGql';
 
 export const generateBottomContent = (
   documentInfosList: DocumentInfosWithLiteral[],
@@ -16,25 +15,16 @@ export const generateBottomContent = (
 ) => {
   const documentMapContent = documentInfosList
     .map(
-      ({ literal, variables, result }) =>
-        `[\`${literal}\`]: TypedDocumentNode<${result}, ${variables}>;`
+      ({ literal, variablesType, operationType }) =>
+        `[\`${literal}\`]: TypedDocumentNode<${operationType}, ${variablesType}>;`
     )
     .join('\n');
 
-  const documentStaticTypes = documentInfosList
-    .map(({ staticTypes }) => staticTypes)
-    .join('\n');
-
-  const moduleName = createUniqueString();
-
-  return `
-/* eslint-disable */
-
-declare module 'graphql-tag' {
+  const module = `
   module ${moduleName} {
     type DocumentNode = import('graphql').DocumentNode;
 
-    interface TypedDocumentNode<
+    export interface TypedDocumentNode<
       Result = { [key: string]: unknown },
       Variables = { [key: string]: unknown }
     > extends DocumentNode {
@@ -46,15 +36,20 @@ declare module 'graphql-tag' {
       __apiType?: (variables: Variables) => Result;
     }
 
-    interface DocumentMap {
+    export interface DocumentMap {
       ${documentMapContent}
     }
 
     ${staticCode}
-
-    ${documentStaticTypes}
   }
+  `;
 
+  return `
+/* eslint-disable */
+
+${module}
+
+declare module 'graphql-tag' {
   export function gql<Literal extends keyof ${moduleName}.DocumentMap>(
     literals: Literal
   ): ${moduleName}.DocumentMap[Literal];

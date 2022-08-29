@@ -1,6 +1,6 @@
 import { parse } from 'graphql';
 import { generateTypeFromLiteral } from './generate-type-from-literal';
-import { formatTS } from '../utils/test-utils';
+import { formatSpaces } from '../utils/test-utils';
 
 describe('Generate type from literal', () => {
   it('generates type from correct string', async () => {
@@ -32,22 +32,19 @@ describe('Generate type from literal', () => {
     }
 `;
 
-    const expectedVariables = `UserQueryVariables`;
+    const expectedVariableType = `Exact<{
+      id: Scalars['ID'];
+    }>`;
 
-    const expectedResult = `UserQueryOperation`;
-
-    const expectedStaticTypes = formatTS(`
-      type UserQueryVariables = Exact<{
-        id: Scalars['ID'];
-      }>;
-
-      type UserQueryOperation = { __typename?: 'Query', user: { __typename?: 'User', id: string, name: string }, users: Array<{ __typename?: 'User', id: string, email: string }> };
-    `);
+    const expectedOperationType = `{ __typename?: 'Query', user: { __typename?: 'User', id: string, name: string }, users: Array<{ __typename?: 'User', id: string, email: string }> }`;
 
     const result = await generateTypeFromLiteral(code, schema);
 
-    expect(result.variables).toEqual(expectedVariables);
-    expect(result.result).toEqual(expectedResult);
-    expect(formatTS(result.staticTypes)).toEqual(expectedStaticTypes);
+    expect(formatSpaces(result.variablesType)).toEqual(
+      formatSpaces(expectedVariableType)
+    );
+    expect(formatSpaces(result.operationType)).toEqual(
+      formatSpaces(expectedOperationType)
+    );
   });
 });

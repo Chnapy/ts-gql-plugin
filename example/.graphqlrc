@@ -2,10 +2,10 @@
   "schema": "./schema.graphql",
   "projects": {
     "Catalog": {
-      "schema": "./schema.graphql"
+      "schema": "./schema-catalog.graphql"
     },
     "Profile": {
-      "schema": "./schema.graphql"
+      "schema": "./schema-profile.graphql"
     }
   }
 }

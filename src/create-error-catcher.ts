@@ -1,5 +1,5 @@
 import ts from 'typescript';
-import { Logger } from './tools';
+import { Logger } from './utils/logger';
 import { isVSCodeEnv } from './utils/is-vscode-env';
 
 export type ErrorCatcher = (
