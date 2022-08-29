@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1661465335402,
+  "lastUpdate": 1661804329754,
   "repoUrl": "https://github.com/Chnapy/ts-gql-plugin",
   "entries": {
     "\"with ts-gql-plugin\" vs \"without ts-gql-plugin\" Benchmark": [
@@ -397,6 +397,37 @@ window.BENCHMARK_DATA = {
             "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
             "value": 23.01,
             "range": "±6.90%",
+            "unit": "%",
+            "extra": "10 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "richardhaddad@hotmail.fr",
+            "name": "Richard Haddad",
+            "username": "Chnapy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "75413b61f8c2c56810c8253ef2e0e0d06da23d5b",
+          "message": "Expose generated types using global module (#31)\n\n* expose generated types using global module\r\nfix multi-projects types name conflicts\r\nfix operations name conflicts\r\nexpose UnionToArray util type\r\nupdate README\r\n\r\n* upgrade to 1.4.0",
+          "timestamp": "2022-08-29T22:17:09+02:00",
+          "tree_id": "d38988df33415cf48b83a7b70804d8fbfcfb58a9",
+          "url": "https://github.com/Chnapy/ts-gql-plugin/commit/75413b61f8c2c56810c8253ef2e0e0d06da23d5b"
+        },
+        "date": 1661804329000,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
+            "value": 22.93,
+            "range": "±1.07%",
             "unit": "%",
             "extra": "10 samples"
           }
