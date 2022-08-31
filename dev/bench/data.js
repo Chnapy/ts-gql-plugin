@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1661804329754,
+  "lastUpdate": 1661943978575,
   "repoUrl": "https://github.com/Chnapy/ts-gql-plugin",
   "entries": {
     "\"with ts-gql-plugin\" vs \"without ts-gql-plugin\" Benchmark": [
@@ -428,6 +428,37 @@ window.BENCHMARK_DATA = {
             "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
             "value": 22.93,
             "range": "±1.07%",
+            "unit": "%",
+            "extra": "10 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "richardhaddad@hotmail.fr",
+            "name": "Richard Haddad",
+            "username": "Chnapy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0d57c8bb1e7a74ca221fab573eb4edf94d545c7a",
+          "message": "Fix generated type name prefix (#37)\n\n* fix generated type name prefix\r\nfix nodejs version, broken in 16.17.0\r\n\r\n* upgrade to 1.4.1",
+          "timestamp": "2022-08-31T13:03:55+02:00",
+          "tree_id": "14857455fb83e3a2edd6b78e318b3cc7b5b2edc8",
+          "url": "https://github.com/Chnapy/ts-gql-plugin/commit/0d57c8bb1e7a74ca221fab573eb4edf94d545c7a"
+        },
+        "date": 1661943976331,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
+            "value": 24.29,
+            "range": "±2.19%",
             "unit": "%",
             "extra": "10 samples"
           }
