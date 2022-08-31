@@ -29,6 +29,9 @@ export type CachedSchemaLoader = ReturnType<typeof createCachedSchemaLoader>;
 
 export const defaultProjectName = 'default';
 
+export const getProjectNameIfNotDefault = (projectName: string) =>
+  projectName === defaultProjectName ? undefined : projectName;
+
 export const createCachedSchemaLoader = ({
   cachedGraphQLConfigLoader,
   errorCatcher,
@@ -61,7 +64,7 @@ export const createCachedSchemaLoader = ({
             schemaDocument,
             staticGlobals: await generateTypeFromSchema(
               schemaDocument,
-              projectName === defaultProjectName ? undefined : projectName,
+              getProjectNameIfNotDefault(projectName),
               extension.codegenConfig
             ),
             extension,

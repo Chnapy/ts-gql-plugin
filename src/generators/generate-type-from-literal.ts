@@ -9,6 +9,7 @@ const plugins = [typescriptOperationsPlugin];
 export const generateTypeFromLiteral = async (
   literal: string,
   schema: DocumentNode,
+  projectName?: string,
   codegenConfig: typescriptOperationsPlugin.TypeScriptDocumentsPluginConfig = {}
 ): Promise<DocumentInfos> => {
   const document = parse(literal);
@@ -22,6 +23,7 @@ export const generateTypeFromLiteral = async (
   );
 
   const config: typescriptOperationsPlugin.TypeScriptDocumentsPluginConfig = {
+    typesPrefix: projectName,
     ...codegenConfig,
   };
 

@@ -302,6 +302,7 @@ describe('Create source updater', () => {
       user(id: $id) {
         id
         name
+        provider
       }
       users {
         id
@@ -401,7 +402,12 @@ describe('Create source updater', () => {
         export interface DocumentMap {
           [${query1.slice(4, -1)}]: TypedDocumentNode<{
             __typename?: "Query";
-            user: { __typename?: "User"; id: string; name: string };
+            user: { 
+              __typename?: "User"; 
+              id: string; 
+              name: string;
+              provider?: CatalogProvider | null;
+            };
             users: Array<{ __typename?: "User"; id: string; email: string }>;
           }, Exact<{
             id: Scalars["ID"];
@@ -440,6 +446,7 @@ describe('Create source updater', () => {
           email: Scalars["String"];
           name: Scalars["String"];
           picture?: Maybe<Scalars["String"]>;
+          provider?: Maybe<CatalogProvider>;
         };
     
         export interface CatalogQuery {
@@ -451,6 +458,8 @@ describe('Create source updater', () => {
          export interface CatalogQueryUserArgs {
            id: Scalars["ID"];
          };
+
+         export type CatalogProvider = "GOOGLE" | "FACEBOOK";
 
          /** All built-in and custom scalars, mapped to their actual values */
          export interface Scalars {
