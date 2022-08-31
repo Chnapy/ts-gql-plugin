@@ -4,9 +4,15 @@ type User {
   email: String!
   name: String!
   picture: String
+  provider: Provider
 }
 
 type Query {
   users: [User!]!
   user(id: ID!): User!
+}
+
+enum Provider {
+  GOOGLE
+  FACEBOOK
 }

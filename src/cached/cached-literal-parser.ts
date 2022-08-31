@@ -3,7 +3,11 @@ import { ErrorCatcher } from '../create-error-catcher';
 import { generateTypeFromLiteral } from '../generators/generate-type-from-literal';
 import { DocumentInfos } from '../generators/generate-bottom-content';
 import { createCacheSystem } from '../utils/cache-system';
-import { CachedSchemaLoader, defaultProjectName } from './cached-schema-loader';
+import {
+  CachedSchemaLoader,
+  defaultProjectName,
+  getProjectNameIfNotDefault,
+} from './cached-schema-loader';
 
 type CreateCachedLiteralParserOptions = {
   cachedSchemaLoader: CachedSchemaLoader;
@@ -44,7 +48,7 @@ export const createCachedLiteralParser = ({
       throw new Error(`Project not defined for name "${projectName}"`);
     }
 
-    return project;
+    return { ...project, projectName };
   };
 
   const parser = createCacheSystem<
@@ -60,6 +64,7 @@ export const createCachedLiteralParser = ({
           documentInfos: await generateTypeFromLiteral(
             literal,
             project.schemaDocument,
+            getProjectNameIfNotDefault(project.projectName),
             project.extension.codegenConfig
           ),
           staticGlobals: project.staticGlobals,
