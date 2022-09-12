@@ -1,6 +1,6 @@
 import { codegen } from '@graphql-codegen/core';
 import * as typescriptOperationsPlugin from '@graphql-codegen/typescript-operations';
-import { DocumentNode, parse } from 'graphql';
+import { DocumentNode, GraphQLError, parse } from 'graphql';
 import { DocumentInfos } from './generate-bottom-content';
 
 type CodegenPlugin = typeof plugins[number];
@@ -27,6 +27,8 @@ export const generateTypeFromLiteral = async (
     ...codegenConfig,
   };
 
+  const codegenErrors: GraphQLError[] = [];
+
   const staticTypes = await codegen({
     schema,
     documents: [
@@ -41,6 +43,24 @@ export const generateTypeFromLiteral = async (
       [i + 1]: {},
     })),
     pluginMap,
+    profiler: {
+      collect: () => [],
+      run: async (fn) => {
+        const value = await fn();
+
+        if (Array.isArray(value)) {
+          codegenErrors.push(...value.flatMap((val) => val.errors ?? []));
+        }
+
+        return value;
+      },
+    },
+  }).catch(async (error) => {
+    if (codegenErrors.length === 0) {
+      throw error;
+    }
+
+    throw new AggregateError(codegenErrors, 'Codegen errors');
   });
 
   const typeRegex = /\s=\s(.*?);\n$/gms;

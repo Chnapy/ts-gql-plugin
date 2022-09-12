@@ -1,6 +1,8 @@
+import { GraphQLError } from 'graphql';
 import ts from 'typescript';
-import { Logger } from './utils/logger';
+import { getCurrentWord } from './utils/get-current-word';
 import { isVSCodeEnv } from './utils/is-vscode-env';
+import { Logger } from './utils/logger';
 
 export type ErrorCatcher = (
   err: unknown,
@@ -43,6 +45,19 @@ export const createErrorCatcher = (
     }
 
     if (sourceFile) {
+      if (err instanceof GraphQLError) {
+        const errorLocation = err.nodes?.[0]?.loc;
+        const position = err.positions?.[0];
+
+        if (errorLocation) {
+          start += errorLocation.start;
+          length = errorLocation.end - errorLocation.start;
+        } else if (position) {
+          start += position;
+          length = getCurrentWord(sourceFile.text, start).length;
+        }
+      }
+
       const gqlDiagnostics = pluginsDiagnostics.get(sourceFile.fileName) ?? [];
 
       pluginsDiagnostics.set(sourceFile.fileName, [
