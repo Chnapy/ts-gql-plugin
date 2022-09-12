@@ -45,7 +45,9 @@ export const createCachedLiteralParser = ({
       projectName,
     });
     if (!project) {
-      throw new Error(`Project not defined for name "${projectName}"`);
+      throw new Error(
+        `Project not defined for name "${projectName}", or there is an issue on schema file`
+      );
     }
 
     return { ...project, projectName };
