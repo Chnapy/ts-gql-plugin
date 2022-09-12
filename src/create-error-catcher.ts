@@ -11,6 +11,8 @@ export type ErrorCatcher = (
   length?: number
 ) => null;
 
+const unknownFileName = '';
+
 export const createErrorCatcher = (
   pluginsDiagnostics: Map<string, ts.Diagnostic[]>,
   logger: Logger
@@ -27,12 +29,6 @@ export const createErrorCatcher = (
       return null;
     }
 
-    if (!sourceFile && !vsCodeEnv) {
-      logger.error(err);
-
-      throw new Error('Internal error - check previous logs.');
-    }
-
     if (err instanceof AggregateError) {
       err.errors.forEach((gqlErr) =>
         errorCatcher(gqlErr, sourceFile, start, length)
@@ -44,33 +40,49 @@ export const createErrorCatcher = (
       logger.error(err);
     }
 
-    if (sourceFile) {
-      if (err instanceof GraphQLError) {
-        const errorLocation = err.nodes?.[0]?.loc;
-        const position = err.positions?.[0];
+    const addNewDiagnosticError = (file: ts.SourceFile | undefined) => {
+      const fileName = file?.fileName ?? unknownFileName;
+      const gqlDiagnostics = pluginsDiagnostics.get(fileName) ?? [];
 
-        if (errorLocation) {
-          start += errorLocation.start;
-          length = errorLocation.end - errorLocation.start;
-        } else if (position) {
-          start += position;
-          length = getCurrentWord(sourceFile.text, start).length;
-        }
-      }
-
-      const gqlDiagnostics = pluginsDiagnostics.get(sourceFile.fileName) ?? [];
-
-      pluginsDiagnostics.set(sourceFile.fileName, [
+      pluginsDiagnostics.set(fileName, [
         ...gqlDiagnostics,
         {
           category: ts.DiagnosticCategory.Error,
           code: 0,
-          file: sourceFile,
+          file,
           start,
           length,
           messageText: err.message,
         },
       ]);
+    };
+
+    if (err instanceof GraphQLError) {
+      const errorLocation = err.nodes?.[0]?.loc;
+      const position = err.positions?.[0];
+
+      const text = sourceFile?.text ?? err.source?.body;
+
+      if (errorLocation) {
+        start += errorLocation.start;
+        length = errorLocation.end - errorLocation.start;
+      } else if (position && text) {
+        start += position;
+        length = getCurrentWord(text, start).length;
+      }
+    }
+
+    if (sourceFile) {
+      addNewDiagnosticError(sourceFile);
+    } else if (err instanceof GraphQLError) {
+      const source = err.source;
+
+      const fileName = source?.name ?? unknownFileName;
+      const file = source && ts.createSourceFile(fileName, source.body, 99);
+
+      addNewDiagnosticError(file);
+    } else {
+      addNewDiagnosticError(undefined);
     }
 
     return null;
