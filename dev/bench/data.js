@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1661943978575,
+  "lastUpdate": 1663022469982,
   "repoUrl": "https://github.com/Chnapy/ts-gql-plugin",
   "entries": {
     "\"with ts-gql-plugin\" vs \"without ts-gql-plugin\" Benchmark": [
@@ -459,6 +459,37 @@ window.BENCHMARK_DATA = {
             "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
             "value": 24.29,
             "range": "±2.19%",
+            "unit": "%",
+            "extra": "10 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "richardhaddad@hotmail.fr",
+            "name": "Richard Haddad",
+            "username": "Chnapy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cc394b519f9d02a302067636516e4a3bf7ee070a",
+          "message": "Improve errors diagnostics, narrowing to related words only (#39)\n\n* improve errors diagnostics, narrowing to related words only\r\n\r\n* improve error diagnostics related to schemas\r\n\r\n* upgrade to 1.4.2",
+          "timestamp": "2022-09-13T00:39:26+02:00",
+          "tree_id": "b382caed748d52eefb89f13266abdf0b55520883",
+          "url": "https://github.com/Chnapy/ts-gql-plugin/commit/cc394b519f9d02a302067636516e4a3bf7ee070a"
+        },
+        "date": 1663022468926,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
+            "value": 23.02,
+            "range": "±1.23%",
             "unit": "%",
             "extra": "10 samples"
           }
