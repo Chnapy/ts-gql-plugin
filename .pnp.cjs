@@ -57,6 +57,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-unicorn", "virtual:bf62a1758336ef570a3ddd2d040e51c441fe5542acd3e0c717dbc901f9248f6c886e55a03cf75a141c39935eef0be14be17b4d592feda1c3997de08e810e6a2f#npm:42.0.0"],\
             ["graphql", "npm:16.5.0"],\
             ["graphql-config", "virtual:bf62a1758336ef570a3ddd2d040e51c441fe5542acd3e0c717dbc901f9248f6c886e55a03cf75a141c39935eef0be14be17b4d592feda1c3997de08e810e6a2f#npm:4.3.1"],\
+            ["graphql-language-service-interface", "virtual:bf62a1758336ef570a3ddd2d040e51c441fe5542acd3e0c717dbc901f9248f6c886e55a03cf75a141c39935eef0be14be17b4d592feda1c3997de08e810e6a2f#npm:2.10.2"],\
             ["graphql-tag", "virtual:bf62a1758336ef570a3ddd2d040e51c441fe5542acd3e0c717dbc901f9248f6c886e55a03cf75a141c39935eef0be14be17b4d592feda1c3997de08e810e6a2f#npm:2.12.6"],\
             ["prettier", "npm:2.6.2"],\
             ["ts-gql-plugin", "link:./::locator=ts-gql-plugin%40workspace%3A."],\
@@ -2167,6 +2168,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/json-schema", "npm:7.0.11"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:7.0.9", {\
+          "packageLocation": "./.yarn/cache/@types-json-schema-npm-7.0.9-361918cff3-259d0e25f1.zip/node_modules/@types/json-schema/",\
+          "packageDependencies": [\
+            ["@types/json-schema", "npm:7.0.9"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@types/json5", [\
@@ -3265,6 +3273,38 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["cosmiconfig-toml-loader", "npm:1.0.0"],\
             ["@iarna/toml", "npm:2.2.5"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["cosmiconfig-typescript-loader", [\
+        ["npm:4.0.0", {\
+          "packageLocation": "./.yarn/cache/cosmiconfig-typescript-loader-npm-4.0.0-cf43f43006-9151ffe62d.zip/node_modules/cosmiconfig-typescript-loader/",\
+          "packageDependencies": [\
+            ["cosmiconfig-typescript-loader", "npm:4.0.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:5b2f79ee413a8deef4825ae27be09e293fd3ffd424e1b9afb832e5c1aac8901d8036efbcabc53d6b1794075e0789f54dbfc6b8fdb0ad49571dd0d1e4c0ce8bec#npm:4.0.0", {\
+          "packageLocation": "./.yarn/__virtual__/cosmiconfig-typescript-loader-virtual-36ec964c04/0/cache/cosmiconfig-typescript-loader-npm-4.0.0-cf43f43006-9151ffe62d.zip/node_modules/cosmiconfig-typescript-loader/",\
+          "packageDependencies": [\
+            ["cosmiconfig-typescript-loader", "virtual:5b2f79ee413a8deef4825ae27be09e293fd3ffd424e1b9afb832e5c1aac8901d8036efbcabc53d6b1794075e0789f54dbfc6b8fdb0ad49571dd0d1e4c0ce8bec#npm:4.0.0"],\
+            ["@types/cosmiconfig", null],\
+            ["@types/node", null],\
+            ["@types/ts-node", null],\
+            ["@types/typescript", null],\
+            ["cosmiconfig", "npm:7.0.1"],\
+            ["ts-node", "virtual:5b2f79ee413a8deef4825ae27be09e293fd3ffd424e1b9afb832e5c1aac8901d8036efbcabc53d6b1794075e0789f54dbfc6b8fdb0ad49571dd0d1e4c0ce8bec#npm:10.9.1"],\
+            ["typescript", null]\
+          ],\
+          "packagePeers": [\
+            "@types/cosmiconfig",\
+            "@types/node",\
+            "@types/ts-node",\
+            "@types/typescript",\
+            "cosmiconfig",\
+            "ts-node",\
+            "typescript"\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4694,6 +4734,39 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
+        ["npm:4.3.5", {\
+          "packageLocation": "./.yarn/cache/graphql-config-npm-4.3.5-8989a92a82-0b8ca47263.zip/node_modules/graphql-config/",\
+          "packageDependencies": [\
+            ["graphql-config", "npm:4.3.5"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:4.3.5", {\
+          "packageLocation": "./.yarn/__virtual__/graphql-config-virtual-5b2f79ee41/0/cache/graphql-config-npm-4.3.5-8989a92a82-0b8ca47263.zip/node_modules/graphql-config/",\
+          "packageDependencies": [\
+            ["graphql-config", "virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:4.3.5"],\
+            ["@graphql-tools/graphql-file-loader", "virtual:0383901ae779deafaa198637a06473314bd6416209ca264be4e35f1b60506f356ff92b34fafcb8c5e84bf4a62729e893969cc2092bc398f095a4012c824b64e6#npm:7.3.15"],\
+            ["@graphql-tools/json-file-loader", "virtual:0383901ae779deafaa198637a06473314bd6416209ca264be4e35f1b60506f356ff92b34fafcb8c5e84bf4a62729e893969cc2092bc398f095a4012c824b64e6#npm:7.3.15"],\
+            ["@graphql-tools/load", "virtual:0383901ae779deafaa198637a06473314bd6416209ca264be4e35f1b60506f356ff92b34fafcb8c5e84bf4a62729e893969cc2092bc398f095a4012c824b64e6#npm:7.5.14"],\
+            ["@graphql-tools/merge", "virtual:0efa5d8688435a591c44fa1a6d55bc15fd940b3da6de07b34932bc0a1d702b398e7bb1e4f498d6d7bf4378914f05914dd8a4dfd63474297e85e0e3989e938b1f#npm:8.2.14"],\
+            ["@graphql-tools/url-loader", "virtual:0383901ae779deafaa198637a06473314bd6416209ca264be4e35f1b60506f356ff92b34fafcb8c5e84bf4a62729e893969cc2092bc398f095a4012c824b64e6#npm:7.9.24"],\
+            ["@graphql-tools/utils", "virtual:0f4e86efd7c9bfe9590b14b7435c1c3d71b82616068202cbd5c5f7cc18b02e6b8b06a2dee4429d73d5be79ed5ab0cfbf2c2627bdfd740f108d5f7797fb673a42#npm:8.10.0"],\
+            ["@types/graphql", null],\
+            ["cosmiconfig", "npm:7.0.1"],\
+            ["cosmiconfig-toml-loader", "npm:1.0.0"],\
+            ["cosmiconfig-typescript-loader", "virtual:5b2f79ee413a8deef4825ae27be09e293fd3ffd424e1b9afb832e5c1aac8901d8036efbcabc53d6b1794075e0789f54dbfc6b8fdb0ad49571dd0d1e4c0ce8bec#npm:4.0.0"],\
+            ["graphql", "npm:16.5.0"],\
+            ["minimatch", "npm:4.2.1"],\
+            ["string-env-interpolation", "npm:1.0.1"],\
+            ["ts-node", "virtual:5b2f79ee413a8deef4825ae27be09e293fd3ffd424e1b9afb832e5c1aac8901d8036efbcabc53d6b1794075e0789f54dbfc6b8fdb0ad49571dd0d1e4c0ce8bec#npm:10.9.1"],\
+            ["tslib", "npm:2.4.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/graphql",\
+            "graphql"\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["virtual:bf62a1758336ef570a3ddd2d040e51c441fe5542acd3e0c717dbc901f9248f6c886e55a03cf75a141c39935eef0be14be17b4d592feda1c3997de08e810e6a2f#npm:4.3.1", {\
           "packageLocation": "./.yarn/__virtual__/graphql-config-virtual-0383901ae7/0/cache/graphql-config-npm-4.3.1-d49df44fb3-29c22fafaa.zip/node_modules/graphql-config/",\
           "packageDependencies": [\
@@ -4733,6 +4806,105 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql-executor", "virtual:8cc8282a0310a8dd41bc32fcc443cc1fdec651b093c6a40ad72e25633bd8fee8fc01a5cb47597738dd12bcf1dd3fb50581f42fb4e74d72faf8b5479c4ffa91bb#npm:0.0.23"],\
             ["@types/graphql", null],\
             ["graphql", "npm:16.5.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/graphql",\
+            "graphql"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["graphql-language-service-interface", [\
+        ["npm:2.10.2", {\
+          "packageLocation": "./.yarn/cache/graphql-language-service-interface-npm-2.10.2-495cb8acb7-301a160298.zip/node_modules/graphql-language-service-interface/",\
+          "packageDependencies": [\
+            ["graphql-language-service-interface", "npm:2.10.2"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:bf62a1758336ef570a3ddd2d040e51c441fe5542acd3e0c717dbc901f9248f6c886e55a03cf75a141c39935eef0be14be17b4d592feda1c3997de08e810e6a2f#npm:2.10.2", {\
+          "packageLocation": "./.yarn/__virtual__/graphql-language-service-interface-virtual-8294204d2f/0/cache/graphql-language-service-interface-npm-2.10.2-495cb8acb7-301a160298.zip/node_modules/graphql-language-service-interface/",\
+          "packageDependencies": [\
+            ["graphql-language-service-interface", "virtual:bf62a1758336ef570a3ddd2d040e51c441fe5542acd3e0c717dbc901f9248f6c886e55a03cf75a141c39935eef0be14be17b4d592feda1c3997de08e810e6a2f#npm:2.10.2"],\
+            ["@types/graphql", null],\
+            ["graphql", "npm:16.5.0"],\
+            ["graphql-config", "virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:4.3.5"],\
+            ["graphql-language-service-parser", "virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:1.10.4"],\
+            ["graphql-language-service-types", "virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:1.8.7"],\
+            ["graphql-language-service-utils", "virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:2.7.1"],\
+            ["vscode-languageserver-types", "npm:3.17.2"]\
+          ],\
+          "packagePeers": [\
+            "@types/graphql",\
+            "graphql"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["graphql-language-service-parser", [\
+        ["npm:1.10.4", {\
+          "packageLocation": "./.yarn/cache/graphql-language-service-parser-npm-1.10.4-7d57750b9c-80c8867cdd.zip/node_modules/graphql-language-service-parser/",\
+          "packageDependencies": [\
+            ["graphql-language-service-parser", "npm:1.10.4"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:1.10.4", {\
+          "packageLocation": "./.yarn/__virtual__/graphql-language-service-parser-virtual-8e266a0648/0/cache/graphql-language-service-parser-npm-1.10.4-7d57750b9c-80c8867cdd.zip/node_modules/graphql-language-service-parser/",\
+          "packageDependencies": [\
+            ["graphql-language-service-parser", "virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:1.10.4"],\
+            ["@types/graphql", null],\
+            ["graphql", "npm:16.5.0"],\
+            ["graphql-language-service-types", "virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:1.8.7"]\
+          ],\
+          "packagePeers": [\
+            "@types/graphql",\
+            "graphql"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["graphql-language-service-types", [\
+        ["npm:1.8.7", {\
+          "packageLocation": "./.yarn/cache/graphql-language-service-types-npm-1.8.7-28bebe1bed-17d73316d5.zip/node_modules/graphql-language-service-types/",\
+          "packageDependencies": [\
+            ["graphql-language-service-types", "npm:1.8.7"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:1.8.7", {\
+          "packageLocation": "./.yarn/__virtual__/graphql-language-service-types-virtual-dde8f2f55e/0/cache/graphql-language-service-types-npm-1.8.7-28bebe1bed-17d73316d5.zip/node_modules/graphql-language-service-types/",\
+          "packageDependencies": [\
+            ["graphql-language-service-types", "virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:1.8.7"],\
+            ["@types/graphql", null],\
+            ["graphql", "npm:16.5.0"],\
+            ["graphql-config", "virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:4.3.5"],\
+            ["vscode-languageserver-types", "npm:3.17.2"]\
+          ],\
+          "packagePeers": [\
+            "@types/graphql",\
+            "graphql"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["graphql-language-service-utils", [\
+        ["npm:2.7.1", {\
+          "packageLocation": "./.yarn/cache/graphql-language-service-utils-npm-2.7.1-deb8c81d4d-36f2d5db18.zip/node_modules/graphql-language-service-utils/",\
+          "packageDependencies": [\
+            ["graphql-language-service-utils", "npm:2.7.1"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:2.7.1", {\
+          "packageLocation": "./.yarn/__virtual__/graphql-language-service-utils-virtual-e3164206ad/0/cache/graphql-language-service-utils-npm-2.7.1-deb8c81d4d-36f2d5db18.zip/node_modules/graphql-language-service-utils/",\
+          "packageDependencies": [\
+            ["graphql-language-service-utils", "virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:2.7.1"],\
+            ["@types/graphql", null],\
+            ["@types/json-schema", "npm:7.0.9"],\
+            ["graphql", "npm:16.5.0"],\
+            ["graphql-language-service-types", "virtual:8294204d2fa697175b7508acd7a254c2d0e9bf3fc088671392d81bcbdc778c2f8c729f35a533b6fc7b76b174012a2b08dd940e061ac81a0767969a527d64ebbe#npm:1.8.7"],\
+            ["nullthrows", "npm:1.1.1"]\
           ],\
           "packagePeers": [\
             "@types/graphql",\
@@ -7278,6 +7450,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-unicorn", "virtual:bf62a1758336ef570a3ddd2d040e51c441fe5542acd3e0c717dbc901f9248f6c886e55a03cf75a141c39935eef0be14be17b4d592feda1c3997de08e810e6a2f#npm:42.0.0"],\
             ["graphql", "npm:16.5.0"],\
             ["graphql-config", "virtual:bf62a1758336ef570a3ddd2d040e51c441fe5542acd3e0c717dbc901f9248f6c886e55a03cf75a141c39935eef0be14be17b4d592feda1c3997de08e810e6a2f#npm:4.3.1"],\
+            ["graphql-language-service-interface", "virtual:bf62a1758336ef570a3ddd2d040e51c441fe5542acd3e0c717dbc901f9248f6c886e55a03cf75a141c39935eef0be14be17b4d592feda1c3997de08e810e6a2f#npm:2.10.2"],\
             ["graphql-tag", "virtual:bf62a1758336ef570a3ddd2d040e51c441fe5542acd3e0c717dbc901f9248f6c886e55a03cf75a141c39935eef0be14be17b4d592feda1c3997de08e810e6a2f#npm:2.12.6"],\
             ["prettier", "npm:2.6.2"],\
             ["ts-gql-plugin", "link:./::locator=ts-gql-plugin%40workspace%3A."],\
@@ -7309,6 +7482,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
+        ["npm:10.9.1", {\
+          "packageLocation": "./.yarn/cache/ts-node-npm-10.9.1-6c268be7f4-090adff130.zip/node_modules/ts-node/",\
+          "packageDependencies": [\
+            ["ts-node", "npm:10.9.1"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
         ["npm:9.1.1", {\
           "packageLocation": "./.yarn/cache/ts-node-npm-9.1.1-4ad31da228-356e2647b8.zip/node_modules/ts-node/",\
           "packageDependencies": [\
@@ -7330,6 +7510,42 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["yn", "npm:3.1.1"]\
           ],\
           "packagePeers": [\
+            "@types/typescript",\
+            "typescript"\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:5b2f79ee413a8deef4825ae27be09e293fd3ffd424e1b9afb832e5c1aac8901d8036efbcabc53d6b1794075e0789f54dbfc6b8fdb0ad49571dd0d1e4c0ce8bec#npm:10.9.1", {\
+          "packageLocation": "./.yarn/__virtual__/ts-node-virtual-b4eefa13aa/0/cache/ts-node-npm-10.9.1-6c268be7f4-090adff130.zip/node_modules/ts-node/",\
+          "packageDependencies": [\
+            ["ts-node", "virtual:5b2f79ee413a8deef4825ae27be09e293fd3ffd424e1b9afb832e5c1aac8901d8036efbcabc53d6b1794075e0789f54dbfc6b8fdb0ad49571dd0d1e4c0ce8bec#npm:10.9.1"],\
+            ["@cspotcode/source-map-support", "npm:0.8.1"],\
+            ["@swc/core", null],\
+            ["@swc/wasm", null],\
+            ["@tsconfig/node10", "npm:1.0.9"],\
+            ["@tsconfig/node12", "npm:1.0.10"],\
+            ["@tsconfig/node14", "npm:1.0.2"],\
+            ["@tsconfig/node16", "npm:1.0.3"],\
+            ["@types/node", null],\
+            ["@types/swc__core", null],\
+            ["@types/swc__wasm", null],\
+            ["@types/typescript", null],\
+            ["acorn", "npm:8.7.1"],\
+            ["acorn-walk", "npm:8.2.0"],\
+            ["arg", "npm:4.1.3"],\
+            ["create-require", "npm:1.1.1"],\
+            ["diff", "npm:4.0.2"],\
+            ["make-error", "npm:1.3.6"],\
+            ["typescript", null],\
+            ["v8-compile-cache-lib", "npm:3.0.1"],\
+            ["yn", "npm:3.1.1"]\
+          ],\
+          "packagePeers": [\
+            "@swc/core",\
+            "@swc/wasm",\
+            "@types/node",\
+            "@types/swc__core",\
+            "@types/swc__wasm",\
             "@types/typescript",\
             "typescript"\
           ],\
@@ -7749,6 +7965,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "c8",\
             "happy-dom",\
             "jsdom"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["vscode-languageserver-types", [\
+        ["npm:3.17.2", {\
+          "packageLocation": "./.yarn/cache/vscode-languageserver-types-npm-3.17.2-b1136aa522-ef2d862d22.zip/node_modules/vscode-languageserver-types/",\
+          "packageDependencies": [\
+            ["vscode-languageserver-types", "npm:3.17.2"]\
           ],\
           "linkType": "HARD"\
         }]\

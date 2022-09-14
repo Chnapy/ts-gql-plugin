@@ -1,11 +1,7 @@
-const spaceRelatedChars = new Set([' ', '\n', '\t']);
+import { getCurrentWordRange } from './get-current-word-range';
 
-export const getCurrentWord = (text: string, start: number): string => {
-  const currentChar = text[start];
+export const getCurrentWord = (text: string, position: number): string => {
+  const [start, end] = getCurrentWordRange(text, position);
 
-  if (spaceRelatedChars.has(currentChar)) {
-    return '';
-  }
-
-  return currentChar + getCurrentWord(text, start + 1);
+  return text.slice(start, end + 1);
 };

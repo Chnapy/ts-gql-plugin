@@ -43,7 +43,8 @@
     "@graphql-codegen/typescript-operations": "2.3.7",
     "@graphql-tools/graphql-tag-pluck": "7.3.3",
     "deasync": "0.1.26",
-    "graphql-config": "4.3.1"
+    "graphql-config": "4.3.1",
+    "graphql-language-service-interface": "2.10.2"
   },
   "peerDependencies": {
     "graphql": ">= 16",

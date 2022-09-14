@@ -1328,6 +1328,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/json-schema@npm:7.0.9":
+  version: 7.0.9
+  resolution: "@types/json-schema@npm:7.0.9"
+  checksum: 259d0e25f11a21ba5c708f7ea47196bd396e379fddb79c76f9f4f62c945879dc21657904914313ec2754e443c5018ea8372362f323f30e0792897fdb2098a705
+  languageName: node
+  linkType: hard
+
 "@types/json-schema@npm:^7.0.9":
   version: 7.0.11
   resolution: "@types/json-schema@npm:7.0.11"
@@ -2214,6 +2221,18 @@ __metadata:
   dependencies:
     "@iarna/toml": ^2.2.5
   checksum: 00836a57c3c029a0d23f4eeeafc59a0be45cdf2707c5a6859020f545d50f939bfb01bc047fa41118faa92e69e25001f34d7687b05a97a469ed59fc870528b875
+  languageName: node
+  linkType: hard
+
+"cosmiconfig-typescript-loader@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "cosmiconfig-typescript-loader@npm:4.0.0"
+  peerDependencies:
+    "@types/node": "*"
+    cosmiconfig: ">=7"
+    ts-node: ">=10"
+    typescript: ">=3"
+  checksum: 9151ffe62d0b3b0bac7435add229febf04d72f4db8199390813fef071343865e91e823bd75210f9aabe218dc97a2cc2c776120c0dc886e9164947b80a910c19b
   languageName: node
   linkType: hard
 
@@ -3424,12 +3443,86 @@ __metadata:
   languageName: node
   linkType: hard
 
+"graphql-config@npm:^4.1.0":
+  version: 4.3.5
+  resolution: "graphql-config@npm:4.3.5"
+  dependencies:
+    "@graphql-tools/graphql-file-loader": ^7.3.7
+    "@graphql-tools/json-file-loader": ^7.3.7
+    "@graphql-tools/load": ^7.5.5
+    "@graphql-tools/merge": ^8.2.6
+    "@graphql-tools/url-loader": ^7.9.7
+    "@graphql-tools/utils": ^8.6.5
+    cosmiconfig: 7.0.1
+    cosmiconfig-toml-loader: 1.0.0
+    cosmiconfig-typescript-loader: ^4.0.0
+    minimatch: 4.2.1
+    string-env-interpolation: 1.0.1
+    ts-node: ^10.8.1
+    tslib: ^2.4.0
+  peerDependencies:
+    graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 0b8ca47263b12b228db72d9abb663ab8e02e01c677d9ffe08f7be651617fdc93ff2ff6c342465544df43dc4d507293a66b8fc2b8237c2628ebdbc5c74311b1d8
+  languageName: node
+  linkType: hard
+
 "graphql-executor@npm:0.0.23":
   version: 0.0.23
   resolution: "graphql-executor@npm:0.0.23"
   peerDependencies:
     graphql: ^15.0.0 || ^16.0.0
   checksum: 22f19ba2d80d73be33246540a5f20c87c1acc53965ac9de05cca12b004f6183f8e4083198c55554f949cdbb0c748eedeb7b9cfc606aea09f30bc7135daa00464
+  languageName: node
+  linkType: hard
+
+"graphql-language-service-interface@npm:2.10.2":
+  version: 2.10.2
+  resolution: "graphql-language-service-interface@npm:2.10.2"
+  dependencies:
+    graphql-config: ^4.1.0
+    graphql-language-service-parser: ^1.10.4
+    graphql-language-service-types: ^1.8.7
+    graphql-language-service-utils: ^2.7.1
+    vscode-languageserver-types: ^3.15.1
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0
+  checksum: 301a1602987099868dcca5fd21e963089bf526f6315b4c6fbabb2bcd7bebf7dcb23652844bd03123f8e0badf00adfce89e0b50f8a7589d342d6b385f92a7e776
+  languageName: node
+  linkType: hard
+
+"graphql-language-service-parser@npm:^1.10.4":
+  version: 1.10.4
+  resolution: "graphql-language-service-parser@npm:1.10.4"
+  dependencies:
+    graphql-language-service-types: ^1.8.7
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0
+  checksum: 80c8867cdd97b5dfe970280a29b56a6c913413717da6dde78091e119cc3157e79e4a3a43d73ec50f01b9280b4af18da5e6ccb083a5faabd81078278cce4143f6
+  languageName: node
+  linkType: hard
+
+"graphql-language-service-types@npm:^1.8.7":
+  version: 1.8.7
+  resolution: "graphql-language-service-types@npm:1.8.7"
+  dependencies:
+    graphql-config: ^4.1.0
+    vscode-languageserver-types: ^3.15.1
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0
+  checksum: 17d73316d52062988dfea2f737d655a47965eae0dd158d9dbfa23bddb12b1f153d2e51eb7c9c5a774ee8dcefcc92cdb6624f38ba5ed0c17777fe3ca60707a430
+  languageName: node
+  linkType: hard
+
+"graphql-language-service-utils@npm:^2.7.1":
+  version: 2.7.1
+  resolution: "graphql-language-service-utils@npm:2.7.1"
+  dependencies:
+    "@types/json-schema": 7.0.9
+    graphql-language-service-types: ^1.8.7
+    nullthrows: ^1.0.0
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0
+  checksum: 36f2d5db18a514187477ee48b29280bdfa6c1fd97258bc21fcdc0ad47a07b115d24b0737be835c3e278362e0cde846d5c6fcf0a2a9f1f397a105460b01859d46
   languageName: node
   linkType: hard
 
@@ -4513,7 +4606,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nullthrows@npm:^1.1.1":
+"nullthrows@npm:^1.0.0, nullthrows@npm:^1.1.1":
   version: 1.1.1
   resolution: "nullthrows@npm:1.1.1"
   checksum: 10806b92121253eb1b08ecf707d92480f5331ba8ae5b23fa3eb0548ad24196eb797ed47606153006568a5733ea9e528a3579f21421f7828e09e7756f4bdd386f
@@ -5637,6 +5730,7 @@ __metadata:
     eslint-plugin-unicorn: 42.0.0
     graphql: 16.5.0
     graphql-config: 4.3.1
+    graphql-language-service-interface: 2.10.2
     graphql-tag: 2.12.6
     prettier: 2.6.2
     ts-gql-plugin: "link:./"
@@ -5700,6 +5794,44 @@ __metadata:
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
   checksum: 7d1aa7aa3ae1c0459c4922ed0dbfbade442cfe0c25aebaf620cdf1774f112c8d7a9b14934cb6719274917f35b2c503ba87bcaf5e16a0d39ba0f68ce3e7728363
+  languageName: node
+  linkType: hard
+
+"ts-node@npm:^10.8.1":
+  version: 10.9.1
+  resolution: "ts-node@npm:10.9.1"
+  dependencies:
+    "@cspotcode/source-map-support": ^0.8.0
+    "@tsconfig/node10": ^1.0.7
+    "@tsconfig/node12": ^1.0.7
+    "@tsconfig/node14": ^1.0.0
+    "@tsconfig/node16": ^1.0.2
+    acorn: ^8.4.1
+    acorn-walk: ^8.1.1
+    arg: ^4.1.0
+    create-require: ^1.1.0
+    diff: ^4.0.1
+    make-error: ^1.1.1
+    v8-compile-cache-lib: ^3.0.1
+    yn: 3.1.1
+  peerDependencies:
+    "@swc/core": ">=1.2.50"
+    "@swc/wasm": ">=1.2.50"
+    "@types/node": "*"
+    typescript: ">=2.7"
+  peerDependenciesMeta:
+    "@swc/core":
+      optional: true
+    "@swc/wasm":
+      optional: true
+  bin:
+    ts-node: dist/bin.js
+    ts-node-cwd: dist/bin-cwd.js
+    ts-node-esm: dist/bin-esm.js
+    ts-node-script: dist/bin-script.js
+    ts-node-transpile-only: dist/bin-transpile.js
+    ts-script: dist/bin-script-deprecated.js
+  checksum: 090adff1302ab20bd3486e6b4799e90f97726ed39e02b39e566f8ab674fd5bd5f727f43615debbfc580d33c6d9d1c6b1b3ce7d8e3cca3e20530a145ffa232c35
   languageName: node
   linkType: hard
 
@@ -6029,6 +6161,13 @@ __metadata:
   bin:
     vitest: vitest.mjs
   checksum: 31614494f682a6adcedb5c1199e21de7d8b34ca836ab3374691a2948d72d1fb0691366d11560dca23f07c92585f65c305d46199de2d84a0e4407e9f213aca229
+  languageName: node
+  linkType: hard
+
+"vscode-languageserver-types@npm:^3.15.1":
+  version: 3.17.2
+  resolution: "vscode-languageserver-types@npm:3.17.2"
+  checksum: ef2d862d22f622b64de0f428773d50a5928ec6cdd485960a7564ebe4fd4a3c8bcd956f29eb15bc45a0f353846e62f39f6c764d2ab85ce774b8724411ba84342f
   languageName: node
   linkType: hard
 
