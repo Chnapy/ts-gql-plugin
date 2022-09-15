@@ -7,16 +7,18 @@ import { PluginConfig } from '../plugin-config';
 import { parseLiteralOccurenceList } from '../source-update/parse-literal-occurence-list';
 import { CursorPosition } from '../utils/cursor-position';
 import { getCurrentWordRange } from '../utils/get-current-word-range';
-import { waitPromiseSync } from '../utils/wait-promise-sync';
 
 export const createGetQuickInfoAtPosition =
   (
     initialFn: LanguageServiceWithDiagnostics['getQuickInfoAtPosition'],
-    languageService: LanguageServiceWithDiagnostics,
+    languageService: Pick<LanguageServiceWithDiagnostics, 'getProgram'>,
     cachedGraphQLSchemaLoader: CachedGraphQLSchemaLoader,
     { projectNameRegex }: Pick<PluginConfig, 'projectNameRegex'>
-  ): LanguageServiceWithDiagnostics['getQuickInfoAtPosition'] =>
-  (fileName, position) => {
+  ) =>
+  async (
+    fileName: string,
+    position: number
+  ): Promise<ts.QuickInfo | undefined> => {
     const defaultAct = () => initialFn(fileName, position);
 
     const program = languageService.getProgram();
@@ -48,11 +50,9 @@ export const createGetQuickInfoAtPosition =
       projectNameRegex
     );
 
-    const schemaInfos = waitPromiseSync(
-      cachedGraphQLSchemaLoader.getItemOrCreate({
-        projectName,
-      })
-    );
+    const schemaInfos = await cachedGraphQLSchemaLoader.getItemOrCreate({
+      projectName,
+    });
 
     if (!schemaInfos) {
       return defaultAct();

@@ -3,7 +3,11 @@
 import { join } from 'node:path';
 import { Logger } from '../utils/logger';
 import { createSourceUpdater as _createSourceUpdater } from './create-source-updater';
-import { createSourceFile, formatTS } from '../utils/test-utils';
+import {
+  createFakeLogger,
+  createSourceFile,
+  formatTS,
+} from '../utils/test-utils';
 import { PluginConfig } from '../plugin-config';
 import { ErrorCatcher } from '../create-error-catcher';
 import { createCachedDocumentSchemaLoader } from '../cached/cached-document-schema-loader';
@@ -17,16 +21,6 @@ const multiProjectPath = resolveTestFile('multi-project/.graphqlrc');
 const codegenConfigPath = resolveTestFile('codegen-config/.graphqlrc');
 
 describe('Create source updater', () => {
-  const createFakeLogger = (): Logger => ({
-    log: vi.fn(),
-    error: vi.fn(),
-    verbose: vi.fn(),
-    debug: vi.fn(),
-    debugTime: vi.fn(),
-    debugToFile: vi.fn(),
-    setFilename: vi.fn(),
-  });
-
   const createSourceUpdater = (
     config: PluginConfig,
     errorCatcher: ErrorCatcher,

@@ -178,14 +178,16 @@ export const init: PluginInit = ({ typescript: ts }) => ({
         }
     );
 
-    overrideLanguageService('getQuickInfoAtPosition', (initialFn) =>
-      createGetQuickInfoAtPosition(
+    overrideLanguageService('getQuickInfoAtPosition', (initialFn) => {
+      const getQuickInfoAtPosition = createGetQuickInfoAtPosition(
         initialFn,
         languageServiceWithDiagnostics,
         cachedGraphQLSchemaLoader,
         config
-      )
-    );
+      );
+
+      return (...args) => waitPromiseSync(getQuickInfoAtPosition(...args));
+    });
 
     return languageServiceWithDiagnostics;
   },
