@@ -5,8 +5,7 @@ import { createFakeLogger } from '../utils/test-utils';
 import { createGetQuickInfoAtPosition } from './get-quick-info-at-position';
 
 describe('Get quick info at position', () => {
-  const multiProjectConfigPath =
-    '/workspace/src/test-files/multi-project/.graphqlrc';
+  const multiProjectConfigPath = 'src/test-files/multi-project/.graphqlrc';
 
   const projectNameRegex = '([A-Z][a-z]*)';
 

@@ -5,8 +5,7 @@ import { createFakeLogger } from '../utils/test-utils';
 import { createGetCompletionsAtPosition } from './get-completions-at-position';
 
 describe('Get completions at position', () => {
-  const multiProjectConfigPath =
-    '/workspace/src/test-files/multi-project/.graphqlrc';
+  const multiProjectConfigPath = 'src/test-files/multi-project/.graphqlrc';
 
   const projectNameRegex = '([A-Z][a-z]*)';
 
