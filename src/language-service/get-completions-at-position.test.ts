@@ -2,15 +2,15 @@ import ts from 'typescript/lib/tsserverlibrary';
 import { createCachedGraphQLConfigLoader } from '../cached/cached-graphql-config-loader';
 import { createCachedGraphQLSchemaLoader } from '../cached/cached-graphql-schema-loader';
 import { createFakeLogger } from '../utils/test-utils';
-import { createGetQuickInfoAtPosition } from './get-quick-info-at-position';
+import { createGetCompletionsAtPosition } from './get-completions-at-position';
 
-describe('Get quick info at position', () => {
+describe('Get completions at position', () => {
   const multiProjectConfigPath =
     '/workspace/src/test-files/multi-project/.graphqlrc';
 
   const projectNameRegex = '([A-Z][a-z]*)';
 
-  it('gives query infos', async () => {
+  it('gives completions', async () => {
     const logger = createFakeLogger();
     const errorCatcher = vi.fn(() => null);
 
@@ -47,7 +47,7 @@ const { data } = useQuery(
 console.log(data);        
 `;
 
-    const getQuickInfoAtPosition = createGetQuickInfoAtPosition(
+    const getCompletionsAtPosition = createGetCompletionsAtPosition(
       () => undefined,
       {
         getProgram: () =>
@@ -59,19 +59,54 @@ console.log(data);
       { projectNameRegex }
     );
 
-    expect(await getQuickInfoAtPosition('foo.ts', 157)).toEqual({
-      displayParts: [
+    expect(await getCompletionsAtPosition('foo.ts', 198, undefined)).toEqual({
+      entries: [
         {
-          kind: '',
-          text: 'Query.user: User!',
+          kind: '5',
+          kindModifiers: 'declare',
+          name: 'id',
+          sortText: '0',
+        },
+        {
+          kind: '5',
+          kindModifiers: 'declare',
+          name: 'oauthId',
+          sortText: '0',
+        },
+        {
+          kind: '5',
+          kindModifiers: 'declare',
+          name: 'email',
+          sortText: '0',
+        },
+        {
+          kind: '5',
+          kindModifiers: 'declare',
+          name: 'name',
+          sortText: '0',
+        },
+        {
+          kind: '5',
+          kindModifiers: 'declare',
+          name: 'picture',
+          sortText: '0',
+        },
+        {
+          kind: '5',
+          kindModifiers: 'declare',
+          name: 'provider',
+          sortText: '0',
+        },
+        {
+          kind: '5',
+          kindModifiers: 'declare',
+          name: '__typename',
+          sortText: '0',
         },
       ],
-      kind: 'string',
-      kindModifiers: '',
-      textSpan: {
-        length: 4,
-        start: 156,
-      },
+      isGlobalCompletion: false,
+      isMemberCompletion: false,
+      isNewIdentifierLocation: false,
     });
   });
 });

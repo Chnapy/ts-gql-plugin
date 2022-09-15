@@ -1,6 +1,11 @@
 import { Diagnostic } from 'typescript/lib/tsserverlibrary';
 import { LanguageServiceWithDiagnostics } from 'tsc-ls';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type PromisifyFunction<F extends (...args: any[]) => any> = (
+  ...args: Parameters<F>
+) => Promise<ReturnType<F>>;
+
 const pluginsDiagnosticsProperty: keyof LanguageServiceWithDiagnostics =
   'pluginsDiagnostics';
 

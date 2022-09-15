@@ -7,6 +7,68 @@ import { PluginConfig } from '../plugin-config';
 import { parseLiteralOccurenceList } from '../source-update/parse-literal-occurence-list';
 import { CursorPosition } from '../utils/cursor-position';
 import { getCurrentWordRange } from '../utils/get-current-word-range';
+import { PromisifyFunction } from './create-language-service-proxy';
+
+export const getQuickInfosPayload = async (
+  languageService: Pick<LanguageServiceWithDiagnostics, 'getProgram'>,
+  cachedGraphQLSchemaLoader: CachedGraphQLSchemaLoader,
+  { projectNameRegex }: Pick<PluginConfig, 'projectNameRegex'>,
+  fileName: string,
+  position: number
+) => {
+  const program = languageService.getProgram();
+  const sourceFile = program?.getSourceFile(fileName);
+  if (!sourceFile) {
+    return null;
+  }
+
+  const occurences = parseLiteralOccurenceList(sourceFile);
+
+  const target = occurences.find(({ locationOffset, body }) => {
+    if (locationOffset.index === undefined) {
+      return false;
+    }
+
+    const start = locationOffset.index;
+    const end = start + body.length;
+
+    return position >= start && position <= end;
+  });
+  if (!target) {
+    return null;
+  }
+
+  const targetLiteral = target.body;
+
+  const projectName = getProjectNameFromLiteral(
+    targetLiteral,
+    projectNameRegex
+  );
+
+  const schemaInfos = await cachedGraphQLSchemaLoader.getItemOrCreate({
+    projectName,
+  });
+
+  if (!schemaInfos) {
+    return null;
+  }
+
+  const literalPosition = position - target.locationOffset.index! - 1;
+  const lines = targetLiteral.slice(0, literalPosition + 1).split('\n');
+  const currentLine = lines[lines.length - 1];
+
+  const character = currentLine.length;
+  const line = lines.length - 1;
+
+  const cursor = new CursorPosition(line, character);
+
+  return {
+    sourceFile,
+    schemaDocument: schemaInfos.schemaDocument,
+    targetLiteral,
+    cursor,
+  };
+};
 
 export const createGetQuickInfoAtPosition =
   (
@@ -14,70 +76,35 @@ export const createGetQuickInfoAtPosition =
     languageService: Pick<LanguageServiceWithDiagnostics, 'getProgram'>,
     cachedGraphQLSchemaLoader: CachedGraphQLSchemaLoader,
     { projectNameRegex }: Pick<PluginConfig, 'projectNameRegex'>
-  ) =>
-  async (
-    fileName: string,
-    position: number
-  ): Promise<ts.QuickInfo | undefined> => {
+  ): PromisifyFunction<
+    LanguageServiceWithDiagnostics['getQuickInfoAtPosition']
+  > =>
+  async (fileName, position) => {
     const defaultAct = () => initialFn(fileName, position);
 
-    const program = languageService.getProgram();
-    const sourceFile = program?.getSourceFile(fileName);
-    if (!sourceFile) {
-      return defaultAct();
-    }
-
-    const occurences = parseLiteralOccurenceList(sourceFile);
-
-    const target = occurences.find(({ locationOffset, body }) => {
-      if (locationOffset.index === undefined) {
-        return false;
-      }
-
-      const start = locationOffset.index;
-      const end = start + body.length;
-
-      return position >= start && position <= end;
-    });
-    if (!target) {
-      return defaultAct();
-    }
-
-    const targetLiteral = target.body;
-
-    const projectName = getProjectNameFromLiteral(
-      targetLiteral,
-      projectNameRegex
+    const payload = await getQuickInfosPayload(
+      languageService,
+      cachedGraphQLSchemaLoader,
+      { projectNameRegex },
+      fileName,
+      position
     );
 
-    const schemaInfos = await cachedGraphQLSchemaLoader.getItemOrCreate({
-      projectName,
-    });
-
-    if (!schemaInfos) {
+    if (!payload) {
       return defaultAct();
     }
 
-    const literalPosition = position - target.locationOffset.index! - 1;
-    const lines = targetLiteral.slice(0, literalPosition + 1).split('\n');
-    const currentLine = lines[lines.length - 1];
-
-    const character = currentLine.length;
-    const line = lines.length - 1;
-
-    const cursor = new CursorPosition(line, character);
-
     const result = getHoverInformation(
-      schemaInfos.schemaDocument,
-      targetLiteral,
-      cursor
+      payload.schemaDocument,
+      payload.targetLiteral,
+      payload.cursor
     );
 
     if (!result || typeof result !== 'string') {
       return defaultAct();
     }
 
-    const wordRange = getCurrentWordRange(sourceFile.text, position);
+    const wordRange = getCurrentWordRange(payload.sourceFile.text, position);
 
     return {
       kind: ts.ScriptElementKind.string,

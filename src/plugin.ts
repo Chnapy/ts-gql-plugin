@@ -3,6 +3,7 @@ import TSL from 'typescript/lib/tsserverlibrary';
 import { createErrorCatcher } from './create-error-catcher';
 import { createLanguageServiceWithDiagnostics } from './language-service/create-language-service-proxy';
 import { createGetQuickInfoAtPosition } from './language-service/get-quick-info-at-position';
+import { createGetCompletionsAtPosition } from './language-service/get-completions-at-position';
 import { PluginConfig } from './plugin-config';
 import { createSourceUpdater } from './source-update/create-source-updater';
 import { isValidFilename, isValidSourceFile } from './utils/is-valid-file';
@@ -187,6 +188,17 @@ export const init: PluginInit = ({ typescript: ts }) => ({
       );
 
       return (...args) => waitPromiseSync(getQuickInfoAtPosition(...args));
+    });
+
+    overrideLanguageService('getCompletionsAtPosition', (initialFn) => {
+      const getCompletionsAtPosition = createGetCompletionsAtPosition(
+        initialFn,
+        languageServiceWithDiagnostics,
+        cachedGraphQLSchemaLoader,
+        config
+      );
+
+      return (...args) => waitPromiseSync(getCompletionsAtPosition(...args));
     });
 
     return languageServiceWithDiagnostics;
