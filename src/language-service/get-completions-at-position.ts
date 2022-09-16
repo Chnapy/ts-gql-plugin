@@ -1,4 +1,4 @@
-import { getAutocompleteSuggestions } from 'graphql-language-service-interface';
+import { getAutocompleteSuggestions } from 'graphql-language-service';
 import { LanguageServiceWithDiagnostics } from 'tsc-ls';
 import ts from 'typescript';
 import { CachedGraphQLSchemaLoader } from '../cached/cached-graphql-schema-loader';

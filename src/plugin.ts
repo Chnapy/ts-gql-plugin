@@ -15,6 +15,7 @@ import { createCachedGraphQLConfigLoader } from './cached/cached-graphql-config-
 import { createCachedLiteralParser } from './cached/cached-literal-parser';
 import { createCachedDocumentSchemaLoader } from './cached/cached-document-schema-loader';
 import { createCachedGraphQLSchemaLoader } from './cached/cached-graphql-schema-loader';
+import { createGetDefinitionAndBoundSpan } from './language-service/get-definition-and-bound-span';
 
 export const init: PluginInit = ({ typescript: ts }) => ({
   create: (info) => {
@@ -199,6 +200,17 @@ export const init: PluginInit = ({ typescript: ts }) => ({
       );
 
       return (...args) => waitPromiseSync(getCompletionsAtPosition(...args));
+    });
+
+    overrideLanguageService('getDefinitionAndBoundSpan', (initialFn) => {
+      const getDefinitionAndBoundSpan = createGetDefinitionAndBoundSpan(
+        initialFn,
+        languageServiceWithDiagnostics,
+        cachedGraphQLSchemaLoader,
+        config
+      );
+
+      return (...args) => waitPromiseSync(getDefinitionAndBoundSpan(...args));
     });
 
     return languageServiceWithDiagnostics;

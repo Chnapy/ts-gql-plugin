@@ -1,4 +1,4 @@
-import { getHoverInformation } from 'graphql-language-service-interface';
+import { getHoverInformation } from 'graphql-language-service';
 import { LanguageServiceWithDiagnostics } from 'tsc-ls';
 import ts from 'typescript/lib/tsserverlibrary';
 import { CachedGraphQLSchemaLoader } from '../cached/cached-graphql-schema-loader';
@@ -63,8 +63,8 @@ export const getQuickInfosPayload = async (
   const cursor = new CursorPosition(line, character);
 
   return {
+    ...schemaInfos,
     sourceFile,
-    schemaDocument: schemaInfos.schemaDocument,
     targetLiteral,
     cursor,
   };

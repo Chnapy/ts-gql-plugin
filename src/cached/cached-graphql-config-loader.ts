@@ -1,4 +1,8 @@
-import { GraphQLProjectConfig, loadConfig } from 'graphql-config';
+import {
+  GraphQLConfig,
+  GraphQLProjectConfig,
+  loadConfig,
+} from 'graphql-config';
 import { tsGqlExtension } from '../source-update/extension';
 import { checkFileLastUpdate, createCacheSystem } from '../utils/cache-system';
 import { Logger } from '../utils/logger';
@@ -12,6 +16,7 @@ type CreateCachedGraphQLConfigLoaderOptions = {
 
 type CachedGraphQLConfigLoaderValue = {
   configFilePath: string;
+  graphqlConfig: GraphQLConfig;
   graphqlProjects: GraphQLProjectConfig[];
 };
 
@@ -59,7 +64,11 @@ export const createCachedGraphQLConfigLoader = ({
         logger.log(`GraphQL project "${name}" schema loaded from ${schema}`)
       );
 
-      return { configFilePath: graphqlConfig.filepath, graphqlProjects };
+      return {
+        configFilePath: graphqlConfig.filepath,
+        graphqlConfig,
+        graphqlProjects,
+      };
     },
     checkValidity: async (currentItem) => {
       const { configFilePath } = await currentItem.value;
