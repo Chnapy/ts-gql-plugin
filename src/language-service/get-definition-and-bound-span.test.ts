@@ -72,16 +72,18 @@ console.log(data);
       },
       definitions: [
         {
-          fileName:
-            '/workspace/src/test-files/multi-project/catalog-schema.graphql',
+          fileName: expect.stringContaining(
+            'src/test-files/multi-project/catalog-schema.graphql'
+          ),
           textSpan: {
             start: 0,
             length: 114,
           },
           kind: ts.ScriptElementKind.unknown,
           name: '',
-          containerName:
-            '/workspace/src/test-files/multi-project/catalog-schema.graphql',
+          containerName: expect.stringContaining(
+            'src/test-files/multi-project/catalog-schema.graphql'
+          ),
           containerKind: ts.ScriptElementKind.unknown,
         },
       ],
