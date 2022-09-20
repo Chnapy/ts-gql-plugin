@@ -1,27 +1,28 @@
-import { Kind, NamedTypeNode, parse } from 'graphql';
-import {
-  getDefinitionQueryResultForDefinitionNode,
-  getDefinitionQueryResultForNamedType,
-} from 'graphql-language-service';
+import { parse } from 'graphql';
 import { getASTNodeAtPosition } from 'graphql-language-service-utils';
 import { LanguageServiceWithDiagnostics } from 'tsc-ls';
 import ts from 'typescript/lib/tsserverlibrary';
+import { CachedDocumentSchemaLoader } from '../cached/cached-document-schema-loader';
 import { CachedGraphQLSchemaLoader } from '../cached/cached-graphql-schema-loader';
 import { PluginConfig } from '../plugin-config';
 import { getCurrentWordRange } from '../utils/get-current-word-range';
 import { PromisifyFunction } from './create-language-service-proxy';
 import { getQuickInfosPayload } from './get-quick-info-at-position';
+import { getSchemaNodeFromLiteral } from './get-schema-node-from-literal';
 
 export const createGetDefinitionAndBoundSpan =
   (
     initialFn: LanguageServiceWithDiagnostics['getDefinitionAndBoundSpan'],
     languageService: Pick<LanguageServiceWithDiagnostics, 'getProgram'>,
+    cachedDocumentSchemaLoader: CachedDocumentSchemaLoader,
     cachedGraphQLSchemaLoader: CachedGraphQLSchemaLoader,
     { projectNameRegex }: Pick<PluginConfig, 'projectNameRegex'>
   ): PromisifyFunction<
     LanguageServiceWithDiagnostics['getDefinitionAndBoundSpan']
   > =>
   async (fileName, position) => {
+    const defaultAct = () => initialFn(fileName, position);
+
     const payload = await getQuickInfosPayload(
       languageService,
       cachedGraphQLSchemaLoader,
@@ -31,7 +32,7 @@ export const createGetDefinitionAndBoundSpan =
     );
 
     if (!payload) {
-      return initialFn(fileName, position);
+      return defaultAct();
     }
 
     const ast = parse(payload.targetLiteral);
@@ -43,47 +44,32 @@ export const createGetDefinitionAndBoundSpan =
     );
 
     if (!node) {
-      return initialFn(fileName, position);
+      return defaultAct();
     }
 
-    const getDefinitionQueryResult = async () => {
-      if (node.kind === Kind.FIELD || node.kind === Kind.NAMED_TYPE) {
-        return await getDefinitionQueryResultForNamedType(
-          payload.targetLiteral,
-          node as NamedTypeNode,
-          [
-            {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              definition: node as any,
-              content: payload.targetLiteral,
-              filePath: fileName,
-            },
-          ]
-        );
-      }
+    const targetNode = await getSchemaNodeFromLiteral(
+      payload.targetLiteral,
+      payload.cursor,
+      cachedDocumentSchemaLoader,
+      { projectNameRegex }
+    );
 
-      if (
-        node.kind === Kind.OPERATION_DEFINITION ||
-        node.kind === Kind.FRAGMENT_DEFINITION
-      ) {
-        return await getDefinitionQueryResultForDefinitionNode(
-          fileName,
-          payload.targetLiteral,
-          node
-        );
-      }
-
-      return null;
-    };
-
-    const result = await getDefinitionQueryResult();
-
-    const def = result?.definitions[0];
-    if (!def) {
-      return initialFn(fileName, position);
+    if (!targetNode) {
+      return defaultAct();
     }
 
     const [start, end] = getCurrentWordRange(payload.sourceFile.text, position);
+
+    const loc = targetNode.loc;
+    const textSpan: ts.TextSpan = loc
+      ? {
+          start: loc.start,
+          length: loc.end - loc.start,
+        }
+      : {
+          start: 0,
+          length: 0,
+        };
 
     return {
       textSpan: {
@@ -93,12 +79,9 @@ export const createGetDefinitionAndBoundSpan =
       definitions: [
         {
           fileName: payload.schemaFilePath!,
-          textSpan: {
-            start: 0,
-            length: 0,
-          },
+          textSpan,
           kind: ts.ScriptElementKind.unknown,
-          name: def.name ?? '',
+          name: '',
           containerName: payload.schemaFilePath!,
           containerKind: ts.ScriptElementKind.unknown,
         },

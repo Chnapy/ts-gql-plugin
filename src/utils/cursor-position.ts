@@ -1,4 +1,6 @@
-export class CursorPosition {
+import { IPosition } from 'graphql-language-service';
+
+export class CursorPosition implements IPosition {
   constructor(public line: number, public character: number) {}
 
   lessThanOrEqualTo(pos: CursorPosition): boolean {

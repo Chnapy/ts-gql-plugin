@@ -1,0 +1,8 @@
+type Item {
+  id: ID!
+  value: String!
+}
+
+type Query {
+  toto(id: ID!): Item!
+}

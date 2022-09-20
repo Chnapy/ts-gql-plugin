@@ -206,6 +206,7 @@ export const init: PluginInit = ({ typescript: ts }) => ({
       const getDefinitionAndBoundSpan = createGetDefinitionAndBoundSpan(
         initialFn,
         languageServiceWithDiagnostics,
+        cachedDocumentSchemaLoader,
         cachedGraphQLSchemaLoader,
         config
       );
