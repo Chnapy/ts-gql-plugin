@@ -90,16 +90,14 @@ export const getSchemaNodeFromLiteral = async (
 
   const targetNodePath = getTargetNodeAncestors(literalAst, targetNode);
 
-  let lastFoundNode: ASTNode = schemaDocument;
-
-  targetNodePath.forEach((node) => {
+  return targetNodePath.reduce<ASTNode>((lastFoundNode, node) => {
     if (Array.isArray(node)) {
-      return;
+      return lastFoundNode;
     }
 
     switch (node.kind) {
       case Kind.NAMED_TYPE:
-        lastFoundNode = getNodeByVisit(
+        return getNodeByVisit(
           schemaDocument,
           (select) => ({
             [Kind.INPUT_OBJECT_TYPE_DEFINITION]: {
@@ -113,21 +111,43 @@ export const getSchemaNodeFromLiteral = async (
           lastFoundNode
         );
 
-        break;
-
       case Kind.FIELD:
-        lastFoundNode = getNodeByVisit(
+        return getNodeByVisit(
           lastFoundNode,
           (select, getCurrentValue) => ({
             [Kind.FIELD_DEFINITION]: {
               enter(currentNode) {
                 if (currentNode.name.value === node.name.value) {
-                  const isOperation = !!node.selectionSet;
+                  const isNodeOperation = !!node.selectionSet;
 
-                  if (isOperation) {
+                  if (isNodeOperation) {
+                    if (node === targetNode) {
+                      return select(currentNode);
+                    }
+
+                    if (targetNode.kind === Kind.ARGUMENT) {
+                      return select(
+                        getNodeByVisit(
+                          currentNode,
+                          (innerSelect) => ({
+                            [Kind.INPUT_VALUE_DEFINITION]: {
+                              enter(innerNode) {
+                                if (
+                                  innerNode.name.value === targetNode.name.value
+                                ) {
+                                  innerSelect(innerNode);
+                                }
+                              },
+                            },
+                          }),
+                          getCurrentValue()
+                        )
+                      );
+                    }
+
                     const typeValue = getNamedType(currentNode.type);
 
-                    select(
+                    return select(
                       getNodeByVisit(
                         getCurrentValue(),
                         (innerSelect) => ({
@@ -142,9 +162,9 @@ export const getSchemaNodeFromLiteral = async (
                         getCurrentValue()
                       )
                     );
-                  } else {
-                    select(currentNode);
                   }
+
+                  select(currentNode);
                 }
               },
             },
@@ -152,12 +172,8 @@ export const getSchemaNodeFromLiteral = async (
           lastFoundNode
         );
 
-        break;
-
       default:
-        break;
+        return lastFoundNode;
     }
-  });
-
-  return lastFoundNode;
+  }, schemaDocument);
 };

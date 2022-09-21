@@ -76,8 +76,8 @@ console.log(data);
             'src/test-files/multi-project/catalog-schema.graphql'
           ),
           textSpan: {
-            start: 0,
-            length: 114,
+            start: 149,
+            length: 20,
           },
           kind: ts.ScriptElementKind.unknown,
           name: '',

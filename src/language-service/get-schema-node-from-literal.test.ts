@@ -1,8 +1,8 @@
 import {
   FieldDefinitionNode,
   InputObjectTypeDefinitionNode,
+  InputValueDefinitionNode,
   Kind,
-  ObjectTypeDefinitionNode,
 } from 'graphql';
 import { createCachedDocumentSchemaLoader } from '../cached/cached-document-schema-loader';
 import { createCachedGraphQLConfigLoader } from '../cached/cached-graphql-config-loader';
@@ -74,7 +74,7 @@ describe('Get schema node from literal', () => {
     });
   });
 
-  it('gives operation definition', async () => {
+  it('gives operation definition on operation name', async () => {
     const code = `
     query CatalogUser1($id: ID!) {
     user(id: $id) {
@@ -94,23 +94,64 @@ describe('Get schema node from literal', () => {
       { projectNameRegex }
     );
 
-    expect(result).toEqual<ObjectTypeDefinitionNode>({
-      kind: Kind.OBJECT_TYPE_DEFINITION,
+    expect(result).toEqual<FieldDefinitionNode>({
+      kind: Kind.FIELD_DEFINITION,
       name: {
         kind: Kind.NAME,
-        value: 'User',
+        value: 'user',
         loc: expect.objectContaining({
-          start: 5,
-          end: 9,
+          start: 457,
+          end: 461,
         }),
       },
       description: undefined,
+      arguments: expect.any(Array),
+      type: expect.any(Object),
       directives: [],
-      fields: expect.any(Array),
-      interfaces: expect.any(Array),
       loc: expect.objectContaining({
-        start: 0,
-        end: 125,
+        start: 457,
+        end: 477,
+      }),
+    });
+  });
+
+  it('gives operation definition on operation argument', async () => {
+    const code = `
+    query CatalogUser1($id: ID!) {
+    user(id: $id) {
+        id
+        name
+    }
+    users {
+        id
+    }
+    }
+`;
+
+    const result = await getSchemaNodeFromLiteral(
+      code,
+      new CursorPosition(2, 10),
+      getSchemaLoader(),
+      { projectNameRegex }
+    );
+
+    expect(result).toEqual<InputValueDefinitionNode>({
+      kind: Kind.INPUT_VALUE_DEFINITION,
+      name: {
+        kind: Kind.NAME,
+        value: 'id',
+        loc: expect.objectContaining({
+          start: 462,
+          end: 464,
+        }),
+      },
+      description: undefined,
+      defaultValue: undefined,
+      type: expect.any(Object),
+      directives: [],
+      loc: expect.objectContaining({
+        start: 462,
+        end: 469,
       }),
     });
   });
