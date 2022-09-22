@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1663022469982,
+  "lastUpdate": 1663853952809,
   "repoUrl": "https://github.com/Chnapy/ts-gql-plugin",
   "entries": {
     "\"with ts-gql-plugin\" vs \"without ts-gql-plugin\" Benchmark": [
@@ -490,6 +490,37 @@ window.BENCHMARK_DATA = {
             "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
             "value": 23.02,
             "range": "±1.23%",
+            "unit": "%",
+            "extra": "10 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "richardhaddad@hotmail.fr",
+            "name": "Richard Haddad",
+            "username": "Chnapy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "efa6c5ce8487b35d108edfccb2d8557aee51da7e",
+          "message": "Add gql editor support: autocomplete / quick infos / go to definitions (#40)\n\n* add gql quick infos\r\n\r\n* add quick-infos test\r\n\r\n* add gql auto-complete with test\r\n\r\n* add gql go to definitions\r\n\r\n* improve get definition and bound span\r\nadd tests\r\n\r\n* improve definition coverage\r\n\r\n* update README\r\n\r\n* upgrade to 1.5.0",
+          "timestamp": "2022-09-22T15:37:08+02:00",
+          "tree_id": "7bd4f4b7c76e4a5beb733ef3a46085481305feb3",
+          "url": "https://github.com/Chnapy/ts-gql-plugin/commit/efa6c5ce8487b35d108edfccb2d8557aee51da7e"
+        },
+        "date": 1663853951684,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
+            "value": 27.57,
+            "range": "±5.89%",
             "unit": "%",
             "extra": "10 samples"
           }
