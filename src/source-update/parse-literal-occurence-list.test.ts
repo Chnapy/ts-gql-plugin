@@ -73,7 +73,9 @@ export default CartList;
     `;
 
     expect(
-      parseLiteralOccurenceList(createSourceFile(code)).map(formatGQL)
+      parseLiteralOccurenceList(createSourceFile(code)).map((source) =>
+        formatGQL(source.body)
+      )
     ).toEqual([
       formatGQL(`
           query User($id: ID!) {
@@ -173,7 +175,9 @@ export default CartList;
     `;
 
     expect(
-      parseLiteralOccurenceList(createSourceFile(code)).map(formatGQL)
+      parseLiteralOccurenceList(createSourceFile(code)).map((source) =>
+        formatGQL(source.body)
+      )
     ).toEqual([
       formatGQL(`
           query User($id: ID!) {

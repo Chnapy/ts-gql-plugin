@@ -4,13 +4,13 @@ import { generateTypeFromLiteral } from '../generators/generate-type-from-litera
 import { DocumentInfos } from '../generators/generate-bottom-content';
 import { createCacheSystem } from '../utils/cache-system';
 import {
-  CachedSchemaLoader,
+  CachedDocumentSchemaLoader,
   defaultProjectName,
   getProjectNameIfNotDefault,
-} from './cached-schema-loader';
+} from './cached-document-schema-loader';
 
 type CreateCachedLiteralParserOptions = {
-  cachedSchemaLoader: CachedSchemaLoader;
+  cachedDocumentSchemaLoader: CachedDocumentSchemaLoader;
   projectNameRegex: string | undefined;
   errorCatcher: ErrorCatcher;
 };
@@ -28,20 +28,23 @@ type CachedLiteralParserInput = {
 
 export type CachedLiteralParser = ReturnType<typeof createCachedLiteralParser>;
 
+export const getProjectNameFromLiteral = (
+  literal: string,
+  projectNameRegex: string | undefined
+) =>
+  projectNameRegex
+    ? (new RegExp(projectNameRegex).exec(literal) ?? [])[0]
+    : defaultProjectName;
+
 export const createCachedLiteralParser = ({
-  cachedSchemaLoader,
+  cachedDocumentSchemaLoader,
   projectNameRegex,
   errorCatcher,
 }: CreateCachedLiteralParserOptions) => {
-  const getProjectNameFromLiteral = (literal: string) =>
-    projectNameRegex
-      ? (new RegExp(projectNameRegex).exec(literal) ?? [])[0]
-      : defaultProjectName;
-
   const getProjectFromLiteral = async (literal: string) => {
-    const projectName = getProjectNameFromLiteral(literal);
+    const projectName = getProjectNameFromLiteral(literal, projectNameRegex);
 
-    const project = await cachedSchemaLoader.getItemOrCreate({
+    const project = await cachedDocumentSchemaLoader.getItemOrCreate({
       projectName,
     });
     if (!project) {
@@ -82,9 +85,12 @@ export const createCachedLiteralParser = ({
       }
     },
     checkValidity: async ({ input }) => {
-      const projectName = getProjectNameFromLiteral(input.literal);
+      const projectName = getProjectNameFromLiteral(
+        input.literal,
+        projectNameRegex
+      );
 
-      return await cachedSchemaLoader.checkItemValidity({
+      return await cachedDocumentSchemaLoader.checkItemValidity({
         projectName,
       });
     },

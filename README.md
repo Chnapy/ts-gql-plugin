@@ -8,6 +8,16 @@ A [TypeScript Language Service Plugin](https://github.com/Microsoft/TypeScript/w
 
 <img src="https://raw.githubusercontent.com/chnapy/ts-gql-plugin/master/.github/images/example.gif" alt="ts-gql-plugin example" />
 
+---
+
+- :triangular_ruler: Typed GraphQL operations
+- :x: No code generation
+- :toolbox: [CLI support](#cli)
+- :pencil: Editor support with autocomplete / quick-infos / "go to definition"
+- :link: Multi-projects support
+
+---
+
 Using `gql` from `graphql-tag` gives you generic `DocumentNode` type, which does not allow you to manipulate typed requested data when used with Apollo for example. To resolve that you can use [code generators](https://www.graphql-code-generator.com/) creating typescript code with correct types, but it adds lot of generated code with risk of obsolete code and bad development comfort.
 
 `ts-gql-plugin` is meant to solve this issue, by replacing most of code generation by compiler-side typing, using [TypeScript Language Service Plugin](https://github.com/Microsoft/TypeScript/wiki/Writing-a-Language-Service-Plugin).
@@ -287,7 +297,6 @@ gql`
 
 - since Language Service feature is limited concerning types overriding, solution was to parse & override text source files during TS server process, which is subobtimal for performances (best solution would have been to work with AST)
 - as described upper, CLI is not handled out-of-box because of `tsc` design limitations
-- because TypeScript compiler does not handle async operations, required by some dependencies, so use of [`deasync`](https://github.com/abbr/deasync) is required
 
 ## Benchmark
 

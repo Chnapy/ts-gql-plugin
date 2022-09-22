@@ -2,8 +2,17 @@
 /* eslint-disable unicorn/consistent-function-scoping */
 import { join } from 'node:path';
 import { Logger } from '../utils/logger';
-import { createSourceUpdater } from './create-source-updater';
-import { createSourceFile, formatTS } from '../utils/test-utils';
+import { createSourceUpdater as _createSourceUpdater } from './create-source-updater';
+import {
+  createFakeLogger,
+  createSourceFile,
+  formatTS,
+} from '../utils/test-utils';
+import { PluginConfig } from '../plugin-config';
+import { ErrorCatcher } from '../create-error-catcher';
+import { createCachedDocumentSchemaLoader } from '../cached/cached-document-schema-loader';
+import { createCachedGraphQLConfigLoader } from '../cached/cached-graphql-config-loader';
+import { createCachedLiteralParser } from '../cached/cached-literal-parser';
 
 const resolveTestFile = (path: string) => join('src/test-files', path);
 
@@ -12,44 +21,111 @@ const multiProjectPath = resolveTestFile('multi-project/.graphqlrc');
 const codegenConfigPath = resolveTestFile('codegen-config/.graphqlrc');
 
 describe('Create source updater', () => {
-  const createFakeLogger = (): Logger => ({
-    log: vi.fn(),
-    error: vi.fn(),
-    verbose: vi.fn(),
-    debug: vi.fn(),
-    debugTime: vi.fn(),
-    debugToFile: vi.fn(),
-    setFilename: vi.fn(),
-  });
+  const createSourceUpdater = (
+    config: PluginConfig,
+    errorCatcher: ErrorCatcher,
+    logger: Logger = createFakeLogger()
+  ) => {
+    const cachedGraphQLConfigLoader = createCachedGraphQLConfigLoader({
+      directory: '',
+      graphqlConfigPath: config.graphqlConfigPath,
+      projectNameRegex: config.projectNameRegex,
+      logger,
+    });
+
+    const cachedDocumentSchemaLoader = createCachedDocumentSchemaLoader({
+      cachedGraphQLConfigLoader,
+      errorCatcher,
+    });
+
+    const cachedLiteralParser = createCachedLiteralParser({
+      cachedDocumentSchemaLoader,
+      projectNameRegex: config.projectNameRegex,
+      errorCatcher,
+    });
+
+    return _createSourceUpdater(
+      cachedDocumentSchemaLoader,
+      cachedLiteralParser,
+      logger,
+      errorCatcher
+    );
+  };
 
   it('gives noop function on any error', async () => {
     const logger = createFakeLogger();
 
     const errorCatcher = vi.fn(() => null);
 
-    const updateScriptSnapshot = createSourceUpdater(
+    const updateScriptSnapshot = _createSourceUpdater(
       null as any,
       null as any,
       logger,
       errorCatcher
+    );
+
+    const query1 = `gql(\`
+    query User($id: ID!) {
+      user(id: $id) {
+        id
+        name
+      }
+      users {
+        id
+        email
+      }
+    }
+    \`)`;
+
+    const query2 = `gql(\`
+  query Toto($id: ID!) {
+    toto(id: $id) {
+      id
+      email
+    }
+  }
+  \`)`;
+
+    const snapshot = `
+      import { useCartPrice } from 'web-client/components/organisms/cart/hooks/UseCartPrice';
+      
+      export const CartList: React.FC = () => {
+        const { t } = useTranslate();
+        const { data: cartData, loading } = useQuery(${query1});
+        const { data: totoData } = useQuery(${query2});
+        const cartItems = useGraphQLArray(cartData?.cartItems);
+        const [removedVendorProductId, setRemovedVendorProductId] = React.useState<string | null>(null);
+        const cartPrice = useCartPrice();
+      
+        return (
+          <div>
+            {removedVendorProductId && (
+              <VendorProductContextProvider value={removedVendorProductId}>
+                <ProductFromVendorProductContextProvider>
+                  <CartItemRemoved />
+                </ProductFromVendorProductContextProvider>
+              </VendorProductContextProvider>
+            )}
+            {loading ? <Spinner /> : <div>foo</div>}
+            <BottomText />
+          </div>
+        );
+      };
+      
+      export default CartList;
+    `;
+
+    expect(await updateScriptSnapshot(createSourceFile(snapshot))).toBe(
+      snapshot
     );
 
     expect(errorCatcher).toHaveBeenCalled();
-
-    expect(await updateScriptSnapshot(createSourceFile(''))).toBe('');
   });
 
   it('gives noop function if schema not defined', async () => {
-    const logger = createFakeLogger();
-
     const errorCatcher = vi.fn(() => null);
 
-    const updateScriptSnapshot = createSourceUpdater(
-      '',
-      {},
-      logger,
-      errorCatcher
-    );
+    const updateScriptSnapshot = createSourceUpdater({}, errorCatcher);
 
     expect(await updateScriptSnapshot(createSourceFile(''))).toBe('');
   });
@@ -58,12 +134,11 @@ describe('Create source updater', () => {
     const logger = createFakeLogger();
 
     const updateScriptSnapshot = createSourceUpdater(
-      '',
       { graphqlConfigPath: singleProjectPath },
-      logger,
       (err) => {
         throw err;
-      }
+      },
+      logger
     );
 
     const source = `
@@ -104,12 +179,11 @@ describe('Create source updater', () => {
     const logger = createFakeLogger();
 
     const updateScriptSnapshot = createSourceUpdater(
-      '',
       { graphqlConfigPath: singleProjectPath },
-      logger,
       (err) => {
         throw err;
-      }
+      },
+      logger
     );
 
     const query1 = `gql(\`
@@ -286,15 +360,14 @@ describe('Create source updater', () => {
     const logger = createFakeLogger();
 
     const updateScriptSnapshot = createSourceUpdater(
-      '',
       {
         graphqlConfigPath: multiProjectPath,
         projectNameRegex: '([A-Z][a-z]*)',
       },
-      logger,
       (err) => {
         throw err;
-      }
+      },
+      logger
     );
 
     const query1 = `gql(\`
@@ -499,12 +572,11 @@ describe('Create source updater', () => {
     const logger = createFakeLogger();
 
     const updateScriptSnapshot = createSourceUpdater(
-      '',
       { graphqlConfigPath: codegenConfigPath },
-      logger,
       (err) => {
         throw err;
-      }
+      },
+      logger
     );
 
     const query1 = `gql(\`

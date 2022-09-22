@@ -1,7 +1,9 @@
 import { PluginInit } from 'tsc-ls';
 import TSL from 'typescript/lib/tsserverlibrary';
 import { createErrorCatcher } from './create-error-catcher';
-import { createLanguageServiceWithDiagnostics } from './create-language-service-proxy';
+import { createLanguageServiceWithDiagnostics } from './language-service/create-language-service-proxy';
+import { createGetQuickInfoAtPosition } from './language-service/get-quick-info-at-position';
+import { createGetCompletionsAtPosition } from './language-service/get-completions-at-position';
 import { PluginConfig } from './plugin-config';
 import { createSourceUpdater } from './source-update/create-source-updater';
 import { isValidFilename, isValidSourceFile } from './utils/is-valid-file';
@@ -9,6 +11,11 @@ import { isVSCodeEnv } from './utils/is-vscode-env';
 import { createLogger } from './utils/logger';
 import { objectOverride } from './utils/object-override';
 import { waitPromiseSync } from './utils/wait-promise-sync';
+import { createCachedGraphQLConfigLoader } from './cached/cached-graphql-config-loader';
+import { createCachedLiteralParser } from './cached/cached-literal-parser';
+import { createCachedDocumentSchemaLoader } from './cached/cached-document-schema-loader';
+import { createCachedGraphQLSchemaLoader } from './cached/cached-graphql-schema-loader';
+import { createGetDefinitionAndBoundSpan } from './language-service/get-definition-and-bound-span';
 
 export const init: PluginInit = ({ typescript: ts }) => ({
   create: (info) => {
@@ -40,10 +47,38 @@ export const init: PluginInit = ({ typescript: ts }) => ({
     };
 
     const overrideTS = objectOverride(ts);
+    const overrideLanguageService = objectOverride(
+      languageServiceWithDiagnostics
+    );
+
+    const { graphqlConfigPath, projectNameRegex } = config;
+
+    const cachedGraphQLConfigLoader = createCachedGraphQLConfigLoader({
+      directory,
+      graphqlConfigPath,
+      projectNameRegex,
+      logger,
+    });
+
+    const cachedDocumentSchemaLoader = createCachedDocumentSchemaLoader({
+      cachedGraphQLConfigLoader,
+      errorCatcher,
+    });
+
+    const cachedGraphQLSchemaLoader = createCachedGraphQLSchemaLoader({
+      cachedGraphQLConfigLoader,
+      errorCatcher,
+    });
+
+    const cachedLiteralParser = createCachedLiteralParser({
+      cachedDocumentSchemaLoader,
+      projectNameRegex,
+      errorCatcher,
+    });
 
     const updateSource = createSourceUpdater(
-      directory,
-      config,
+      cachedDocumentSchemaLoader,
+      cachedLiteralParser,
       logger,
       errorCatcher
     );
@@ -144,6 +179,40 @@ export const init: PluginInit = ({ typescript: ts }) => ({
           return initialFn(sourceFile, scriptSnapshot, ...rest);
         }
     );
+
+    overrideLanguageService('getQuickInfoAtPosition', (initialFn) => {
+      const getQuickInfoAtPosition = createGetQuickInfoAtPosition(
+        initialFn,
+        languageServiceWithDiagnostics,
+        cachedGraphQLSchemaLoader,
+        config
+      );
+
+      return (...args) => waitPromiseSync(getQuickInfoAtPosition(...args));
+    });
+
+    overrideLanguageService('getCompletionsAtPosition', (initialFn) => {
+      const getCompletionsAtPosition = createGetCompletionsAtPosition(
+        initialFn,
+        languageServiceWithDiagnostics,
+        cachedGraphQLSchemaLoader,
+        config
+      );
+
+      return (...args) => waitPromiseSync(getCompletionsAtPosition(...args));
+    });
+
+    overrideLanguageService('getDefinitionAndBoundSpan', (initialFn) => {
+      const getDefinitionAndBoundSpan = createGetDefinitionAndBoundSpan(
+        initialFn,
+        languageServiceWithDiagnostics,
+        cachedDocumentSchemaLoader,
+        cachedGraphQLSchemaLoader,
+        config
+      );
+
+      return (...args) => waitPromiseSync(getDefinitionAndBoundSpan(...args));
+    });
 
     return languageServiceWithDiagnostics;
   },

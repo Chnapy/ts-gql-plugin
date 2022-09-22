@@ -10,7 +10,7 @@ type CacheSystemOptions<O, I> = {
   sizeLimit?: number;
 };
 
-type CacheItem<O, I> = {
+export type CacheItem<O, I> = {
   input: I;
   value: Promise<O>;
   dateTime: number;

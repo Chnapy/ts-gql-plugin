@@ -1,5 +1,16 @@
 import { format } from 'prettier';
 import ts from 'typescript/lib/tsserverlibrary';
+import { Logger } from './logger';
+
+export const createFakeLogger = (): Logger => ({
+  log: vi.fn(),
+  error: vi.fn(),
+  verbose: vi.fn(),
+  debug: vi.fn(),
+  debugTime: vi.fn(),
+  debugToFile: vi.fn(),
+  setFilename: vi.fn(),
+});
 
 export const createSourceFile = (code: string) =>
   ts.createSourceFile('foo.tsx', code, ts.ScriptTarget.ESNext);
