@@ -33,7 +33,7 @@ export const getProjectNameFromLiteral = (
   projectNameRegex: string | undefined
 ) =>
   projectNameRegex
-    ? (new RegExp(projectNameRegex).exec(literal) ?? [])[0]
+    ? (new RegExp(projectNameRegex).exec(literal) ?? [])[0]!
     : defaultProjectName;
 
 export const createCachedLiteralParser = ({

@@ -3,7 +3,7 @@ import * as typescriptPlugin from '@graphql-codegen/typescript';
 import { DocumentNode } from 'graphql';
 import { parseWithRegex } from '../utils/parse-with-regex';
 
-type CodegenPlugin = typeof plugins[number];
+type CodegenPlugin = (typeof plugins)[number];
 const plugins = [typescriptPlugin];
 
 export const generateTypeFromSchema = async (

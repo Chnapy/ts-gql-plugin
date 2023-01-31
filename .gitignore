@@ -9,6 +9,7 @@
 !.yarn/unplugged
 
 **/node_modules/.cache/
+**/node_modules/.vitest/
 coverage/
 
 dist/
