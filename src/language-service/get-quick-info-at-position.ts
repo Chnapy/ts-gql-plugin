@@ -24,12 +24,12 @@ export const getQuickInfosPayload = async (
 
   const occurences = parseLiteralOccurenceList(sourceFile);
 
-  const target = occurences.find(({ locationOffset, body }) => {
-    if (locationOffset.index === undefined) {
+  const target = occurences.find(({ index, body }) => {
+    if (index === undefined) {
       return false;
     }
 
-    const start = locationOffset.index;
+    const start = index;
     const end = start + body.length;
 
     return position >= start && position <= end;
@@ -53,7 +53,7 @@ export const getQuickInfosPayload = async (
     return null;
   }
 
-  const literalPosition = position - target.locationOffset.index! - 1;
+  const literalPosition = position - target.index! - 1;
   const lines = targetLiteral.slice(0, literalPosition + 1).split('\n');
   const currentLine = lines[lines.length - 1];
 
