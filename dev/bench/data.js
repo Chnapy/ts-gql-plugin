@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675127041939,
+  "lastUpdate": 1675128087302,
   "repoUrl": "https://github.com/Chnapy/ts-gql-plugin",
   "entries": {
     "\"with ts-gql-plugin\" vs \"without ts-gql-plugin\" Benchmark": [
@@ -552,6 +552,37 @@ window.BENCHMARK_DATA = {
             "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
             "value": 24.87,
             "range": "±1.46%",
+            "unit": "%",
+            "extra": "10 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "richardhaddad@hotmail.fr",
+            "name": "Richard Haddad",
+            "username": "Chnapy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f16f6ba26b9e9a1335c3647d117339dbfe0eb581",
+          "message": "Fix broken parse-literal-occurences on syntax errored code (#43)\n\n* fix broken parse-literal-occurences on syntax errored code\r\n\r\n* upgrade to 1.5.1",
+          "timestamp": "2023-01-31T02:19:38+01:00",
+          "tree_id": "c231982733ff918c41d345b7e9b1e1bb3fa85b62",
+          "url": "https://github.com/Chnapy/ts-gql-plugin/commit/f16f6ba26b9e9a1335c3647d117339dbfe0eb581"
+        },
+        "date": 1675128086312,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
+            "value": 21.87,
+            "range": "±1.83%",
             "unit": "%",
             "extra": "10 samples"
           }
