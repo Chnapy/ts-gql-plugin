@@ -57,10 +57,12 @@ const getTargetNodeAncestors = (literalAst: ASTNode, targetNode: ASTNode) => {
 const getNamedType = (type: TypeNode): string => {
   switch (type.kind) {
     case Kind.NON_NULL_TYPE:
-    case Kind.LIST_TYPE:
+    case Kind.LIST_TYPE: {
       return getNamedType(type.type);
-    case Kind.NAMED_TYPE:
+    }
+    case Kind.NAMED_TYPE: {
       return type.name.value;
+    }
   }
 };
 
@@ -96,7 +98,7 @@ export const getSchemaNodeFromLiteral = async (
     }
 
     switch (node.kind) {
-      case Kind.NAMED_TYPE:
+      case Kind.NAMED_TYPE: {
         return getNodeByVisit(
           schemaDocument,
           (select) => ({
@@ -110,8 +112,9 @@ export const getSchemaNodeFromLiteral = async (
           }),
           lastFoundNode
         );
+      }
 
-      case Kind.FIELD:
+      case Kind.FIELD: {
         return getNodeByVisit(
           lastFoundNode,
           (select, getCurrentValue) => ({
@@ -171,9 +174,11 @@ export const getSchemaNodeFromLiteral = async (
           }),
           lastFoundNode
         );
+      }
 
-      default:
+      default: {
         return lastFoundNode;
+      }
     }
   }, schemaDocument);
 };

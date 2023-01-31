@@ -3,7 +3,7 @@ import * as typescriptOperationsPlugin from '@graphql-codegen/typescript-operati
 import { DocumentNode, GraphQLError, parse } from 'graphql';
 import { DocumentInfos } from './generate-bottom-content';
 
-type CodegenPlugin = typeof plugins[number];
+type CodegenPlugin = (typeof plugins)[number];
 const plugins = [typescriptOperationsPlugin];
 
 export const generateTypeFromLiteral = async (
