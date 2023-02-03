@@ -18,10 +18,11 @@ export const createCachedGraphQLSchemaLoader = ({
   cachedGraphQLConfigLoader,
   errorCatcher,
 }: CreateCachedSchemaLoaderOptions) =>
-  createCacheSystem<CachedSchemaLoaderValue, CachedSchemaLoaderInput>({
+  createCacheSystem<CachedSchemaLoaderValue, CachedSchemaLoaderInput, true>({
+    async: true,
     getKeyFromInput: (input) => input.projectName,
     create: async (input) => {
-      const { project, schemaFilePath } = await getCreateProjectInfos(
+      const { project, schemaFilePath } = getCreateProjectInfos(
         cachedGraphQLConfigLoader,
         input
       );

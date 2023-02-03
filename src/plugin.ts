@@ -16,11 +16,14 @@ import { createCachedLiteralParser } from './cached/cached-literal-parser';
 import { createCachedDocumentSchemaLoader } from './cached/cached-document-schema-loader';
 import { createCachedGraphQLSchemaLoader } from './cached/cached-graphql-schema-loader';
 import { createGetDefinitionAndBoundSpan } from './language-service/get-definition-and-bound-span';
+import { validateTsBuildInfoFileTime } from './validate-ts-build-info-file-time';
 
 export const init: PluginInit = ({ typescript: ts }) => ({
   create: (info) => {
-    const { project, languageService } = info;
+    const { project, languageService, languageServiceHost } = info;
     const config = info.config as PluginConfig;
+
+    const compilationSettings = languageServiceHost.getCompilationSettings();
 
     const vsCodeEnv = isVSCodeEnv();
 
@@ -213,6 +216,15 @@ export const init: PluginInit = ({ typescript: ts }) => ({
 
       return (...args) => waitPromiseSync(getDefinitionAndBoundSpan(...args));
     });
+
+    const tsBuildInfoPath = compilationSettings.tsBuildInfoFile;
+    if (!vsCodeEnv && tsBuildInfoPath) {
+      validateTsBuildInfoFileTime(
+        cachedGraphQLConfigLoader,
+        tsBuildInfoPath,
+        logger
+      );
+    }
 
     return languageServiceWithDiagnostics;
   },

@@ -6,13 +6,34 @@ describe('Cache system', () => {
       const create = vi.fn(async ({ inputValue }) => inputValue.length);
       const checkValidity = vi.fn(async () => true);
 
-      const cache = createCacheSystem<number, { inputValue: string }>({
+      const cache = createCacheSystem<number, { inputValue: string }, true>({
+        async: true,
         getKeyFromInput: ({ inputValue }) => inputValue,
         create,
         checkValidity,
       });
 
       const value = await cache.getItemOrCreate({
+        inputValue: 'foobar',
+      });
+
+      expect(create).toHaveBeenCalledOnce();
+      expect(checkValidity).not.toHaveBeenCalled();
+      expect(value).toEqual(6);
+    });
+
+    it('creates new item on empty cache, in sync mode', () => {
+      const create = vi.fn(({ inputValue }) => inputValue.length);
+      const checkValidity = vi.fn(() => true);
+
+      const cache = createCacheSystem<number, { inputValue: string }, false>({
+        async: false,
+        getKeyFromInput: ({ inputValue }) => inputValue,
+        create,
+        checkValidity,
+      });
+
+      const value = cache.getItemOrCreate({
         inputValue: 'foobar',
       });
 
@@ -29,8 +50,10 @@ describe('Cache system', () => {
 
       const cache = createCacheSystem<
         { length: number },
-        { inputValue: string }
+        { inputValue: string },
+        true
       >({
+        async: true,
         getKeyFromInput: ({ inputValue }) => inputValue.length.toString(),
         create,
         checkValidity,
@@ -57,8 +80,10 @@ describe('Cache system', () => {
 
       const cache = createCacheSystem<
         { length: number },
-        { inputValue: string }
+        { inputValue: string },
+        true
       >({
+        async: true,
         getKeyFromInput: ({ inputValue }) => inputValue.length.toString(),
         create,
         checkValidity,
@@ -84,8 +109,10 @@ describe('Cache system', () => {
 
       const cache = createCacheSystem<
         { length: number } | null,
-        { inputValue: string }
+        { inputValue: string },
+        true
       >({
+        async: true,
         getKeyFromInput: ({ inputValue }) => inputValue,
         create,
         checkValidity,
@@ -113,8 +140,10 @@ describe('Cache system', () => {
 
       const cache = createCacheSystem<
         { length: number },
-        { inputValue: string }
+        { inputValue: string },
+        true
       >({
+        async: true,
         getKeyFromInput: ({ inputValue }) => inputValue,
         create,
         checkValidity,
@@ -169,8 +198,10 @@ describe('Cache system', () => {
 
         const cache = createCacheSystem<
           { length: number },
-          { inputValue: string }
+          { inputValue: string },
+          true
         >({
+          async: true,
           getKeyFromInput: ({ inputValue }) => inputValue,
           create,
           checkValidity,
@@ -196,8 +227,10 @@ describe('Cache system', () => {
 
         const cache = createCacheSystem<
           { length: number },
-          { inputValue: string }
+          { inputValue: string },
+          true
         >({
+          async: true,
           getKeyFromInput: ({ inputValue }) => inputValue,
           create,
           checkValidity,
@@ -207,6 +240,35 @@ describe('Cache system', () => {
           inputValue: 'foobar',
         });
         const secondValue = await cache.getItemOrCreate({
+          inputValue: 'foobar',
+        });
+
+        expect(firstValue).toBe(secondValue);
+        expect(checkValidity).toHaveBeenCalledOnce();
+        expect(create).toHaveBeenCalledOnce();
+      });
+
+      it('gives existing item on checkValidity success, in sync mode', () => {
+        const create = vi.fn(({ inputValue }) => ({
+          length: inputValue.length,
+        }));
+        const checkValidity = vi.fn(() => true);
+
+        const cache = createCacheSystem<
+          { length: number },
+          { inputValue: string },
+          false
+        >({
+          async: false,
+          getKeyFromInput: ({ inputValue }) => inputValue,
+          create,
+          checkValidity,
+        });
+
+        const firstValue = cache.getItemOrCreate({
+          inputValue: 'foobar',
+        });
+        const secondValue = cache.getItemOrCreate({
           inputValue: 'foobar',
         });
 
@@ -225,8 +287,10 @@ describe('Cache system', () => {
 
         const cache = createCacheSystem<
           { length: number },
-          { inputValue: string }
+          { inputValue: string },
+          true
         >({
+          async: true,
           getKeyFromInput: ({ inputValue }) => inputValue,
           create,
           checkValidity,
@@ -236,6 +300,35 @@ describe('Cache system', () => {
           inputValue: 'foobar',
         });
         const secondValue = await cache.getItemOrCreate({
+          inputValue: 'foobar',
+        });
+
+        expect(firstValue).toBe(secondValue);
+        expect(checkValidity).not.toHaveBeenCalled();
+        expect(create).toHaveBeenCalledOnce();
+      });
+
+      it('gives existing item ignoring checkValidity, in sync mode', () => {
+        const create = vi.fn(({ inputValue }) => ({
+          length: inputValue.length,
+        }));
+        const checkValidity = vi.fn(() => false);
+
+        const cache = createCacheSystem<
+          { length: number },
+          { inputValue: string },
+          false
+        >({
+          async: false,
+          getKeyFromInput: ({ inputValue }) => inputValue,
+          create,
+          checkValidity,
+        });
+
+        const firstValue = cache.getItemOrCreate({
+          inputValue: 'foobar',
+        });
+        const secondValue = cache.getItemOrCreate({
           inputValue: 'foobar',
         });
 
