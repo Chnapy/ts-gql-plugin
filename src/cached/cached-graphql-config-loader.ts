@@ -56,10 +56,11 @@ export const createCachedGraphQLConfigLoader = ({
 
       const graphqlProjects = Object.values(graphqlProjectsMap);
 
-      logger.log(`GraphQL config loaded from ${graphqlConfig.filepath}`);
-
-      graphqlProjects.forEach(({ name, schema }) =>
-        logger.log(`GraphQL project "${name}" schema loaded from ${schema}`)
+      logger.log(
+        graphqlProjects.reduce(
+          (txt, { name, schema }) => `${txt}\n\t- ${name}: '${schema}'`,
+          `Project '${directory}' GraphQL config loaded from '${graphqlConfig.filepath}':`
+        )
       );
 
       return {

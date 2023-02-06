@@ -1,0 +1,31 @@
+type User {
+  id: ID!
+  name: String!
+}
+
+enum OAuthProvider {
+  GOOGLE
+  FACEBOOK
+}
+
+type Auth {
+  id: ID!
+  accessToken: String!
+  user: User!
+}
+
+type Query {
+  users: [User!]!
+  user(id: ID!): User!
+  authByGoogle(code: String!): Auth!
+}
+
+type Mutation {
+  updateUser(updateUserInput: UpdateUserInput!): User!
+}
+
+input UpdateUserInput {
+  id: Int!
+  name: String!
+  picture: String
+}

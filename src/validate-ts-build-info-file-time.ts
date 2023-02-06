@@ -3,6 +3,11 @@ import path from 'node:path';
 import { CachedGraphQLConfigLoader } from './cached/cached-graphql-config-loader';
 import { Logger } from './utils/logger';
 
+const isInDirectory = (
+  absoluteDirectoryPath: string,
+  absoluteTestPath: string
+) => !path.relative(absoluteDirectoryPath, absoluteTestPath).startsWith('..');
+
 /**
  * In projects with composite or incremental mode, tsBuildInfo file ignores graphql-related files.
  * If one of these files change, tsBuildInfo should be removed so that compilation can be triggered again.
@@ -13,14 +18,13 @@ import { Logger } from './utils/logger';
  */
 export const validateTsBuildInfoFileTime = (
   cachedGraphQLConfigLoader: CachedGraphQLConfigLoader,
+  projectPath: string,
   tsBuildInfoPath: string,
   logger: Logger
 ) => {
   if (!fs.existsSync(tsBuildInfoPath)) {
     return;
   }
-
-  logger.verbose(() => 'Project tsBuildInfo validation');
 
   const gqlConfig = cachedGraphQLConfigLoader.getItemOrCreate(null);
 
@@ -30,7 +34,9 @@ export const validateTsBuildInfoFileTime = (
     path.join(project.dirpath, project.schema as string)
   );
 
-  const gqlRelatedPaths = [...new Set([gqlConfigPath, ...schemasPaths])];
+  const gqlRelatedPaths = [...new Set([gqlConfigPath, ...schemasPaths])]
+    // ignore gql-files outside of project
+    .filter((gqlPath) => isInDirectory(projectPath, gqlPath));
 
   const tsBuildInfoPathLastModifiedTime = fs.statSync(tsBuildInfoPath).mtimeMs;
 
@@ -43,14 +49,14 @@ export const validateTsBuildInfoFileTime = (
   if (newestPath) {
     logger.verbose(
       () =>
-        `Project GraphQL part is out of date because its tsBuildInfo output '${tsBuildInfoPath}' is older than GraphQL-related input '${newestPath}'. TsBuildInfo output will be removed`
+        `Project '${projectPath}' GraphQL part is out of date because its tsBuildInfo output '${tsBuildInfoPath}' is older than GraphQL-related input '${newestPath}'. TsBuildInfo output will be removed`
     );
 
     fs.rmSync(tsBuildInfoPath);
   } else {
     logger.verbose(
       () =>
-        `Project GraphQL part is up to date because GraphQL-related inputs are older than output '${tsBuildInfoPath}'`
+        `Project '${projectPath}' GraphQL part is up to date because GraphQL-related inputs are older than output '${tsBuildInfoPath}'`
     );
   }
 };
