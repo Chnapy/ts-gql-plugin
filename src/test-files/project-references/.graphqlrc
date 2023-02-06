@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "Catalog": {
+      "schema": "./project-catalog/schema-catalog.graphql"
+    },
+    "Profile": {
+      "schema": "./project-profile/schema-profile.graphql"
+    }
+  }
+}

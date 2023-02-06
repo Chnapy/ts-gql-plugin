@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.cache/.tsbuildinfo",
@@ -12,5 +12,12 @@
       }
     ]
   },
-  "include": ["*.ts"]
+  "references": [
+    {
+      "path": "./project-catalog"
+    },
+    {
+      "path": "./project-profile"
+    }
+  ]
 }

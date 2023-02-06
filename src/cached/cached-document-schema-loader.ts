@@ -41,13 +41,11 @@ export const defaultProjectName = 'default';
 export const getProjectNameIfNotDefault = (projectName: string) =>
   projectName === defaultProjectName ? undefined : projectName;
 
-export const getCreateProjectInfos = async (
+export const getCreateProjectInfos = (
   cachedGraphQLConfigLoader: CachedGraphQLConfigLoader,
   { projectName }: CachedSchemaLoaderInput
 ) => {
-  const { graphqlProjects } = await cachedGraphQLConfigLoader.getItemOrCreate(
-    null
-  );
+  const { graphqlProjects } = cachedGraphQLConfigLoader.getItemOrCreate(null);
 
   const project = graphqlProjects.find(({ name }) => name === projectName);
   if (!project) {
@@ -68,10 +66,10 @@ export const getCreateProjectInfos = async (
 export const getCachedSchemaCheckValidity =
   (cachedGraphQLConfigLoader: CachedGraphQLConfigLoader) =>
   async (
-    currentItem: CacheItem<SchemaProjectInfos<unknown> | null, unknown>
+    currentItem: CacheItem<SchemaProjectInfos<unknown> | null, unknown, true>
   ) => {
     const isGraphQLConfigValid =
-      await cachedGraphQLConfigLoader.checkItemValidity(null);
+      cachedGraphQLConfigLoader.checkItemValidity(null);
     if (!isGraphQLConfigValid) {
       return false;
     }
@@ -92,12 +90,17 @@ export const createCachedDocumentSchemaLoader = ({
   cachedGraphQLConfigLoader,
   errorCatcher,
 }: CreateCachedSchemaLoaderOptions) =>
-  createCacheSystem<CachedDocumentSchemaLoaderValue, CachedSchemaLoaderInput>({
+  createCacheSystem<
+    CachedDocumentSchemaLoaderValue,
+    CachedSchemaLoaderInput,
+    true
+  >({
+    async: true,
     // TODO debounce
     // debounceValue: 1000,
     getKeyFromInput: (input) => input.projectName,
     create: async (input) => {
-      const { project, schemaFilePath } = await getCreateProjectInfos(
+      const { project, schemaFilePath } = getCreateProjectInfos(
         cachedGraphQLConfigLoader,
         input
       );

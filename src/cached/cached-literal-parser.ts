@@ -58,8 +58,10 @@ export const createCachedLiteralParser = ({
 
   const parser = createCacheSystem<
     CachedLiteralParserValue,
-    CachedLiteralParserInput
+    CachedLiteralParserInput,
+    true
   >({
+    async: true,
     getKeyFromInput: (input) => input.literal.replaceAll(/\s/gi, ''),
     create: async ({ literal, sourceFile }) => {
       try {

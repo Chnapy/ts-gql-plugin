@@ -16,23 +16,27 @@ import { createCachedLiteralParser } from './cached/cached-literal-parser';
 import { createCachedDocumentSchemaLoader } from './cached/cached-document-schema-loader';
 import { createCachedGraphQLSchemaLoader } from './cached/cached-graphql-schema-loader';
 import { createGetDefinitionAndBoundSpan } from './language-service/get-definition-and-bound-span';
+import { validateTsBuildInfoFileTime } from './validate-ts-build-info-file-time';
 
 export const init: PluginInit = ({ typescript: ts }) => ({
   create: (info) => {
-    const { project, languageService } = info;
+    const { project, languageService, languageServiceHost } = info;
     const config = info.config as PluginConfig;
+
+    const projectPath = project.getCurrentDirectory();
+
+    const compilationSettings = languageServiceHost.getCompilationSettings();
 
     const vsCodeEnv = isVSCodeEnv();
 
     const logger = createLogger(config.logLevel, project.projectService.logger);
 
-    const directory = project.getCurrentDirectory();
-
-    logger.log('Plugin started');
-
-    logger.log(`Running in ${vsCodeEnv ? 'VS Code' : 'CLI'} env`);
-
-    logger.log(`Plugin config ${JSON.stringify(config)}`);
+    logger.log(
+      `Plugin started:\n` +
+        `\t- project: '${projectPath}'\n` +
+        `\t- environment: ${vsCodeEnv ? 'VS Code' : 'CLI'}\n` +
+        `\t- plugin config: \n${JSON.stringify(config, undefined, 2)}`
+    );
 
     const languageServiceWithDiagnostics =
       createLanguageServiceWithDiagnostics(languageService);
@@ -54,7 +58,7 @@ export const init: PluginInit = ({ typescript: ts }) => ({
     const { graphqlConfigPath, projectNameRegex } = config;
 
     const cachedGraphQLConfigLoader = createCachedGraphQLConfigLoader({
-      directory,
+      directory: projectPath,
       graphqlConfigPath,
       projectNameRegex,
       logger,
@@ -213,6 +217,16 @@ export const init: PluginInit = ({ typescript: ts }) => ({
 
       return (...args) => waitPromiseSync(getDefinitionAndBoundSpan(...args));
     });
+
+    const tsBuildInfoPath = compilationSettings.tsBuildInfoFile;
+    if (!vsCodeEnv && tsBuildInfoPath) {
+      validateTsBuildInfoFileTime(
+        cachedGraphQLConfigLoader,
+        projectPath,
+        tsBuildInfoPath,
+        logger
+      );
+    }
 
     return languageServiceWithDiagnostics;
   },

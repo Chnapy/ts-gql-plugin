@@ -1,7 +1,7 @@
 import {
   GraphQLConfig,
   GraphQLProjectConfig,
-  loadConfig,
+  loadConfigSync,
 } from 'graphql-config';
 import { tsGqlExtension } from '../source-update/extension';
 import { checkFileLastUpdate, createCacheSystem } from '../utils/cache-system';
@@ -32,21 +32,19 @@ export const createCachedGraphQLConfigLoader = ({
   projectNameRegex,
   logger,
 }: CreateCachedGraphQLConfigLoaderOptions) =>
-  createCacheSystem<CachedGraphQLConfigLoaderValue, null>({
+  createCacheSystem<CachedGraphQLConfigLoaderValue, null, false>({
+    async: false,
     // TODO debounce
     // debounceValue: 5000,
     getKeyFromInput: () => '',
-    create: async () => {
-      const graphqlConfig = await loadConfig({
+    create: () => {
+      const graphqlConfig = loadConfigSync({
         rootDir: directory,
         filepath: graphqlConfigPath,
         throwOnMissing: true,
         throwOnEmpty: true,
         extensions: [tsGqlExtension],
       });
-      if (!graphqlConfig) {
-        throw new Error('GraphQL config file not found.');
-      }
 
       const graphqlProjectsMap = graphqlConfig.projects;
 
@@ -58,10 +56,11 @@ export const createCachedGraphQLConfigLoader = ({
 
       const graphqlProjects = Object.values(graphqlProjectsMap);
 
-      logger.log(`GraphQL config loaded from ${graphqlConfig.filepath}`);
-
-      graphqlProjects.forEach(({ name, schema }) =>
-        logger.log(`GraphQL project "${name}" schema loaded from ${schema}`)
+      logger.log(
+        graphqlProjects.reduce(
+          (txt, { name, schema }) => `${txt}\n\t- ${name}: '${schema}'`,
+          `Project '${directory}' GraphQL config loaded from '${graphqlConfig.filepath}':`
+        )
       );
 
       return {
@@ -70,8 +69,8 @@ export const createCachedGraphQLConfigLoader = ({
         graphqlProjects,
       };
     },
-    checkValidity: async (currentItem) => {
-      const { configFilePath } = await currentItem.value;
+    checkValidity: (currentItem) => {
+      const { configFilePath } = currentItem.value;
 
       return checkFileLastUpdate(configFilePath, currentItem.dateTime);
     },
