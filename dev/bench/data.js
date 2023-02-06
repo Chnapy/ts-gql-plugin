@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675128087302,
+  "lastUpdate": 1675650174821,
   "repoUrl": "https://github.com/Chnapy/ts-gql-plugin",
   "entries": {
     "\"with ts-gql-plugin\" vs \"without ts-gql-plugin\" Benchmark": [
@@ -583,6 +583,37 @@ window.BENCHMARK_DATA = {
             "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
             "value": 21.87,
             "range": "±1.83%",
+            "unit": "%",
+            "extra": "10 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "richardhaddad@hotmail.fr",
+            "name": "Richard Haddad",
+            "username": "Chnapy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "804fd24f84bbb2055630742225e698a9bc1137e6",
+          "message": "Validate .tsbuildinfo file following GraphQL-related files last update (#44)\n\n* validate tsBuildInfo file following gql files last update\r\n\r\n* fix tsbuildinfo validation for project-references\r\nimprove logs",
+          "timestamp": "2023-02-06T03:21:06+01:00",
+          "tree_id": "9da7da0b5ab24a1d170ead2df41b318b9c53a2f8",
+          "url": "https://github.com/Chnapy/ts-gql-plugin/commit/804fd24f84bbb2055630742225e698a9bc1137e6"
+        },
+        "date": 1675650173957,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "performance impact %: \"with ts-gql-plugin\" vs \"without ts-gql-plugin\"",
+            "value": 22.11,
+            "range": "±0.93%",
             "unit": "%",
             "extra": "10 samples"
           }
